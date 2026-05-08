@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Lifecycle manager for the 03_llm_research web demo.
+#
+# Starts the A2A multi-agent server (port 9292) and the Sinatra web client
+# (port 4567), then waits. Press Ctrl-C to stop both.
+#
+# Usage (from project root):   ruby examples/run 03_llm_research
+# Usage (from demo dir):       ./run
+#
+# Requires:
+#   ANTHROPIC_API_KEY
+#   OPENAI_API_KEY
+
+require "socket"
+
+DEMO_DIR        = File.expand_path("..", __FILE__)
+RUBY            = RbConfig.ruby
+A2A_PORT        = 9292
+WEB_PORT        = 4567
+STARTUP_TIMEOUT = 30
+
+def server_ready?(port)
+  TCPSocket.new("localhost", port).close
+  true
+rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Errno::ETIMEDOUT
+  false
+end
+
+def wait_for(name, port, timeout)
+  deadline = Time.now + timeout
+  sleep 0.1 until server_ready?(port) || Time.now > deadline
+  abort "#{name} did not start on port #{port} within #{timeout}s" unless server_ready?(port)
+  puts "  #{name} ready → http://localhost:#{port}"
+end
+
+# ---------------------------------------------------------------------------
+# Environment check
+# ---------------------------------------------------------------------------
+missing = %w[ANTHROPIC_API_KEY OPENAI_API_KEY].reject { |k| ENV[k] }
+unless missing.empty?
+  warn "Missing required environment variables: #{missing.join(', ')}"
+  warn "Set them before running:"
+  missing.each { |k| warn "  export #{k}=your_key_here" }
+  exit 1
+end
+
+# ---------------------------------------------------------------------------
+# Start servers
+# ---------------------------------------------------------------------------
+puts "Starting 03_llm_research demo…"
+puts
+
+a2a_pid = spawn(RUBY, File.join(DEMO_DIR, "server.rb"),     out: $stdout, err: $stderr)
+web_pid = spawn(RUBY, File.join(DEMO_DIR, "web_client.rb"), out: $stdout, err: $stderr)
+
+wait_for("A2A server",  A2A_PORT, STARTUP_TIMEOUT)
+wait_for("Web client",  WEB_PORT,  STARTUP_TIMEOUT)
+
+puts
+puts "Open http://localhost:#{WEB_PORT} in your browser."
+puts "Press Ctrl-C to stop."
+puts
+
+# ---------------------------------------------------------------------------
+# Keep running until Ctrl-C
+# ---------------------------------------------------------------------------
+trap("INT") do
+  puts "\nStopping…"
+  [a2a_pid, web_pid].each { |pid| Process.kill("TERM", pid) rescue nil }
+  [a2a_pid, web_pid].each { |pid| Process.wait(pid)         rescue nil }
+  exit 0
+end
+
+trap("TERM") do
+  [a2a_pid, web_pid].each { |pid| Process.kill("TERM", pid) rescue nil }
+  [a2a_pid, web_pid].each { |pid| Process.wait(pid)         rescue nil }
+  exit 0
+end
+
+loop { sleep 1 }

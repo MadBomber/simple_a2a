@@ -33,10 +33,18 @@ unless name
 end
 
 demo_dir  = File.join(EXAMPLES_DIR, name)
+
+abort "Demo not found: #{demo_dir}" unless File.directory?(demo_dir)
+
+# If the demo has its own run script, delegate to it.
+custom_runner = File.join(demo_dir, "run")
+if File.exist?(custom_runner)
+  exec(RUBY, custom_runner, *ARGV.drop(1))
+end
+
 server_rb = File.join(demo_dir, "server.rb")
 client_rb = File.join(demo_dir, "client.rb")
 
-abort "Demo not found: #{demo_dir}"  unless File.directory?(demo_dir)
 abort "Missing server.rb in #{demo_dir}" unless File.exist?(server_rb)
 abort "Missing client.rb in #{demo_dir}" unless File.exist?(client_rb)
 

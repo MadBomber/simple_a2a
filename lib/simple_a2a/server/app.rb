@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "roda"
+require "protocol/http/body/writable"
 
 module A2A
   module Server
@@ -52,14 +53,15 @@ module A2A
             r.halt([200, { "Content-Type" => "application/json" }, [err]])
           end
 
-          # SSE has different headers and body — intercept before normal dispatch
+          # SSE has different headers and body — intercept before normal dispatch.
+          # The body is an Enumerator so Falcon streams each event to the client
+          # as the executor yields it, rather than buffering the whole response.
           if rpc_req.method == "tasks/sendSubscribe"
-            sse_body = handle_send_subscribe(rpc_req)
             r.halt([200, {
               "Content-Type"      => "text/event-stream",
               "Cache-Control"     => "no-cache",
               "X-Accel-Buffering" => "no"
-            }, [sse_body]])
+            }, handle_send_subscribe(rpc_req)])
           end
 
           result = dispatch(rpc_req)
@@ -161,30 +163,44 @@ module A2A
         )
         self.class.storage.save(task)
 
-        # Collect events synchronously via a lightweight capture router.
-        # The executor runs to completion first; events are then flushed as SSE.
-        captured = []
-        capture_router = Object.new.tap do |ro|
-          ro.define_singleton_method(:publish)   { |_, ev| captured << ev }
-          ro.define_singleton_method(:open)      { |*| }
-          ro.define_singleton_method(:close)     { |*| }
-          ro.define_singleton_method(:channel?)  { |*| false }
-          ro.define_singleton_method(:subscribe) { |*| }
+        storage  = self.class.storage
+        executor = self.class.executor
+
+        # Protocol::HTTP::Body::Writable is a Readable subclass.
+        # Protocol::Rack detects this and does NOT wrap it in an Enumerable
+        # fiber — Falcon reads it directly via queue.dequeue in its async task.
+        # The executor runs in a sibling async task and pushes events via
+        # output.write (queue.enqueue), which is fully async-safe.
+        # This avoids the FiberError that Enumerator::Yielder#<< raises when
+        # called from inside an LLM streaming callback (an async task context
+        # where the Enumerator consumer fiber is not currently waiting).
+        output = Protocol::HTTP::Body::Writable.new
+
+        Async::Task.current.async do
+          streaming_router = Object.new.tap do |ro|
+            ro.define_singleton_method(:publish)   { |_, ev| output.write("data: #{JSON.generate({ 'jsonrpc' => '2.0', 'result' => ev.to_h })}\n\n") }
+            ro.define_singleton_method(:open)      { |*| }
+            ro.define_singleton_method(:close)     { |*| }
+            ro.define_singleton_method(:channel?)  { |*| false }
+            ro.define_singleton_method(:subscribe) { |*| }
+          end
+
+          ctx = Server::Context.new(
+            task:         task,
+            message:      message,
+            storage:      storage,
+            event_router: streaming_router
+          )
+
+          executor.call(ctx)
+          storage.save(task)
+        rescue => e
+          output.write("data: #{JSON.generate({ 'jsonrpc' => '2.0', 'error' => { 'code' => -32000, 'message' => e.message } })}\n\n") rescue nil
+        ensure
+          output.close
         end
 
-        ctx = Server::Context.new(
-          task:         task,
-          message:      message,
-          storage:      self.class.storage,
-          event_router: capture_router
-        )
-
-        self.class.executor.call(ctx)
-        self.class.storage.save(task)
-
-        captured.map { |ev|
-          "data: #{JSON.generate({ 'jsonrpc' => '2.0', 'result' => ev.to_h })}\n\n"
-        }.join
+        output
       end
 
       def handle_push_set(rpc_req)

@@ -15,6 +15,10 @@ module A2A
       Server::Base.new(**opts)
     end
 
+    def multi_server(**opts)
+      Server::MultiAgent.new(**opts)
+    end
+
     def client(**opts)
       Client::Base.new(**opts)
     end
