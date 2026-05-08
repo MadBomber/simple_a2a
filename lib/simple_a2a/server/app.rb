@@ -197,7 +197,7 @@ module A2A
         rescue => e
           output.write("data: #{JSON.generate({ 'jsonrpc' => '2.0', 'error' => { 'code' => -32000, 'message' => e.message } })}\n\n") rescue nil
         ensure
-          output.close
+          output.close_write rescue nil
         end
 
         output

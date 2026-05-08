@@ -88,7 +88,11 @@ puts "\n(server ready on port #{SERVER_PORT})\n\n"
 # Run client
 # ---------------------------------------------------------------------------
 banner "Running #{name} — client"
-client_ok = system(RUBY, client_rb)
+begin
+  client_ok = system(RUBY, client_rb)
+rescue Interrupt
+  client_ok = false
+end
 
 # ---------------------------------------------------------------------------
 # Shut down server

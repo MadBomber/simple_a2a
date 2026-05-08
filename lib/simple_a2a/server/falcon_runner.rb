@@ -23,6 +23,8 @@ module A2A
         Async do
           server.run
         end
+      rescue Interrupt
+        # Ctrl-C — clean shutdown, no backtrace needed
       end
     end
   end
