@@ -1,44 +1,61 @@
 # simple_a2a
 
-A Ruby gem implementing the [Agent2Agent (A2A) protocol](https://a2a-protocol.org/latest/) — an open standard by Google and the Linux Foundation for interoperability between AI agents.
+<table>
+  <tr>
+    <td width="40%">
+      <img src="docs/assets/images/simple_a2a.jpg" alt="simple_a2a - AI agents communicating" width="100%">
+    </td>
+    <td width="60%" valign="top">
+      <strong>A Ruby gem implementing the <a href="https://a2a-protocol.org/latest/">Agent2Agent (A2A) protocol</a></strong>
+      <br><br>
+      A complete A2A client and server in a single package, built on the async Ruby ecosystem with Falcon as the recommended HTTP server.
+      <ul>
+        <li>Full A2A v1.0 protocol support (backward compatible with v0.3)</li>
+        <li>JSON-RPC 2.0 over HTTP(S) — primary binding</li>
+        <li>Server-Sent Events (SSE) for streaming responses</li>
+        <li>Push notifications via webhooks (RS256 JWT)</li>
+        <li>Task lifecycle management (<code>submitted → working → completed/failed/canceled</code>)</li>
+        <li>AgentCard discovery endpoint at <code>GET /agentCard</code></li>
+        <li>Multi-agent hosting with path-based routing via <code>A2A.multi_server</code></li>
+        <li>Async-first via the <code>async</code> gem ecosystem (Falcon + async-http)</li>
+        <li>Rack-compatible server with Roda routing</li>
+        <li>Zeitwerk autoloading — top-level module is <code>A2A</code></li>
+        <li><a href="https://madbomber.github.io/simple_a2a">Full documentation website</a></li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
-`simple_a2a` provides a complete A2A client and server in a single package, built on the async Ruby ecosystem with [Falcon](https://github.com/socketry/falcon) as the recommended HTTP server.
+## MCP vs. A2A
 
-## Documentation
+Two open protocols address different dimensions of AI agent integration — and they are designed to complement each other.
 
-The full documentation website is available at [https://madbomber.github.io/simple_a2a](https://madbomber.github.io/simple_a2a).
+**MCP — Vertical Integration (Agent ↕ Environment)**
+
+The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), introduced by Anthropic in November 2024, defines how an AI agent connects to the tools, data sources, and services in its environment — file systems, databases, APIs, browsers, and code execution engines. MCP uses a client-server model where the agent is the client and each external capability is a server. This is *vertical* integration: the agent reaches downward into its local context and outward into external services through a uniform interface.
+
+**A2A — Horizontal Integration (Agent ↔ Agent)**
+
+The [Agent2Agent Protocol](https://a2a-protocol.org/latest/) (A2A), introduced by Google in April 2025 and donated to the Linux Foundation for vendor-neutral governance, defines how autonomous agents running on different platforms, frameworks, and vendors can discover one another, delegate tasks, and stream results in real time. This is *horizontal* integration: peer agents — each with its own specialization, runtime, and vendor — collaborate as equals across organizational and technology boundaries.
+
+**Together**
+
+MCP and A2A are complementary. A single agent can use MCP to access its tools and A2A to delegate subtasks to peer agents. `simple_a2a` implements the A2A layer.
 
 ## Lineage
 
 `simple_a2a` is the successor to my earlier Ruby gem, `simple_acp`. That gem implemented the Agent Communication Protocol (ACP), which IBM Research introduced through the BeeAI project for interoperable agent communication. ACP later merged into A2A under the Linux Foundation, with the ACP team contributing its technology and expertise to the A2A effort.
 
-A2A itself was created by Google and then donated to the Linux Foundation for neutral, open governance. The current A2A specification is maintained by the Linux Foundation-hosted [Agent2Agent project](https://github.com/a2aproject/A2A) and published at [a2a-protocol.org](https://a2a-protocol.org/latest/).
-
 > My opinion: the A2A specification is still a little jagged in places. A simple example is that it does not clearly cover whether an A2A server is expected to host only one agent or may host multiple agents. That is a minor example, but it points to the kind of operational detail the specification still needs to tighten up.
 
 References:
 
+- Anthropic: [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol) (November 2024)
+- Google Developers Blog: [A2A: A new era of agent interoperability](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/) (April 2025)
 - IBM Research: [Agent Communication Protocol](https://research.ibm.com/projects/agent-communication-protocol)
 - BeeAI announcement: [ACP Joins Forces with A2A Under the Linux Foundation](https://github.com/orgs/i-am-bee/discussions/5)
 - Linux Foundation: [Launch of the Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
-
-## Protocol Reference
-
-- **Official A2A Specification:** [https://a2a-protocol.org/latest/](https://a2a-protocol.org/latest/)
-- **A2A Project on GitHub:** [https://github.com/a2aproject/A2A](https://github.com/a2aproject/A2A)
-
-## Features
-
-- Full A2A v1.0 protocol support (backward compatible with v0.3)
-- JSON-RPC 2.0 over HTTP(S) — primary binding
-- Server-Sent Events (SSE) for streaming responses
-- Push notifications via webhooks (RS256 JWT)
-- Task lifecycle management (`submitted → working → completed/failed/canceled`)
-- AgentCard discovery endpoint at `GET /agentCard`
-- Multi-agent hosting with path-based routing via `A2A.multi_server`
-- Async-first via the `async` gem ecosystem (Falcon + async-http)
-- Rack-compatible server with Roda routing
-- Zeitwerk autoloading — top-level module is `A2A`
+- A2A Project on GitHub: [https://github.com/a2aproject/A2A](https://github.com/a2aproject/A2A)
 
 ## Installation
 

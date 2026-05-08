@@ -1,22 +1,67 @@
 # simple_a2a
 
-A Ruby gem implementing the [Agent2Agent (A2A) protocol](https://a2a-protocol.org/latest/) — an open standard by Google and the Linux Foundation for interoperability between AI agents.
+<div class="grid" markdown>
 
-`simple_a2a` provides a complete A2A client and server in a single package, built on the async Ruby ecosystem with [Falcon](https://github.com/socketry/falcon) as the recommended HTTP server.
+<div markdown>
+
+![simple_a2a](assets/images/simple_a2a.jpg){ width="100%" }
+
+<p align="center"><em>"Anyone speak robot?"</em></p>
+
+</div>
+
+<div markdown>
+
+**A Ruby gem implementing the [Agent2Agent (A2A) protocol](https://a2a-protocol.org/latest/)**
+
+A complete A2A client and server in a single package, built on the async Ruby ecosystem with Falcon as the recommended HTTP server.
+
+- Full A2A v1.0 protocol, backward compatible with v0.3
+- JSON-RPC 2.0 over HTTP(S)
+- Server-Sent Events (SSE) streaming
+- Push notifications via webhooks (RS256 JWT)
+- Task lifecycle: `submitted → working → completed/failed/canceled`
+- AgentCard discovery at `GET /agentCard`
+- Multi-agent hosting via `A2A.multi_server`
+- `async` gem ecosystem — non-blocking I/O
+- Falcon HTTP server; any Rack-compatible server
+- In-memory storage; pluggable via `Storage::Base`
+- Roda routing, Zeitwerk autoloading
+- [:material-book-open: Full documentation](https://madbomber.github.io/simple_a2a)
+
+</div>
+
+</div>
+
+<p align="center" markdown>
+[:material-book-open: Documentation](https://madbomber.github.io/simple_a2a){ .md-button .md-button--primary }
+[:material-github: GitHub](https://github.com/MadBomber/simple_a2a){ .md-button }
+</p>
 
 ---
 
-## What is A2A?
+## MCP vs. A2A
 
-The Agent2Agent (A2A) protocol defines how AI agents running on different platforms, frameworks, and vendors can discover each other, exchange tasks, and stream results — without vendor lock-in.
+Two open protocols address different dimensions of AI agent integration — and they are designed to complement each other.
 
-- Agents expose a JSON-RPC 2.0 over HTTP endpoint
-- Clients send tasks and receive structured results
-- Streaming uses Server-Sent Events (SSE)
-- Push notifications use webhooks (RS256 JWT)
-- AgentCards describe capabilities and skills
+### MCP — Vertical Integration (Agent ↕ Environment)
 
-**Protocol Reference:** [https://a2a-protocol.org/latest/](https://a2a-protocol.org/latest/)
+The [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), introduced by Anthropic in November 2024, defines how an AI agent connects to the tools, data sources, and services in its environment — file systems, databases, APIs, browsers, and code execution engines. MCP uses a client-server model where the agent is the client and each external capability is a server. This is *vertical* integration: the agent reaches downward into its local context and outward into external services through a uniform interface.
+
+### A2A — Horizontal Integration (Agent ↔ Agent)
+
+The [Agent2Agent Protocol](https://a2a-protocol.org/latest/) (A2A), introduced by Google in April 2025 and donated to the Linux Foundation for vendor-neutral governance, defines how autonomous agents running on different platforms, frameworks, and vendors can discover one another, delegate tasks, and stream results in real time. This is *horizontal* integration: peer agents — each with its own specialization, runtime, and vendor — collaborate as equals across organizational and technology boundaries.
+
+### Together
+
+MCP and A2A are complementary. A single agent can use MCP to access its tools and A2A to delegate subtasks to peer agents. `simple_a2a` implements the A2A layer.
+
+### References
+
+- Anthropic: [Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol) (November 2024)
+- Google Developers Blog: [A2A: A new era of agent interoperability](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/) (April 2025)
+- Linux Foundation: [Launch of the Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
+- A2A Project on GitHub: [https://github.com/a2aproject/A2A](https://github.com/a2aproject/A2A)
 
 ---
 
@@ -60,23 +105,6 @@ puts task.status.state   # => "completed"
 ```
 
 ---
-
-## Features
-
-| Feature | Details |
-|---|---|
-| Protocol | A2A v1.0, backward compatible with v0.3 |
-| Transport | JSON-RPC 2.0 over HTTP(S) |
-| Streaming | Server-Sent Events (SSE) |
-| Push notifications | Webhooks with RS256 JWT signing |
-| Task lifecycle | `submitted → working → completed/failed/canceled` |
-| Discovery | AgentCard endpoint at `GET /agentCard` |
-| Async runtime | `async` gem ecosystem — non-blocking I/O |
-| HTTP server | Falcon (recommended), any Rack-compatible server |
-| HTTP client | `async-http` (`Async::HTTP::Internet`) |
-| Storage | In-memory (thread-safe); pluggable via `Storage::Base` |
-| Routing | Roda with JSON-RPC dispatch |
-| Autoloading | Zeitwerk |
 
 ## Runnable demos
 
