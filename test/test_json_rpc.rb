@@ -113,6 +113,39 @@ class TestJsonRpcResponse < Minitest::Test
     parsed = JSON.parse(json)
     assert_equal A2A::JsonRpc::ErrorCode::PARSE_ERROR, parsed["error"]["code"]
   end
+
+  def test_from_error_unsupported_operation
+    json = A2A::JsonRpc::Response.from_error(id: 1, error: A2A::UnsupportedOperationError.new("not supported"))
+    parsed = JSON.parse(json)
+    assert_equal A2A::JsonRpc::ErrorCode::UNSUPPORTED_OPERATION, parsed["error"]["code"]
+    assert_equal "not supported", parsed["error"]["message"]
+  end
+
+  def test_from_error_content_type_not_supported
+    json = A2A::JsonRpc::Response.from_error(id: 1, error: A2A::ContentTypeNotSupportedError.new("bad content type"))
+    parsed = JSON.parse(json)
+    assert_equal A2A::JsonRpc::ErrorCode::CONTENT_TYPE_NOT_SUPPORTED, parsed["error"]["code"]
+  end
+
+  def test_from_error_invalid_agent_response
+    json = A2A::JsonRpc::Response.from_error(id: 1, error: A2A::InvalidAgentResponseError.new("bad agent response"))
+    parsed = JSON.parse(json)
+    assert_equal A2A::JsonRpc::ErrorCode::INVALID_AGENT_RESPONSE, parsed["error"]["code"]
+    assert_equal "bad agent response", parsed["error"]["message"]
+  end
+
+  def test_from_error_extension_required
+    json = A2A::JsonRpc::Response.from_error(id: 1, error: A2A::ExtensionSupportRequiredError.new)
+    parsed = JSON.parse(json)
+    assert_equal A2A::JsonRpc::ErrorCode::EXTENSION_REQUIRED, parsed["error"]["code"]
+  end
+
+  def test_from_error_invalid_request
+    json = A2A::JsonRpc::Response.from_error(id: 1, error: A2A::JsonRpc::InvalidRequestError.new("bad request"))
+    parsed = JSON.parse(json)
+    assert_equal A2A::JsonRpc::ErrorCode::INVALID_REQUEST, parsed["error"]["code"]
+    assert_equal "bad request", parsed["error"]["message"]
+  end
 end
 
 class TestJsonRpcErrorCodes < Minitest::Test

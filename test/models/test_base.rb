@@ -116,4 +116,25 @@ class TestModelsBase < Minitest::Test
     assert_instance_of item_class, c.items[0]
     assert_equal "b", c.items[1].label
   end
+
+  def test_serialize_hash_attribute
+    klass = Class.new(A2A::Models::Base) { attribute :metadata }
+    obj = klass.new(metadata: { "key" => "value", "num" => 42 })
+    h = obj.to_h
+    assert_equal({ "key" => "value", "num" => 42 }, h["metadata"])
+  end
+
+  def test_serialize_time_attribute
+    klass = Class.new(A2A::Models::Base) { attribute :created_at }
+    t = Time.now
+    obj = klass.new(created_at: t)
+    h = obj.to_h
+    assert_equal t.iso8601, h["createdAt"]
+  end
+
+  def test_coerce_returns_val_when_type_mismatch_and_not_hash
+    klass = Class.new(A2A::Models::Base) { attribute :count, type: Integer }
+    obj = klass.from_hash({ "count" => "42" })
+    assert_equal "42", obj.count
+  end
 end

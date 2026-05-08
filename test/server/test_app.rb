@@ -11,6 +11,18 @@ class EchoExecutor < A2A::Server::AgentExecutor
   end
 end
 
+class WorkingExecutor < A2A::Server::AgentExecutor
+  def call(ctx)
+    ctx.task.start!  # leaves task in non-terminal "working" state
+  end
+end
+
+class ErrorExecutor < A2A::Server::AgentExecutor
+  def call(_ctx)
+    raise RuntimeError, "something went wrong"
+  end
+end
+
 class TestServerApp < Minitest::Test
   include Rack::Test::Methods
 
@@ -37,6 +49,21 @@ class TestServerApp < Minitest::Test
       event_router: router
     )
     app_class.freeze.app
+  end
+
+  def build_alt_app(executor)
+    storage = A2A::Storage::Memory.new
+    router  = A2A::Server::EventRouter.new
+    card    = A2A::Models::AgentCard.new(
+      name:         "AltAgent",
+      version:      "1.0",
+      capabilities: A2A::Models::AgentCapabilities.new,
+      skills:       [A2A::Models::AgentSkill.new(name: "alt")],
+      interfaces:   [A2A::Models::AgentInterface.new(type: "json-rpc", url: "http://localhost/a2a", version: "1.0")]
+    )
+    klass = Class.new(A2A::Server::App)
+    klass.configure(agent_card: card, storage: storage, executor: executor, event_router: router)
+    klass.freeze.app
   end
 
   def json_post(method, params = {})
@@ -128,6 +155,46 @@ class TestServerApp < Minitest::Test
     resp = parsed_response
     refute_nil resp["error"]
     assert_equal A2A::JsonRpc::ErrorCode::TASK_NOT_CANCELABLE, resp["error"]["code"]
+  end
+
+  def test_tasks_cancel_unknown_id_returns_not_found
+    json_post("tasks/cancel", { "id" => "no-such-task" })
+    resp = parsed_response
+    refute_nil resp["error"]
+    assert_equal A2A::JsonRpc::ErrorCode::TASK_NOT_FOUND, resp["error"]["code"]
+  end
+
+  def test_tasks_cancel_missing_id_returns_invalid_params
+    json_post("tasks/cancel", {})
+    resp = parsed_response
+    refute_nil resp["error"]
+    assert_equal A2A::JsonRpc::ErrorCode::INVALID_PARAMS, resp["error"]["code"]
+  end
+
+  def test_tasks_cancel_working_task_succeeds
+    session = Rack::Test::Session.new(Rack::MockSession.new(build_alt_app(WorkingExecutor.new)))
+
+    msg  = A2A::Models::Message.user("hello").to_h
+    body = JSON.generate({ "jsonrpc" => "2.0", "id" => 1, "method" => "tasks/send", "params" => { "message" => msg } })
+    send_resp = JSON.parse(session.post("/", body, "CONTENT_TYPE" => "application/json").body)
+    task_id = send_resp.dig("result", "id")
+    assert_equal "working", send_resp.dig("result", "status", "state")
+
+    cancel_body = JSON.generate({ "jsonrpc" => "2.0", "id" => 2, "method" => "tasks/cancel", "params" => { "id" => task_id } })
+    cancel_resp = JSON.parse(session.post("/", cancel_body, "CONTENT_TYPE" => "application/json").body)
+    assert_nil cancel_resp["error"]
+    assert_equal "canceled", cancel_resp.dig("result", "status", "state")
+  end
+
+  # --- executor error handling ---
+
+  def test_executor_standard_error_returns_internal_error
+    session = Rack::Test::Session.new(Rack::MockSession.new(build_alt_app(ErrorExecutor.new)))
+    msg  = A2A::Models::Message.user("hello").to_h
+    body = JSON.generate({ "jsonrpc" => "2.0", "id" => 1, "method" => "tasks/send", "params" => { "message" => msg } })
+    resp = JSON.parse(session.post("/", body, "CONTENT_TYPE" => "application/json").body)
+    refute_nil resp["error"]
+    assert_equal A2A::JsonRpc::ErrorCode::INTERNAL_ERROR, resp["error"]["code"]
   end
 
   # --- unknown method ---

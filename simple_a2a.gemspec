@@ -44,4 +44,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest-reporters", "~> 1.6"
   spec.add_development_dependency "rack-test",          "~> 2.0"
   spec.add_development_dependency "debug_me"
+  spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "simplecov-ai"
 end

@@ -23,21 +23,15 @@ module A2A
       end
 
       def rack_app
-        a2a_card    = @agent_card
-        a2a_storage = @storage
-        a2a_exec    = @executor
-        a2a_router  = @event_router
-        a2a_push    = @push_sender
-
-        App.configure(
-          agent_card:   a2a_card,
-          storage:      a2a_storage,
-          executor:     a2a_exec,
-          event_router: a2a_router,
-          push_sender:  a2a_push
+        klass = Class.new(App)
+        klass.configure(
+          agent_card:   @agent_card,
+          storage:      @storage,
+          executor:     @executor,
+          event_router: @event_router,
+          push_sender:  @push_sender
         )
-
-        App.freeze.app
+        klass.freeze.app
       end
 
       def run
