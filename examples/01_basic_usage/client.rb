@@ -6,8 +6,7 @@
 # Start the server first:
 #   bundle exec ruby examples/01_basic_usage/server.rb
 
-$LOAD_PATH.unshift File.expand_path("../../lib", __dir__)
-require "simple_a2a"
+require_relative "../common_config"
 
 URL = "http://localhost:9292"
 

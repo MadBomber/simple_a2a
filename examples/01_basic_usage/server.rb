@@ -3,8 +3,7 @@
 
 # Usage: bundle exec ruby examples/01_basic_usage/server.rb
 
-$LOAD_PATH.unshift File.expand_path("../../lib", __dir__)
-require "simple_a2a"
+require_relative "../common_config"
 
 # ---------------------------------------------------------------------------
 # Agent executor — contains all of your agent's logic.

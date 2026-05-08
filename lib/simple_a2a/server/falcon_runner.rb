@@ -2,6 +2,7 @@
 
 require "falcon"
 require "async"
+require "async/http/endpoint"
 
 module A2A
   module Server
@@ -16,7 +17,7 @@ module A2A
       end
 
       def run
-        endpoint = Falcon::Endpoint.parse("http://#{@host}:#{@port}")
+        endpoint = Async::HTTP::Endpoint.parse("http://#{@host}:#{@port}")
         server   = Falcon::Server.new(Falcon::Server.middleware(@app), endpoint)
 
         Async do

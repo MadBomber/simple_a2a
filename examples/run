@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Run a demo app end-to-end: starts the server, waits until it accepts
+# connections, runs the client, then shuts the server down.
+#
+# Usage (from the project root):
+#   ruby examples/run 01_basic_usage
+#
+# Usage (from inside examples/):
+#   ./run 01_basic_usage
+
+require "socket"
+
+EXAMPLES_DIR = File.expand_path("..", __FILE__)
+RUBY         = RbConfig.ruby
+SERVER_PORT  = 9292
+STARTUP_TIMEOUT = 15  # seconds
+
+# ---------------------------------------------------------------------------
+# Argument handling
+# ---------------------------------------------------------------------------
+name = ARGV.first&.chomp("/")
+
+unless name
+  puts "Usage: run <demo-name>"
+  puts
+  puts "Available demos:"
+  Dir["#{EXAMPLES_DIR}/*/server.rb"].sort.each do |f|
+    puts "  #{File.basename(File.dirname(f))}"
+  end
+  exit 1
+end
+
+demo_dir  = File.join(EXAMPLES_DIR, name)
+server_rb = File.join(demo_dir, "server.rb")
+client_rb = File.join(demo_dir, "client.rb")
+
+abort "Demo not found: #{demo_dir}"  unless File.directory?(demo_dir)
+abort "Missing server.rb in #{demo_dir}" unless File.exist?(server_rb)
+abort "Missing client.rb in #{demo_dir}" unless File.exist?(client_rb)
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+def banner(text)
+  bar = "─" * (text.length + 4)
+  puts "┌#{bar}┐"
+  puts "│  #{text}  │"
+  puts "└#{bar}┘"
+end
+
+def server_ready?(port)
+  TCPSocket.new("localhost", port).close
+  true
+rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Errno::ETIMEDOUT
+  false
+end
+
+def wait_for_server(port, timeout)
+  deadline = Time.now + timeout
+  sleep 0.05 until server_ready?(port) || Time.now > deadline
+  server_ready?(port)
+end
+
+# ---------------------------------------------------------------------------
+# Start server
+# ---------------------------------------------------------------------------
+banner "Starting #{name} — server"
+server_pid = spawn(RUBY, server_rb, out: $stdout, err: $stderr)
+
+unless wait_for_server(SERVER_PORT, STARTUP_TIMEOUT)
+  Process.kill("TERM", server_pid) rescue nil
+  abort "\nServer did not become ready within #{STARTUP_TIMEOUT}s — aborting."
+end
+
+puts "\n(server ready on port #{SERVER_PORT})\n\n"
+
+# ---------------------------------------------------------------------------
+# Run client
+# ---------------------------------------------------------------------------
+banner "Running #{name} — client"
+client_ok = system(RUBY, client_rb)
+
+# ---------------------------------------------------------------------------
+# Shut down server
+# ---------------------------------------------------------------------------
+puts "\n(stopping server…)"
+begin
+  Process.kill("TERM", server_pid)
+  Process.wait(server_pid)
+rescue Errno::ESRCH, Errno::ECHILD
+  # already gone
+end
+
+exit(client_ok ? 0 : 1)
