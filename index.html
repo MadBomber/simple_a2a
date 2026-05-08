@@ -473,13 +473,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-a2a" class="md-nav__link">
+  <a href="#mcp-vs-a2a" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is A2A?
+        MCP vs. A2A
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="MCP vs. A2A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mcp-vertical-integration-agent-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP — Vertical Integration (Agent ↕ Environment)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a2a-horizontal-integration-agent-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A2A — Horizontal Integration (Agent ↔ Agent)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Together
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -488,17 +538,6 @@
     <span class="md-ellipsis">
       
         At a Glance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
       
     </span>
   </a>
@@ -1277,13 +1316,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-a2a" class="md-nav__link">
+  <a href="#mcp-vs-a2a" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is A2A?
+        MCP vs. A2A
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="MCP vs. A2A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mcp-vertical-integration-agent-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP — Vertical Integration (Agent ↕ Environment)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a2a-horizontal-integration-agent-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A2A — Horizontal Integration (Agent ↔ Agent)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Together
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1292,17 +1381,6 @@
     <span class="md-ellipsis">
       
         At a Glance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Features
       
     </span>
   </a>
@@ -1362,19 +1440,50 @@
 
 
 <h1 id="simple_a2a">simple_a2a<a class="headerlink" href="#simple_a2a" title="Permanent link">&para;</a></h1>
-<p>A Ruby gem implementing the <a href="https://a2a-protocol.org/latest/">Agent2Agent (A2A) protocol</a> — an open standard by Google and the Linux Foundation for interoperability between AI agents.</p>
-<p><code>simple_a2a</code> provides a complete A2A client and server in a single package, built on the async Ruby ecosystem with <a href="https://github.com/socketry/falcon">Falcon</a> as the recommended HTTP server.</p>
-<hr />
-<h2 id="what-is-a2a">What is A2A?<a class="headerlink" href="#what-is-a2a" title="Permanent link">&para;</a></h2>
-<p>The Agent2Agent (A2A) protocol defines how AI agents running on different platforms, frameworks, and vendors can discover each other, exchange tasks, and stream results — without vendor lock-in.</p>
+<div class="grid">
+<div>
+<p><img alt="simple_a2a" src="assets/images/simple_a2a.jpg" width="100%" /></p>
+<p align="center"><em>"Anyone speak robot?"</em></p>
+</div>
+<div>
+<p><strong>A Ruby gem implementing the <a href="https://a2a-protocol.org/latest/">Agent2Agent (A2A) protocol</a></strong></p>
+<p>A complete A2A client and server in a single package, built on the async Ruby ecosystem with Falcon as the recommended HTTP server.</p>
 <ul>
-<li>Agents expose a JSON-RPC 2.0 over HTTP endpoint</li>
-<li>Clients send tasks and receive structured results</li>
-<li>Streaming uses Server-Sent Events (SSE)</li>
-<li>Push notifications use webhooks (RS256 JWT)</li>
-<li>AgentCards describe capabilities and skills</li>
+<li>Full A2A v1.0 protocol, backward compatible with v0.3</li>
+<li>JSON-RPC 2.0 over HTTP(S)</li>
+<li>Server-Sent Events (SSE) streaming</li>
+<li>Push notifications via webhooks (RS256 JWT)</li>
+<li>Task lifecycle: <code>submitted → working → completed/failed/canceled</code></li>
+<li>AgentCard discovery at <code>GET /agentCard</code></li>
+<li>Multi-agent hosting via <code>A2A.multi_server</code></li>
+<li><code>async</code> gem ecosystem — non-blocking I/O</li>
+<li>Falcon HTTP server; any Rack-compatible server</li>
+<li>In-memory storage; pluggable via <code>Storage::Base</code></li>
+<li>Roda routing, Zeitwerk autoloading</li>
+<li><a href="https://madbomber.github.io/simple_a2a"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 12h7v1.5h-7m0-4h7V11h-7m0 3.5h7V16h-7m8-12H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 15h-9V6h9"/></svg></span> Full documentation</a></li>
 </ul>
-<p><strong>Protocol Reference:</strong> <a href="https://a2a-protocol.org/latest/">https://a2a-protocol.org/latest/</a></p>
+</div>
+</div>
+<p align="center">
+<a class="md-button md-button--primary" href="https://madbomber.github.io/simple_a2a"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 12h7v1.5h-7m0-4h7V11h-7m0 3.5h7V16h-7m8-12H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 15h-9V6h9"/></svg></span> Documentation</a>
+<a class="md-button" href="https://github.com/MadBomber/simple_a2a"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span> GitHub</a>
+</p>
+<hr />
+<h2 id="mcp-vs-a2a">MCP vs. A2A<a class="headerlink" href="#mcp-vs-a2a" title="Permanent link">&para;</a></h2>
+<p>Two open protocols address different dimensions of AI agent integration — and they are designed to complement each other.</p>
+<h3 id="mcp-vertical-integration-agent-environment">MCP — Vertical Integration (Agent ↕ Environment)<a class="headerlink" href="#mcp-vertical-integration-agent-environment" title="Permanent link">&para;</a></h3>
+<p>The <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP), introduced by Anthropic in November 2024, defines how an AI agent connects to the tools, data sources, and services in its environment — file systems, databases, APIs, browsers, and code execution engines. MCP uses a client-server model where the agent is the client and each external capability is a server. This is <em>vertical</em> integration: the agent reaches downward into its local context and outward into external services through a uniform interface.</p>
+<h3 id="a2a-horizontal-integration-agent-agent">A2A — Horizontal Integration (Agent ↔ Agent)<a class="headerlink" href="#a2a-horizontal-integration-agent-agent" title="Permanent link">&para;</a></h3>
+<p>The <a href="https://a2a-protocol.org/latest/">Agent2Agent Protocol</a> (A2A), introduced by Google in April 2025 and donated to the Linux Foundation for vendor-neutral governance, defines how autonomous agents running on different platforms, frameworks, and vendors can discover one another, delegate tasks, and stream results in real time. This is <em>horizontal</em> integration: peer agents — each with its own specialization, runtime, and vendor — collaborate as equals across organizational and technology boundaries.</p>
+<h3 id="together">Together<a class="headerlink" href="#together" title="Permanent link">&para;</a></h3>
+<p>MCP and A2A are complementary. A single agent can use MCP to access its tools and A2A to delegate subtasks to peer agents. <code>simple_a2a</code> implements the A2A layer.</p>
+<h3 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Anthropic: <a href="https://www.anthropic.com/news/model-context-protocol">Introducing the Model Context Protocol</a> (November 2024)</li>
+<li>Google Developers Blog: <a href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/">A2A: A new era of agent interoperability</a> (April 2025)</li>
+<li>Linux Foundation: <a href="https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents">Launch of the Agent2Agent Protocol Project</a></li>
+<li>A2A Project on GitHub: <a href="https://github.com/a2aproject/A2A">https://github.com/a2aproject/A2A</a></li>
+</ul>
 <hr />
 <h2 id="at-a-glance">At a Glance<a class="headerlink" href="#at-a-glance" title="Permanent link">&para;</a></h2>
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">require</span><span class="w"> </span><span class="s2">&quot;simple_a2a&quot;</span>
@@ -1411,65 +1520,6 @@
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">puts</span><span class="w"> </span><span class="n">task</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">state</span><span class="w">   </span><span class="c1"># =&gt; &quot;completed&quot;</span>
 </span></code></pre></div>
 <hr />
-<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Protocol</td>
-<td>A2A v1.0, backward compatible with v0.3</td>
-</tr>
-<tr>
-<td>Transport</td>
-<td>JSON-RPC 2.0 over HTTP(S)</td>
-</tr>
-<tr>
-<td>Streaming</td>
-<td>Server-Sent Events (SSE)</td>
-</tr>
-<tr>
-<td>Push notifications</td>
-<td>Webhooks with RS256 JWT signing</td>
-</tr>
-<tr>
-<td>Task lifecycle</td>
-<td><code>submitted → working → completed/failed/canceled</code></td>
-</tr>
-<tr>
-<td>Discovery</td>
-<td>AgentCard endpoint at <code>GET /agentCard</code></td>
-</tr>
-<tr>
-<td>Async runtime</td>
-<td><code>async</code> gem ecosystem — non-blocking I/O</td>
-</tr>
-<tr>
-<td>HTTP server</td>
-<td>Falcon (recommended), any Rack-compatible server</td>
-</tr>
-<tr>
-<td>HTTP client</td>
-<td><code>async-http</code> (<code>Async::HTTP::Internet</code>)</td>
-</tr>
-<tr>
-<td>Storage</td>
-<td>In-memory (thread-safe); pluggable via <code>Storage::Base</code></td>
-</tr>
-<tr>
-<td>Routing</td>
-<td>Roda with JSON-RPC dispatch</td>
-</tr>
-<tr>
-<td>Autoloading</td>
-<td>Zeitwerk</td>
-</tr>
-</tbody>
-</table>
 <h2 id="runnable-demos">Runnable demos<a class="headerlink" href="#runnable-demos" title="Permanent link">&para;</a></h2>
 <p>The repository includes three demo applications under <code>examples/</code>:</p>
 <table>
