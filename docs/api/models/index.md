@@ -68,13 +68,14 @@ A2A::Models::Artifact.new(
 
 | Attribute | Type | Description |
 |---|---|---|
+| `artifact_id` | String | UUID, auto-generated |
 | `name` | String | Artifact identifier |
 | `description` | String | Human-readable description |
 | `parts` | [Part] | Content parts |
-| `index` | Integer | Position in artifact sequence |
-| `append` | Boolean | True if this is a streaming chunk appended to a prior artifact |
-| `last_chunk` | Boolean | True if this is the final streaming chunk |
 | `metadata` | Hash | Arbitrary metadata |
+| `extensions` | Array | Protocol extension data |
+
+Note: `append` and `last_chunk` are **not** Artifact attributes — they are parameters on `ctx.emit_artifact(artifact, append:, last_chunk:)` and on `TaskArtifactUpdateEvent`.
 
 ---
 
@@ -160,16 +161,16 @@ card = A2A::Models::AgentCard.new(
 |---|---|---|---|
 | `streaming` | Boolean | false | Supports `tasks/sendSubscribe` |
 | `push_notifications` | Boolean | false | Supports webhook push |
-| `state_transition_history` | Boolean | false | Preserves task history |
+| `extended_agent_card` | Boolean | false | Exposes extended AgentCard at `GET /agentCard?extended=true` |
 
 ### AgentSkill
 
-| Attribute | Description |
-|---|---|
-| `name` | Skill identifier |
-| `description` | Human-readable description |
-| `tags` | Searchable tags |
-| `examples` | Example prompts |
+| Attribute | Required | Description |
+|---|---|---|
+| `name` | yes | Skill identifier |
+| `description` | | Human-readable description |
+| `input_schema` | | JSON Schema describing accepted input |
+| `output_schema` | | JSON Schema describing produced output |
 
 ### AgentInterface
 
@@ -218,7 +219,8 @@ A2A::Models::TaskArtifactUpdateEvent.new(
 config = A2A::Models::PushNotificationConfig.new(
   webhook_url:          "https://example.com/hook",
   authentication_info:  A2A::Models::AuthenticationInfo.new(
-    scheme: "bearer"
+    scheme: "bearer",
+    value:  ""   # not used for JWT; PushSender generates the token from the private key
   )
 )
 config.valid?   # => true

@@ -80,7 +80,10 @@ A JWT is generated and sent as `Authorization: Bearer <token>`. The token payloa
 ```
 
 ```ruby
-auth = A2A::Models::AuthenticationInfo.new(scheme: "bearer")
+auth = A2A::Models::AuthenticationInfo.new(
+  scheme: "bearer",
+  value:  ""   # not used for JWT; PushSender generates the token from the private key
+)
 ```
 
 ### Static token

@@ -8,7 +8,6 @@ Abstract interface. Subclass this to implement custom storage backends.
 class MyStorage < A2A::Storage::Base
   def save(task)  = …   # persist, return task
   def find(id)    = …   # return task or nil
-  def find!(id)   = …   # return task or raise A2A::TaskNotFoundError
   def delete(id)  = …   # remove task
   def list        = …   # return array of all tasks
 end

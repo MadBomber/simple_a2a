@@ -15,9 +15,10 @@
 ```ruby
 A2A.logger = Logger.new($stdout)   # optional — logs internal warnings
 
-A2A.server(**opts)      # → A2A::Server::Base.new(**opts)
-A2A.client(**opts)      # → A2A::Client::Base.new(**opts)
-A2A.sse_client(**opts)  # → A2A::Client::SSE.new(**opts)
+A2A.server(**opts)       # → A2A::Server::Base.new(**opts)
+A2A.multi_server(**opts) # → A2A::Server::MultiAgent.new(**opts)
+A2A.client(**opts)       # → A2A::Client::Base.new(**opts)
+A2A.sse_client(**opts)   # → A2A::Client::SSE.new(**opts)
 ```
 
 ## Constants

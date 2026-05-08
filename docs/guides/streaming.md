@@ -16,10 +16,7 @@ class StreamingExecutor < A2A::Server::AgentExecutor
     ["Thinking… ", "Processing… ", "Done!"].each_with_index do |chunk, i|
       last = i == 2
       artifact = A2A::Models::Artifact.new(
-        index:      0,
-        parts:      [A2A::Models::Part.text(chunk)],
-        append:     i > 0,   # true for chunks after the first
-        last_chunk: last
+        parts: [A2A::Models::Part.text(chunk)]
       )
       ctx.emit_artifact(artifact, append: i > 0, last_chunk: last)
     end

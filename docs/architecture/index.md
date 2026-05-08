@@ -58,6 +58,6 @@ JsonRpc::Response (task hash) → HTTP response
 
 **One executor instance** — `Server::Base` holds a single executor object. For concurrent requests, executors must be stateless (or use per-call state inside `#call`).
 
-**Pluggable storage** — `Storage::Base` defines the interface (`save`, `find!`, `list`, `delete`). Swap in Redis or PostgreSQL by subclassing and passing your implementation to `Server::Base`.
+**Pluggable storage** — `Storage::Base` defines the interface (`save`, `find`, `list`, `delete`). `find!` (raises on missing) is a convenience method on `Storage::Memory` only — not part of the required interface. Swap in Redis or PostgreSQL by subclassing and passing your implementation to `Server::Base`.
 
 **EventRouter** — wraps `TypedBus::MessageBus` to provide per-task SSE channels. Channels are opened on first publish and closed when the SSE connection ends. `subscribe` transparently unwraps `TypedBus::Delivery` and calls `ack!`.

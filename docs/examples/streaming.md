@@ -37,10 +37,7 @@ def call(ctx)
     text = i.zero? ? word : " #{word}"
 
     artifact = A2A::Models::Artifact.new(
-      index: 0,
-      parts: [A2A::Models::Part.text(text)],
-      append: i > 0,
-      last_chunk: i == WORDS.length - 1
+      parts: [A2A::Models::Part.text(text)]
     )
 
     ctx.emit_artifact(artifact, append: i > 0, last_chunk: i == WORDS.length - 1)
