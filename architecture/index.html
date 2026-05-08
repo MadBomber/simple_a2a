@@ -1342,7 +1342,7 @@
 <p><strong>Zeitwerk autoloading</strong> — all files under <code>lib/simple_a2a/</code> load on demand. The top-level module is <code>A2A</code> (not <code>SimpleA2a</code>), achieved via a custom Zeitwerk inflector.</p>
 <p><strong>Async-first</strong> — the server runs inside Falcon's async reactor. The client uses <code>Async::HTTP::Internet</code> and wraps calls in <code>Async { }.wait</code> when invoked outside a reactor, keeping the public API synchronous.</p>
 <p><strong>One executor instance</strong> — <code>Server::Base</code> holds a single executor object. For concurrent requests, executors must be stateless (or use per-call state inside <code>#call</code>).</p>
-<p><strong>Pluggable storage</strong> — <code>Storage::Base</code> defines the interface (<code>save</code>, <code>find!</code>, <code>list</code>, <code>delete</code>). Swap in Redis or PostgreSQL by subclassing and passing your implementation to <code>Server::Base</code>.</p>
+<p><strong>Pluggable storage</strong> — <code>Storage::Base</code> defines the interface (<code>save</code>, <code>find</code>, <code>list</code>, <code>delete</code>). <code>find!</code> (raises on missing) is a convenience method on <code>Storage::Memory</code> only — not part of the required interface. Swap in Redis or PostgreSQL by subclassing and passing your implementation to <code>Server::Base</code>.</p>
 <p><strong>EventRouter</strong> — wraps <code>TypedBus::MessageBus</code> to provide per-task SSE channels. Channels are opened on first publish and closed when the SSE connection ends. <code>subscribe</code> transparently unwraps <code>TypedBus::Delivery</code> and calls <code>ack!</code>.</p>
 
 
