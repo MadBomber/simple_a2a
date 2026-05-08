@@ -52,6 +52,16 @@ module A2A
             r.halt([200, { "Content-Type" => "application/json" }, [err]])
           end
 
+          # SSE has different headers and body — intercept before normal dispatch
+          if rpc_req.method == "tasks/sendSubscribe"
+            sse_body = handle_send_subscribe(rpc_req)
+            r.halt([200, {
+              "Content-Type"      => "text/event-stream",
+              "Cache-Control"     => "no-cache",
+              "X-Accel-Buffering" => "no"
+            }, [sse_body]])
+          end
+
           result = dispatch(rpc_req)
           response["Content-Type"] = "application/json"
           result
@@ -63,7 +73,6 @@ module A2A
       def dispatch(rpc_req)
         case rpc_req.method
         when "tasks/send"                    then handle_send(rpc_req)
-        when "tasks/sendSubscribe"           then handle_send_subscribe(rpc_req)
         when "tasks/get"                     then handle_get(rpc_req)
         when "tasks/list"                    then handle_list(rpc_req)
         when "tasks/cancel"                  then handle_cancel(rpc_req)
@@ -142,7 +151,40 @@ module A2A
       end
 
       def handle_send_subscribe(rpc_req)
-        raise UnsupportedOperationError, "Streaming requires SSE client"
+        params   = rpc_req.params || {}
+        msg_hash = params["message"]
+        raise JsonRpc::InvalidParamsError, "message is required" unless msg_hash.is_a?(Hash)
+        message  = Models::Message.from_hash(msg_hash)
+
+        task = Models::Task.new(
+          status: Models::TaskStatus.new(state: Models::Types::TaskState::SUBMITTED)
+        )
+        self.class.storage.save(task)
+
+        # Collect events synchronously via a lightweight capture router.
+        # The executor runs to completion first; events are then flushed as SSE.
+        captured = []
+        capture_router = Object.new.tap do |ro|
+          ro.define_singleton_method(:publish)   { |_, ev| captured << ev }
+          ro.define_singleton_method(:open)      { |*| }
+          ro.define_singleton_method(:close)     { |*| }
+          ro.define_singleton_method(:channel?)  { |*| false }
+          ro.define_singleton_method(:subscribe) { |*| }
+        end
+
+        ctx = Server::Context.new(
+          task:         task,
+          message:      message,
+          storage:      self.class.storage,
+          event_router: capture_router
+        )
+
+        self.class.executor.call(ctx)
+        self.class.storage.save(task)
+
+        captured.map { |ev|
+          "data: #{JSON.generate({ 'jsonrpc' => '2.0', 'result' => ev.to_h })}\n\n"
+        }.join
       end
 
       def handle_push_set(rpc_req)

@@ -12,6 +12,10 @@ module A2A
 
       def append?     = !!append
       def last_chunk? = !!last_chunk
+
+      def to_h
+        super.merge("type" => "TaskArtifactUpdateEvent")
+      end
     end
   end
 end

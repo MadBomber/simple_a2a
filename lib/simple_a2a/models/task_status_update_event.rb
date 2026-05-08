@@ -10,6 +10,10 @@ module A2A
       attribute :metadata
 
       def final? = !!final
+
+      def to_h
+        super.merge("type" => "TaskStatusUpdateEvent")
+      end
     end
   end
 end
