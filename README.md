@@ -4,7 +4,23 @@ A Ruby gem implementing the [Agent2Agent (A2A) protocol](https://a2a-protocol.or
 
 `simple_a2a` provides a complete A2A client and server in a single package, built on the async Ruby ecosystem with [Falcon](https://github.com/socketry/falcon) as the recommended HTTP server.
 
-**Documentation:** [https://madbomber.github.io/simple_a2a](https://madbomber.github.io/simple_a2a)
+## Documentation
+
+The full documentation website is available at [https://madbomber.github.io/simple_a2a](https://madbomber.github.io/simple_a2a).
+
+## Lineage
+
+`simple_a2a` is the successor to my earlier Ruby gem, `simple_acp`. That gem implemented the Agent Communication Protocol (ACP), which IBM Research introduced through the BeeAI project for interoperable agent communication. ACP later merged into A2A under the Linux Foundation, with the ACP team contributing its technology and expertise to the A2A effort.
+
+A2A itself was created by Google and then donated to the Linux Foundation for neutral, open governance. The current A2A specification is maintained by the Linux Foundation-hosted [Agent2Agent project](https://github.com/a2aproject/A2A) and published at [a2a-protocol.org](https://a2a-protocol.org/latest/).
+
+> My opinion: the A2A specification is still a little jagged in places. A simple example is that it does not clearly cover whether an A2A server is expected to host only one agent or may host multiple agents. That is a minor example, but it points to the kind of operational detail the specification still needs to tighten up.
+
+References:
+
+- IBM Research: [Agent Communication Protocol](https://research.ibm.com/projects/agent-communication-protocol)
+- BeeAI announcement: [ACP Joins Forces with A2A Under the Linux Foundation](https://github.com/orgs/i-am-bee/discussions/5)
+- Linux Foundation: [Launch of the Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
 
 ## Protocol Reference
 
@@ -19,6 +35,7 @@ A Ruby gem implementing the [Agent2Agent (A2A) protocol](https://a2a-protocol.or
 - Push notifications via webhooks (RS256 JWT)
 - Task lifecycle management (`submitted → working → completed/failed/canceled`)
 - AgentCard discovery endpoint at `GET /agentCard`
+- Multi-agent hosting with path-based routing via `A2A.multi_server`
 - Async-first via the `async` gem ecosystem (Falcon + async-http)
 - Rack-compatible server with Roda routing
 - Zeitwerk autoloading — top-level module is `A2A`
@@ -124,11 +141,46 @@ client.send_subscribe(message: A2A::Models::Message.user("go")) do |event|
 end
 ```
 
+## Multi-agent server
+
+Use `A2A.multi_server` to host multiple A2A agents in one Falcon process, with each agent mounted at its own path:
+
+```ruby
+A2A.multi_server(
+  agents: {
+    "/research"  => { agent_card: research_card,  executor: ResearchExecutor.new },
+    "/evaluator" => { agent_card: evaluator_card, executor: EvaluatorExecutor.new }
+  },
+  port: 9292
+).run
+```
+
+Each mounted agent has its own AgentCard, executor, storage, and event router.
+
+## Examples
+
+The repository includes three runnable demo apps:
+
+| Demo | Shows |
+|---|---|
+| `01_basic_usage` | Agent discovery, `tasks/send`, task listing, task lookup, and error handling |
+| `02_streaming` | `tasks/sendSubscribe` with Server-Sent Events and incremental artifact chunks |
+| `03_llm_research` | Multi-agent routing, parallel streaming LLM calls, evaluator agent, and a Sinatra web client |
+
+Run the basic and streaming demos end-to-end:
+
+```bash
+bundle exec ruby examples/run 01_basic_usage
+bundle exec ruby examples/run 02_streaming
+```
+
+The LLM research demo requires `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, and demo-specific gems. See the full documentation for setup details.
+
 ## Development
 
 ```bash
-bin/setup       # install dependencies
-bundle exec rake test   # run the test suite (222 tests)
+bin/setup             # install dependencies
+bundle exec rake test # run the test suite
 ```
 
 ## Contributing

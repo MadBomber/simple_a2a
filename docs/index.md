@@ -77,3 +77,22 @@ puts task.status.state   # => "completed"
 | Storage | In-memory (thread-safe); pluggable via `Storage::Base` |
 | Routing | Roda with JSON-RPC dispatch |
 | Autoloading | Zeitwerk |
+
+## Runnable demos
+
+The repository includes three demo applications under `examples/`:
+
+| Demo | Shows |
+|---|---|
+| `01_basic_usage` | Agent discovery, `tasks/send`, task listing, task lookup, and error handling |
+| `02_streaming` | `tasks/sendSubscribe` with Server-Sent Events and incremental artifact chunks |
+| `03_llm_research` | Multi-agent routing, parallel streaming LLM calls, evaluator agent, and a Sinatra web client |
+
+Run the basic and streaming demos end-to-end with:
+
+```bash
+bundle exec ruby examples/run 01_basic_usage
+bundle exec ruby examples/run 02_streaming
+```
+
+The LLM research demo requires `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, and its demo-specific gems. See the [examples overview](examples/index.md) for setup details.

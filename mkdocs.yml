@@ -137,4 +137,7 @@ nav:
       - Push Notifications: guides/push-notifications.md
       - Custom Storage: guides/custom-storage.md
   - Examples:
-      - Echo Agent: examples/echo-agent.md
+      - Overview: examples/index.md
+      - Basic Usage: examples/basic-usage.md
+      - Streaming: examples/streaming.md
+      - Multi-Agent LLM Research: examples/llm-research.md

@@ -27,6 +27,38 @@ server.run
 
 ---
 
+## Server::MultiAgent
+
+Hosts multiple A2A agents in one Falcon process by mounting each agent at its own URL path. Use this when you want independent AgentCards, executors, storage, and SSE channels behind one port.
+
+```ruby
+server = A2A.multi_server(
+  agents: {
+    "/anthropic" => { agent_card: anthropic_card, executor: AnthropicExecutor.new },
+    "/openai"    => { agent_card: openai_card,    executor: OpenAIExecutor.new },
+    "/evaluator" => { agent_card: evaluator_card, executor: EvaluatorExecutor.new }
+  },
+  host: "localhost",
+  port: 9292
+)
+
+server.run
+```
+
+Each entry in `agents` accepts the same core configuration used by `Server::Base`:
+
+| Key | Required | Description |
+|---|---|---|
+| `:agent_card` | Yes | AgentCard returned by that path's `/agentCard` endpoint |
+| `:executor` | Yes | Executor that handles requests for that path |
+| `:storage` | No | Storage backend for that path; defaults to `A2A::Storage::Memory.new` |
+| `:event_router` | No | SSE event router for that path; defaults to a new router |
+| `:push_sender` | No | Push notification sender for that path |
+
+For a runnable example, see the [Multi-Agent LLM Research demo](../../examples/llm-research.md).
+
+---
+
 ## Server::AgentExecutor
 
 Base class for your agent logic. Subclass and implement `#call`:

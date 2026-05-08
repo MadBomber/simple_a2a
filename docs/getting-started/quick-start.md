@@ -95,5 +95,6 @@ puts task.id
 
 - [Architecture overview](../architecture/index.md) — understand the components
 - [Streaming responses](../guides/streaming.md) — emit incremental SSE events
+- [Runnable examples](../examples/index.md) - run the demo apps in `examples/`
 - [Push notifications](../guides/push-notifications.md) — webhook delivery
 - [API reference](../api/index.md) — full class and method docs
