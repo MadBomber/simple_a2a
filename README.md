@@ -1,38 +1,87 @@
-# SimpleA2a
+# simple_a2a
 
-TODO: Delete this and the text below, and describe your gem
+A Ruby gem implementing the [Agent2Agent (A2A) protocol](https://a2a-protocol.org/latest/) — an open standard by Google and the Linux Foundation for interoperability between AI agents.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/simple_a2a`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem provides both an A2A client and server in a single package, built on the async Ruby ecosystem with Falcon as the recommended HTTP server.
+
+## Protocol Reference
+
+- **Official A2A Specification:** https://a2a-protocol.org/latest/
+- **A2A Project on GitHub:** https://github.com/a2aproject/A2A
+
+## Features
+
+- Full A2A v1.0 protocol support (backward compatible with v0.3)
+- JSON-RPC 2.0 over HTTP(S) — primary binding
+- Server-Sent Events (SSE) for streaming responses
+- Push notifications via webhooks (RS256 JWT)
+- Task lifecycle management (submitted → working → completed/failed/canceled)
+- AgentCard discovery endpoint
+- Async-first via the `async` gem ecosystem (Falcon + async-http)
+- Rack-compatible server with Roda routing
+- Pipeline composition via `simple_flow`
+- Per-task SSE fan-out via `typed_bus`
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add to your Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+gem "simple_a2a"
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Or install directly:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+gem install simple_a2a
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require "simple_a2a"
+
+# Define an agent executor
+class MyExecutor < SimpleA2a::Server::AgentExecutor
+  def call(context)
+    context.task.start!
+    context.task.complete!(
+      artifacts: [
+        SimpleA2a::Models::Artifact.new(
+          parts: [SimpleA2a::Models::Part.text("Hello from my agent!")]
+        )
+      ]
+    )
+  end
+end
+
+# Build and run the server
+card = SimpleA2a::Models::AgentCard.new(
+  name:         "MyAgent",
+  version:      "1.0",
+  capabilities: SimpleA2a::Models::AgentCapabilities.new(streaming: true),
+  skills:       [SimpleA2a::Models::AgentSkill.new(name: "greet")],
+  interfaces:   [SimpleA2a::Models::AgentInterface.new(
+    type: "json-rpc", url: "http://localhost:9292/a2a", version: "1.0"
+  )]
+)
+
+server = SimpleA2a::Server::Base.new(agent_card: card, executor: MyExecutor.new)
+server.run  # starts Falcon on port 9292
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then run `rake test` to run the tests.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```bash
+bin/setup
+rake test
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/simple_a2a.
+Bug reports and pull requests are welcome on GitHub at https://github.com/madbomber/simple_a2a.
 
 ## License
 

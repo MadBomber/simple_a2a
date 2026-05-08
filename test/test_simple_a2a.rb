@@ -2,12 +2,13 @@
 
 require "test_helper"
 
-class TestSimpleA2a < Minitest::Test
+class TestA2A < Minitest::Test
   def test_that_it_has_a_version_number
-    refute_nil ::SimpleA2a::VERSION
+    refute_nil ::A2A::VERSION
   end
 
-  def test_it_does_something_useful
-    assert false
+  def test_logger_accessor
+    A2A.logger = nil
+    assert_nil A2A.logger
   end
 end

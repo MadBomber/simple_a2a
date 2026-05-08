@@ -4,23 +4,23 @@ require "test_helper"
 
 class TestErrors < Minitest::Test
   def test_base_error_is_standard_error
-    assert_operator SimpleA2a::Error, :<, StandardError
+    assert_operator A2A::Error, :<, StandardError
   end
 
   def test_all_errors_inherit_from_base
     [
-      SimpleA2a::ConfigurationError,
-      SimpleA2a::TaskNotFoundError,
-      SimpleA2a::TaskNotCancelableError,
-      SimpleA2a::PushNotificationNotSupportedError,
-      SimpleA2a::UnsupportedOperationError,
-      SimpleA2a::ContentTypeNotSupportedError,
-      SimpleA2a::InvalidAgentResponseError,
-      SimpleA2a::ExtensionSupportRequiredError,
-      SimpleA2a::VersionNotSupportedError,
-      SimpleA2a::ExtendedAgentCardNotConfiguredError
+      A2A::ConfigurationError,
+      A2A::TaskNotFoundError,
+      A2A::TaskNotCancelableError,
+      A2A::PushNotificationNotSupportedError,
+      A2A::UnsupportedOperationError,
+      A2A::ContentTypeNotSupportedError,
+      A2A::InvalidAgentResponseError,
+      A2A::ExtensionSupportRequiredError,
+      A2A::VersionNotSupportedError,
+      A2A::ExtendedAgentCardNotConfiguredError
     ].each do |klass|
-      assert_operator klass, :<, SimpleA2a::Error, "#{klass} should inherit from SimpleA2a::Error"
+      assert_operator klass, :<, A2A::Error, "#{klass} should inherit from A2A::Error"
     end
   end
 end

@@ -4,7 +4,7 @@ require_relative "lib/simple_a2a/version"
 
 Gem::Specification.new do |spec|
   spec.name = "simple_a2a"
-  spec.version = SimpleA2a::VERSION
+  spec.version = A2A::VERSION
   spec.authors = ["Dewayne VanHoozer"]
   spec.email = ["dvanhoozer@gmail.com"]
 
@@ -28,6 +28,8 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "zeitwerk",    "~> 2.6"
+  spec.add_dependency "logger",      "~> 1.6"
   spec.add_dependency "async",       "~> 2.0"
   spec.add_dependency "async-http",  "~> 0.66"
   spec.add_dependency "falcon",      "~> 0.47"

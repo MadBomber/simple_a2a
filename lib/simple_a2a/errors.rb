@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module SimpleA2a
+module A2A
   class Error < StandardError; end
   class ConfigurationError < Error; end
   class TaskNotFoundError < Error; end

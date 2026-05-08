@@ -3,7 +3,7 @@
 require "test_helper"
 
 class TestModelsBase < Minitest::Test
-  class Widget < SimpleA2a::Models::Base
+  class Widget < A2A::Models::Base
     attribute :widget_id, required: true
     attribute :name
     attribute :count, default: 0
@@ -97,8 +97,8 @@ class TestModelsBase < Minitest::Test
   end
 
   def test_nested_model_coercion
-    inner_class = Class.new(SimpleA2a::Models::Base) { attribute :value }
-    outer_class = Class.new(SimpleA2a::Models::Base) { attribute :inner }
+    inner_class = Class.new(A2A::Models::Base) { attribute :value }
+    outer_class = Class.new(A2A::Models::Base)
     outer_class.attribute :inner, type: inner_class
 
     outer = outer_class.from_hash({ "inner" => { "value" => "hello" } })
@@ -107,8 +107,8 @@ class TestModelsBase < Minitest::Test
   end
 
   def test_array_of_models_coercion
-    item_class = Class.new(SimpleA2a::Models::Base) { attribute :label }
-    container_class = Class.new(SimpleA2a::Models::Base)
+    item_class = Class.new(A2A::Models::Base) { attribute :label }
+    container_class = Class.new(A2A::Models::Base)
     container_class.attribute :items, type: [item_class], default: -> { [] }
 
     c = container_class.from_hash({ "items" => [{ "label" => "a" }, { "label" => "b" }] })

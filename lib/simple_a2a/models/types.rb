@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module SimpleA2a
+module A2A
   module Models
     module Types
       module TaskState
