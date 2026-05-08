@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://madbomber.github.io/robot_lab/superpowers/plans/2026-05-08-simple-a2a-implementation/</loc>
+         <loc>https://madbomber.github.io/simple_a2a/</loc>
          <lastmod>2026-05-08</lastmod>
     </url>
     <url>
-         <loc>https://madbomber.github.io/robot_lab/superpowers/specs/2026-05-08-simple-a2a-design/</loc>
+         <loc>https://madbomber.github.io/simple_a2a/api/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/api/client/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/api/models/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/api/server/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/api/storage/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/architecture/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/architecture/protocol/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/examples/echo-agent/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/getting-started/installation/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/getting-started/quick-start/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/guides/custom-storage/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/guides/push-notifications/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/guides/streaming/</loc>
          <lastmod>2026-05-08</lastmod>
     </url>
 </urlset>
