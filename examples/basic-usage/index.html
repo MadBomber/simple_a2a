@@ -12,13 +12,13 @@
         <meta name="author" content="Dewayne VanHoozer">
       
       
-        <link rel="canonical" href="https://madbomber.github.io/simple_a2a/guides/push-notifications/">
+        <link rel="canonical" href="https://madbomber.github.io/simple_a2a/examples/basic-usage/">
       
       
-        <link rel="prev" href="../streaming/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../custom-storage/">
+        <link rel="next" href="../streaming/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Push Notifications - simple_a2a</title>
+        <title>Basic Usage - simple_a2a</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#push-notifications" class="md-skip">
+        <a href="#basic-usage-demo" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Push Notifications
+              Basic Usage
             
           </span>
         </div>
@@ -313,13 +313,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../streaming/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../guides/streaming/" class="md-tabs__link">
           
   
   
@@ -337,11 +335,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../examples/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -850,10 +850,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -867,20 +865,17 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -898,7 +893,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -916,7 +911,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../streaming/" class="md-nav__link">
+      <a href="../../guides/streaming/" class="md-nav__link">
         
   
   
@@ -941,37 +936,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Push Notifications
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../guides/push-notifications/" class="md-nav__link">
         
   
   
@@ -987,111 +955,6 @@
   
 
       </a>
-      
-        
-
-  
-
-<nav class="md-nav md-nav--secondary" aria-label="On this page">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      On this page
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#server-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server setup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#delivering-events-from-your-executor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delivering events from your executor
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#authentication-schemes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication schemes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Authentication schemes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bearer-rs256-jwt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bearer (RS256 JWT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#static-token" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Static token
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pushsender-without-a-private-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PushSender without a private key
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1104,7 +967,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../custom-storage/" class="md-nav__link">
+      <a href="../../guides/custom-storage/" class="md-nav__link">
         
   
   
@@ -1136,6 +999,8 @@
       
   
   
+    
+  
   
   
     
@@ -1155,18 +1020,21 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../examples/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -1184,13 +1052,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1207,10 +1075,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../examples/basic-usage/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Usage
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1226,6 +1121,83 @@
   
 
       </a>
+      
+        
+
+  
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-study-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to study next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1238,7 +1210,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/streaming/" class="md-nav__link">
+      <a href="../streaming/" class="md-nav__link">
         
   
   
@@ -1266,7 +1238,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/llm-research/" class="md-nav__link">
+      <a href="../llm-research/" class="md-nav__link">
         
   
   
@@ -1323,10 +1295,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Files
       
     </span>
   </a>
@@ -1334,10 +1306,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#server-setup" class="md-nav__link">
+  <a href="#run-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Server setup
+        Run it
       
     </span>
   </a>
@@ -1345,10 +1317,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#delivering-events-from-your-executor" class="md-nav__link">
+  <a href="#server-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Delivering events from your executor
+        Server behavior
       
     </span>
   </a>
@@ -1356,49 +1328,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#authentication-schemes" class="md-nav__link">
+  <a href="#client-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Authentication schemes
+        Client flow
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Authentication schemes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bearer-rs256-jwt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bearer (RS256 JWT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#static-token" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Static token
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pushsender-without-a-private-key" class="md-nav__link">
+  <a href="#what-to-study-next" class="md-nav__link">
     <span class="md-ellipsis">
       
-        PushSender without a private key
+        What to study next
       
     </span>
   </a>
@@ -1448,10 +1392,10 @@
     
     
       <li class="md-path__item">
-        <a href="../streaming/" class="md-path__link">
+        <a href="../" class="md-path__link">
           
   <span class="md-ellipsis">
-    Guides
+    Examples
   </span>
 
         </a>
@@ -1470,7 +1414,7 @@
 
 
   
-    <a href="https://github.com/MadBomber/simple_a2a/edit/main/docs/guides/push-notifications.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/MadBomber/simple_a2a/edit/main/docs/examples/basic-usage.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1479,89 +1423,100 @@
     
       
     
-    <a href="https://github.com/MadBomber/simple_a2a/raw/main/docs/guides/push-notifications.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/MadBomber/simple_a2a/raw/main/docs/examples/basic-usage.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-<h1 id="push-notifications">Push Notifications<a class="headerlink" href="#push-notifications" title="Permanent link">&para;</a></h1>
-<p>Push notifications let an A2A server deliver task events to a client-registered webhook, rather than requiring the client to maintain an open SSE connection.</p>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Client registers a webhook URL via <code>tasks/pushNotification/set</code></li>
-<li>Server delivers <code>TaskStatusUpdateEvent</code> and <code>TaskArtifactUpdateEvent</code> to the URL</li>
-<li>Requests are signed with RS256 JWT (optional but recommended)</li>
-</ol>
-<h2 id="server-setup">Server setup<a class="headerlink" href="#server-setup" title="Permanent link">&para;</a></h2>
-<p>Create a <code>PushSender</code> with an RS256 private key:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">require</span><span class="w"> </span><span class="s2">&quot;openssl&quot;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">private_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">OpenSSL</span><span class="o">::</span><span class="no">PKey</span><span class="o">::</span><span class="no">RSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">2048</span><span class="p">)</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">push_sender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">PushSender</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="ss">private_key</span><span class="p">:</span><span class="w"> </span><span class="n">private_key</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="ss">key_id</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;my-key-2026&quot;</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="ss">issuer</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;my-agent&quot;</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">Base</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="ss">agent_card</span><span class="p">:</span><span class="w">  </span><span class="n">card</span><span class="p">,</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="ss">executor</span><span class="p">:</span><span class="w">    </span><span class="no">MyExecutor</span><span class="o">.</span><span class="n">new</span><span class="p">,</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="ss">push_sender</span><span class="p">:</span><span class="w"> </span><span class="n">push_sender</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">)</span>
+<h1 id="basic-usage-demo">Basic Usage Demo<a class="headerlink" href="#basic-usage-demo" title="Permanent link">&para;</a></h1>
+<p><code>examples/01_basic_usage</code> is the smallest complete client/server demo. It shows the non-streaming JSON-RPC flow for an A2A agent.</p>
+<h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>examples/01_basic_usage/server.rb</code></td>
+<td>Defines <code>BasicExecutor</code>, builds the <code>BasicAgent</code> card, and starts the A2A server</td>
+</tr>
+<tr>
+<td><code>examples/01_basic_usage/client.rb</code></td>
+<td>Discovers the agent, sends tasks, lists tasks, retrieves a task, and handles an expected error</td>
+</tr>
+</tbody>
+</table>
+<h2 id="run-it">Run it<a class="headerlink" href="#run-it" title="Permanent link">&para;</a></h2>
+<p>From the repository root:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>bundle<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ruby<span class="w"> </span>examples/run<span class="w"> </span>01_basic_usage
 </span></code></pre></div>
-<p>Advertise push notification support in your AgentCard:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">capabilities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">AgentCapabilities</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="ss">push_notifications</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">)</span>
+<p>The launcher starts the server on <code>http://localhost:9292</code>, runs the client, and stops the server afterward.</p>
+<p>Manual run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bundle<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ruby<span class="w"> </span>examples/01_basic_usage/server.rb
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bundle<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ruby<span class="w"> </span>examples/01_basic_usage/client.rb
 </span></code></pre></div>
-<h2 id="delivering-events-from-your-executor">Delivering events from your executor<a class="headerlink" href="#delivering-events-from-your-executor" title="Permanent link">&para;</a></h2>
-<p>Call <code>push_sender.deliver</code> with the stored <code>PushNotificationConfig</code> and an event:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyExecutor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">AgentExecutor</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="ss">push_sender</span><span class="p">:)</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="vi">@push_sender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">push_sender</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="n">ctx</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">complete!</span><span class="p">(</span><span class="ss">artifacts</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="err">…</span><span class="w"> </span><span class="o">]</span><span class="p">)</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">TaskStatusUpdateEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="ss">task_id</span><span class="p">:</span><span class="w">    </span><span class="n">ctx</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="ss">context_id</span><span class="p">:</span><span class="w"> </span><span class="n">ctx</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">context_id</span><span class="p">,</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="ss">status</span><span class="p">:</span><span class="w">     </span><span class="n">ctx</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="ss">final</span><span class="p">:</span><span class="w">      </span><span class="kp">true</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="p">)</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="c1"># retrieve PushNotificationConfig registered by the client</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="vi">@push_sender</span><span class="o">.</span><span class="n">deliver</span><span class="p">(</span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="n">event</span><span class="p">)</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="k">end</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">end</span>
+<h2 id="server-behavior">Server behavior<a class="headerlink" href="#server-behavior" title="Permanent link">&para;</a></h2>
+<p><code>BasicExecutor</code> subclasses <code>A2A::Server::AgentExecutor</code> and implements <code>#call(ctx)</code>. It reads the incoming user message with <code>ctx.message.text_content</code>, prepends a random greeting, and completes the task with one text artifact.</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">BasicExecutor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">AgentExecutor</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="no">GREETINGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sx">%w[Hello Greetings Salutations Hey Howdy]</span><span class="o">.</span><span class="n">freeze</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">text_content</span><span class="o">.</span><span class="n">strip</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="n">reply</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">GREETINGS</span><span class="o">.</span><span class="n">sample</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">input</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="n">ctx</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">complete!</span><span class="p">(</span><span class="ss">artifacts</span><span class="p">:</span><span class="w"> </span><span class="o">[</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">Artifact</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nb">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reply&quot;</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="ss">parts</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">Part</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span><span class="o">]</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="p">)</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="o">]</span><span class="p">)</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="k">end</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">end</span>
 </span></code></pre></div>
-<p><code>deliver</code> returns <code>true</code> on HTTP 2xx, <code>false</code> on failure. Failures are logged via <code>A2A.logger</code> but not raised.</p>
-<h2 id="authentication-schemes">Authentication schemes<a class="headerlink" href="#authentication-schemes" title="Permanent link">&para;</a></h2>
-<h3 id="bearer-rs256-jwt">Bearer (RS256 JWT)<a class="headerlink" href="#bearer-rs256-jwt" title="Permanent link">&para;</a></h3>
-<p>A JWT is generated and sent as <code>Authorization: Bearer &lt;token&gt;</code>. The token payload includes:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;iss&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-agent&quot;</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;iat&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1700000000</span><span class="p">,</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1700000300</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&quot;payload_hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;SHA-256 hex of the request body&gt;&quot;</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
+<p>The server advertises one skill named <code>greet</code> and one JSON-RPC interface at <code>http://localhost:9292</code>.</p>
+<h2 id="client-flow">Client flow<a class="headerlink" href="#client-flow" title="Permanent link">&para;</a></h2>
+<p>The client demonstrates the core client API:</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="ss">url</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:9292&quot;</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">card</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="o">.</span><span class="n">agent_card</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="o">.</span><span class="n">send_task</span><span class="p">(</span><span class="ss">message</span><span class="p">:</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">Message</span><span class="o">.</span><span class="n">user</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">))</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">tasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="o">.</span><span class="n">list_tasks</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">retrieved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="o">.</span><span class="n">get_task</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">auth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">AuthenticationInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">scheme</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bearer&quot;</span><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="static-token">Static token<a class="headerlink" href="#static-token" title="Permanent link">&para;</a></h3>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">auth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">AuthenticationInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="ss">scheme</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;token&quot;</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="ss">value</span><span class="p">:</span><span class="w">       </span><span class="s2">&quot;secret-webhook-token&quot;</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="ss">header_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X-Webhook-Token&quot;</span><span class="w">   </span><span class="c1"># optional, defaults to &quot;Authorization&quot;</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
-</span></code></pre></div>
-<p>Sent as <code>X-Webhook-Token: Token secret-webhook-token</code>.</p>
-<h2 id="pushsender-without-a-private-key">PushSender without a private key<a class="headerlink" href="#pushsender-without-a-private-key" title="Permanent link">&para;</a></h2>
-<p>If no <code>private_key</code> is provided, the JWT token is the literal string <code>"no-key"</code>. This is useful for local development without RSA setup:</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">push_sender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">PushSender</span><span class="o">.</span><span class="n">new</span><span class="w">  </span><span class="c1"># no args</span>
-</span></code></pre></div>
+<p>It also calls <code>client.get_task("no-such-task-id")</code> and rescues <code>A2A::Error</code>, which is a compact example of handling protocol or server errors from a client.</p>
+<h2 id="what-to-study-next">What to study next<a class="headerlink" href="#what-to-study-next" title="Permanent link">&para;</a></h2>
+<p>Use this demo when learning the minimal server shape:</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Where to look</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Executor contract</td>
+<td><code>BasicExecutor#call</code> in <code>server.rb</code></td>
+</tr>
+<tr>
+<td>Agent discovery</td>
+<td><code>client.agent_card</code> in <code>client.rb</code></td>
+</tr>
+<tr>
+<td>Task submission</td>
+<td><code>client.send_task</code> in <code>client.rb</code></td>
+</tr>
+<tr>
+<td>Storage-backed task lookup</td>
+<td><code>client.list_tasks</code> and <code>client.get_task</code></td>
+</tr>
+</tbody>
+</table>
 
 
 
@@ -1599,7 +1554,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../streaming/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Streaming Responses">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1609,20 +1564,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Streaming Responses
+                Overview
               </div>
             </div>
           </a>
         
         
           
-          <a href="../custom-storage/" class="md-footer__link md-footer__link--next" aria-label="Next: Custom Storage">
+          <a href="../streaming/" class="md-footer__link md-footer__link--next" aria-label="Next: Streaming">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Custom Storage
+                Streaming
               </div>
             </div>
             <div class="md-footer__button md-icon">

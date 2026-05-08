@@ -33,7 +33,19 @@
          <lastmod>2026-05-08</lastmod>
     </url>
     <url>
-         <loc>https://madbomber.github.io/simple_a2a/examples/echo-agent/</loc>
+         <loc>https://madbomber.github.io/simple_a2a/examples/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/examples/basic-usage/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/examples/llm-research/</loc>
+         <lastmod>2026-05-08</lastmod>
+    </url>
+    <url>
+         <loc>https://madbomber.github.io/simple_a2a/examples/streaming/</loc>
          <lastmod>2026-05-08</lastmod>
     </url>
     <url>
