@@ -1298,21 +1298,22 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>A2A
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Models      — data classes (Task, Message, Part, Artifact, AgentCard, …)
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── Server      — HTTP server, routing, executor base, event fan-out
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── App          (Roda JSON-RPC router)
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── Base         (server bootstrap + Falcon runner)
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── AgentExecutor (base class for your agent logic)
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── Context      (per-request helper passed to executor)
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ├── ResumeContext (Context + resume_message for interrupted tasks)
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ├── EventRouter  (TypedBus SSE fan-out)
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── PushSender   (webhook delivery with JWT signing)
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └── FalconRunner (Falcon adapter)
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>├── Client      — async HTTP client
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   ├── Base    (JSON-RPC client over async/http)
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └── SSE     (streaming subscribe client)
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>├── Storage     — task persistence
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ├── Base    (abstract interface)
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   └── Memory  (in-process, thread-safe)
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└── JsonRpc     — JSON-RPC 2.0 layer (request/response/error)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── App               (Roda JSON-RPC router)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── Base              (server bootstrap + Falcon runner)
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ├── AgentExecutor     (base class for your agent logic)
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ├── Context           (per-request helper passed to executor)
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ├── ResumeContext     (Context + resume_message for interrupted tasks)
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ├── TaskBroadcast     (RactorQueue-based SSE fan-out per running task)
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── BroadcastRegistry (task_id → TaskBroadcast map, shared across requests)
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ├── PushSender        (webhook delivery with JWT signing)
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └── FalconRunner      (Falcon adapter)
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>├── Client      — async HTTP client
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ├── Base    (JSON-RPC client over async/http)
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └── SSE     (streaming subscribe + resubscribe client)
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>├── Storage     — task persistence
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ├── Base    (abstract interface)
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └── Memory  (in-process, thread-safe)
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└── JsonRpc     — JSON-RPC 2.0 layer (request/response/error)
 </span></code></pre></div>
 <h2 id="request-lifecycle">Request lifecycle<a class="headerlink" href="#request-lifecycle" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Client POST /
@@ -1322,28 +1323,29 @@
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    │  JSON-RPC parse + dispatch
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    │
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    ▼
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>handle_send
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>handle_send / handle_send_subscribe
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    │  creates Task (submitted)
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    │  builds Context
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    │  builds Context (with TaskBroadcast as event_router)
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    │
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    ▼
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Executor#call(ctx)          ← your code lives here
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    │  ctx.task.start!
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    │  ctx.emit_artifact(…)  → EventRouter → SSE subscribers
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    │  ctx.emit_artifact(…)  → TaskBroadcast → RactorQueue(s) → SSE subscriber(s)
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    │  ctx.task.complete!(…)
 </span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    │
 </span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    ▼
 </span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Storage#save(task)
 </span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    │
 </span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    ▼
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>JsonRpc::Response (task hash) → HTTP response
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>JsonRpc::Response (task hash) → HTTP response   [tasks/send]
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>SSE stream closes             → HTTP body ends  [tasks/sendSubscribe / tasks/resubscribe]
 </span></code></pre></div>
 <h2 id="key-design-decisions">Key design decisions<a class="headerlink" href="#key-design-decisions" title="Permanent link">&para;</a></h2>
 <p><strong>Zeitwerk autoloading</strong> — all files under <code>lib/simple_a2a/</code> load on demand. The top-level module is <code>A2A</code> (not <code>SimpleA2a</code>), achieved via a custom Zeitwerk inflector.</p>
 <p><strong>Async-first</strong> — the server runs inside Falcon's async reactor. The client uses <code>Async::HTTP::Internet</code> and wraps calls in <code>Async { }.wait</code> when invoked outside a reactor, keeping the public API synchronous.</p>
 <p><strong>One executor instance</strong> — <code>Server::Base</code> holds a single executor object. For concurrent requests, executors must be stateless (or use per-call state inside <code>#call</code>).</p>
 <p><strong>Pluggable storage</strong> — <code>Storage::Base</code> defines the interface (<code>save</code>, <code>find</code>, <code>list</code>, <code>delete</code>). <code>find!</code> (raises on missing) is a convenience method on <code>Storage::Memory</code> only — not part of the required interface. Swap in Redis or PostgreSQL by subclassing and passing your implementation to <code>Server::Base</code>.</p>
-<p><strong>EventRouter</strong> — wraps <code>TypedBus::MessageBus</code> to provide per-task SSE channels. Channels are opened on first publish and closed when the SSE connection ends. <code>subscribe</code> transparently unwraps <code>TypedBus::Delivery</code> and calls <code>ack!</code>.</p>
+<p><strong>TaskBroadcast + BroadcastRegistry</strong> — each streaming task gets one <code>TaskBroadcast</code>, which holds one <code>RactorQueue</code> per SSE subscriber. The broadcast is registered in <code>BroadcastRegistry</code> for the duration of the task so that <code>tasks/resubscribe</code> and <code>tasks/cancel</code> can locate it by task ID. <code>RactorQueue#async_push</code> / <code>#async_pop</code> cooperate with the Falcon fiber scheduler via <code>sleep(0)</code>, keeping the event loop non-blocking. Multiple concurrent subscribers (original <code>sendSubscribe</code> and any number of <code>resubscribe</code> clients) each receive every event independently.</p>
 
 
 

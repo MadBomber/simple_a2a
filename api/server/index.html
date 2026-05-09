@@ -884,10 +884,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#servereventrouter" class="md-nav__link">
+  <a href="#servertaskbroadcast" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Server::EventRouter
+        Server::TaskBroadcast
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serverbroadcastregistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server::BroadcastRegistry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serverpushconfigstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server::PushConfigStore
       
     </span>
   </a>
@@ -1383,10 +1405,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#servereventrouter" class="md-nav__link">
+  <a href="#servertaskbroadcast" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Server::EventRouter
+        Server::TaskBroadcast
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serverbroadcastregistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server::BroadcastRegistry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serverpushconfigstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server::PushConfigStore
       
     </span>
   </a>
@@ -1556,11 +1600,6 @@
 <td>Storage backend for that path; defaults to <code>A2A::Storage::Memory.new</code></td>
 </tr>
 <tr>
-<td><code>:event_router</code></td>
-<td>No</td>
-<td>SSE event router for that path; defaults to a new router</td>
-</tr>
-<tr>
 <td><code>:push_sender</code></td>
 <td>No</td>
 <td>Push notification sender for that path</td>
@@ -1594,7 +1633,7 @@
 <div class="language-ruby highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">ctx</span><span class="o">.</span><span class="n">task</span><span class="w">          </span><span class="c1"># =&gt; A2A::Models::Task</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">ctx</span><span class="o">.</span><span class="n">message</span><span class="w">       </span><span class="c1"># =&gt; A2A::Models::Message (the incoming message)</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">ctx</span><span class="o">.</span><span class="n">storage</span><span class="w">       </span><span class="c1"># =&gt; A2A::Storage::Base</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">ctx</span><span class="o">.</span><span class="n">event_router</span><span class="w">  </span><span class="c1"># =&gt; A2A::Server::EventRouter</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">ctx</span><span class="o">.</span><span class="n">event_router</span><span class="w">  </span><span class="c1"># =&gt; A2A::Server::TaskBroadcast (duck-typed — responds to #publish)</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="w">        </span><span class="c1"># =&gt; Hash (arbitrary per-request config, default {})</span>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">ctx</span><span class="o">.</span><span class="n">save_task</span><span class="w">           </span><span class="c1"># persists task to storage</span>
@@ -1608,25 +1647,46 @@
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">ctx</span><span class="o">.</span><span class="n">resume_message</span><span class="w">   </span><span class="c1"># =&gt; A2A::Models::Message (the new input from the user)</span>
 </span></code></pre></div>
 <hr />
-<h2 id="servereventrouter">Server::EventRouter<a class="headerlink" href="#servereventrouter" title="Permanent link">&para;</a></h2>
-<p>Manages per-task SSE channels using <code>TypedBus</code>. You rarely interact with this directly — use <code>ctx.emit_status</code> and <code>ctx.emit_artifact</code> instead.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">EventRouter</span><span class="o">.</span><span class="n">new</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">router</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span><span class="w">                     </span><span class="c1"># creates a channel</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">router</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w">           </span><span class="c1"># sends an event to subscribers</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">router</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">event</span><span class="o">|</span><span class="w"> </span><span class="err">…</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1"># block receives raw event objects</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">router</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span><span class="w">                    </span><span class="c1"># removes the channel</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">router</span><span class="o">.</span><span class="n">channel?</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span><span class="w">                 </span><span class="c1"># =&gt; true/false</span>
+<h2 id="servertaskbroadcast">Server::TaskBroadcast<a class="headerlink" href="#servertaskbroadcast" title="Permanent link">&para;</a></h2>
+<p>Per-task lock-free SSE fan-out. One <code>TaskBroadcast</code> is created per streaming task and held in the <code>BroadcastRegistry</code> for the duration of that task. You rarely interact with this directly — use <code>ctx.emit_status</code> and <code>ctx.emit_artifact</code> instead.</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">broadcast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">TaskBroadcast</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">queue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">broadcast</span><span class="o">.</span><span class="n">subscribe</span><span class="w">           </span><span class="c1"># returns a RactorQueue for this subscriber</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">broadcast</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w">     </span><span class="c1"># fans event out to all subscriber queues</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">broadcast</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;something failed&quot;</span><span class="p">)</span><span class="w">  </span><span class="c1"># fans a BroadcastError sentinel to all queues</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">broadcast</span><span class="o">.</span><span class="n">close</span><span class="w">                       </span><span class="c1"># fans the DONE sentinel — signals end of stream</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">broadcast</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span><span class="w">          </span><span class="c1"># removes one subscriber</span>
+</span></code></pre></div>
+<p>Each subscriber gets its own <code>RactorQueue</code>. <code>async_push</code> / <code>async_pop</code> cooperate with the Falcon fiber scheduler via <code>sleep(0)</code>.</p>
+<hr />
+<h2 id="serverbroadcastregistry">Server::BroadcastRegistry<a class="headerlink" href="#serverbroadcastregistry" title="Permanent link">&para;</a></h2>
+<p>Thread-safe <code>task_id → TaskBroadcast</code> map, held at the App class level and shared across all concurrent requests.</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">registry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">BroadcastRegistry</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span><span class="w"> </span><span class="n">broadcast</span><span class="p">)</span><span class="w">   </span><span class="c1"># called when a streaming task starts</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">registry</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span><span class="w">                  </span><span class="c1"># =&gt; TaskBroadcast or nil</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">registry</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span><span class="w">            </span><span class="c1"># called when the executor finishes</span>
+</span></code></pre></div>
+<p><code>tasks/resubscribe</code> and <code>tasks/cancel</code> use <code>registry.find</code> to locate the live broadcast for a running task.</p>
+<hr />
+<h2 id="serverpushconfigstore">Server::PushConfigStore<a class="headerlink" href="#serverpushconfigstore" title="Permanent link">&para;</a></h2>
+<p>In-memory store for push notification configurations, keyed by task ID. One instance is created per <code>Server::App</code> and exposed as <code>App.push_config_store</code>. You rarely interact with this directly — the four <code>tasks/pushNotification/*</code> handlers use it automatically.</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">PushConfigStore</span><span class="o">.</span><span class="n">new</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">store</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">)</span><span class="w">   </span><span class="c1"># =&gt; config — stores or replaces the config for this task</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span><span class="w">           </span><span class="c1"># =&gt; PushNotificationConfig or nil</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span><span class="w">        </span><span class="c1"># =&gt; the deleted config or nil</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">store</span><span class="o">.</span><span class="n">list</span><span class="w">                   </span><span class="c1"># =&gt; { task_id =&gt; config, … } snapshot</span>
 </span></code></pre></div>
 <hr />
 <h2 id="serverpushsender">Server::PushSender<a class="headerlink" href="#serverpushsender" title="Permanent link">&para;</a></h2>
 <p>Delivers webhook push notifications.</p>
-<div class="language-ruby highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">sender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">PushSender</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="ss">private_key</span><span class="p">:</span><span class="w"> </span><span class="no">OpenSSL</span><span class="o">::</span><span class="no">PKey</span><span class="o">::</span><span class="no">RSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">2048</span><span class="p">),</span><span class="w">  </span><span class="c1"># for JWT signing</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="ss">key_id</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;my-key-id&quot;</span><span class="p">,</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="ss">issuer</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;my-agent&quot;</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">)</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">sender</span><span class="o">.</span><span class="n">deliver</span><span class="p">(</span><span class="n">push_config</span><span class="p">,</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w">   </span><span class="c1"># =&gt; true (success) or false (failure)</span>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">sender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">PushSender</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="ss">private_key</span><span class="p">:</span><span class="w"> </span><span class="no">OpenSSL</span><span class="o">::</span><span class="no">PKey</span><span class="o">::</span><span class="no">RSA</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="mi">2048</span><span class="p">),</span><span class="w">  </span><span class="c1"># for JWT signing</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="ss">key_id</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;my-key-id&quot;</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="ss">issuer</span><span class="p">:</span><span class="w">      </span><span class="s2">&quot;my-agent&quot;</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">sender</span><span class="o">.</span><span class="n">deliver</span><span class="p">(</span><span class="n">push_config</span><span class="p">,</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w">   </span><span class="c1"># =&gt; true (success) or false (failure)</span>
 </span></code></pre></div>
 <p>Schemes:</p>
 <ul>

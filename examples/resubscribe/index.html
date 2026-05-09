@@ -12,13 +12,9 @@
         <meta name="author" content="Dewayne VanHoozer">
       
       
-        <link rel="canonical" href="https://madbomber.github.io/simple_a2a/architecture/protocol/">
+        <link rel="canonical" href="https://madbomber.github.io/simple_a2a/examples/resubscribe/">
       
       
-        <link rel="prev" href="../">
-      
-      
-        <link rel="next" href="../../api/">
       
       
         
@@ -29,7 +25,7 @@
     
     
       
-        <title>Protocol Details - simple_a2a</title>
+        <title>04 Resubscribe - simple_a2a</title>
       
     
     
@@ -82,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#protocol-details" class="md-skip">
+        <a href="#04-resubscribe" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Protocol Details
+              04 Resubscribe
             
           </span>
         </div>
@@ -269,13 +265,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../architecture/" class="md-tabs__link">
           
   
   
@@ -341,7 +335,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../examples/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -556,8 +550,6 @@
       
   
   
-    
-  
   
   
     
@@ -573,21 +565,18 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../architecture/" class="md-nav__link ">
               
   
   
@@ -605,13 +594,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -628,37 +617,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Protocol Details
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../architecture/protocol/" class="md-nav__link">
         
   
   
@@ -674,122 +636,6 @@
   
 
       </a>
-      
-        
-
-  
-
-<nav class="md-nav md-nav--secondary" aria-label="On this page">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      On this page
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#transport" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Transport
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Transport">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#request-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Request format
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Response format
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Methods
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-codes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error codes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#version-negotiation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Version negotiation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#task-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Task lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#streaming-sse" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Streaming (SSE)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1177,7 +1023,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../examples/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -1221,7 +1067,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/basic-usage/" class="md-nav__link">
+      <a href="../basic-usage/" class="md-nav__link">
         
   
   
@@ -1249,7 +1095,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/streaming/" class="md-nav__link">
+      <a href="../streaming/" class="md-nav__link">
         
   
   
@@ -1277,7 +1123,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/llm-research/" class="md-nav__link">
+      <a href="../llm-research/" class="md-nav__link">
         
   
   
@@ -1334,22 +1180,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#transport" class="md-nav__link">
+  <a href="#the-scenario" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transport
+        The scenario
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Transport">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expected-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How it works">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#request-format" class="md-nav__link">
+  <a href="#server-analysisexecutor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Request format
+        Server — AnalysisExecutor
       
     </span>
   </a>
@@ -1357,10 +1225,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#response-format" class="md-nav__link">
+  <a href="#client-concurrent-subscribers-via-async" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Response format
+        Client — concurrent subscribers via Async
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#under-the-hood-taskbroadcast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Under the hood — TaskBroadcast
       
     </span>
   </a>
@@ -1369,61 +1248,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Methods
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-codes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error codes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#version-negotiation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Version negotiation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#task-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Task lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#streaming-sse" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Streaming (SSE)
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1445,46 +1269,6 @@
   
 
 
-  <nav class="md-path" aria-label="Navigation" >
-    <ol class="md-path__list">
-      
-        
-  
-  
-    <li class="md-path__item">
-      <a href="../.." class="md-path__link">
-        
-  <span class="md-ellipsis">
-    Home
-  </span>
-
-      </a>
-    </li>
-  
-
-      
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="../" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Architecture
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-    </ol>
-  </nav>
-
               
               <article class="md-content__inner md-typeset">
                 
@@ -1492,7 +1276,7 @@
 
 
   
-    <a href="https://github.com/MadBomber/simple_a2a/edit/main/docs/architecture/protocol.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/MadBomber/simple_a2a/edit/main/docs/examples/resubscribe.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1501,209 +1285,119 @@
     
       
     
-    <a href="https://github.com/MadBomber/simple_a2a/raw/main/docs/architecture/protocol.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/MadBomber/simple_a2a/raw/main/docs/examples/resubscribe.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-<h1 id="protocol-details">Protocol Details<a class="headerlink" href="#protocol-details" title="Permanent link">&para;</a></h1>
-<h2 id="transport">Transport<a class="headerlink" href="#transport" title="Permanent link">&para;</a></h2>
-<p>All A2A communication uses <strong>JSON-RPC 2.0 over HTTP POST</strong> to a single endpoint (the server root <code>/</code>). The AgentCard is served at <code>GET /agentCard</code>.</p>
-<h3 id="request-format">Request format<a class="headerlink" href="#request-format" title="Permanent link">&para;</a></h3>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc-123&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tasks/send&quot;</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&quot;params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">&quot;messageId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;msg-1&quot;</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="w"> </span><span class="p">}]</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
+<h1 id="04-resubscribe">04 Resubscribe<a class="headerlink" href="#04-resubscribe" title="Permanent link">&para;</a></h1>
+<p><strong>Run it:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>bundle<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>ruby<span class="w"> </span>examples/run<span class="w"> </span>04_resubscribe
 </span></code></pre></div>
-<h3 id="response-format">Response format<a class="headerlink" href="#response-format" title="Permanent link">&para;</a></h3>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc-123&quot;</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;task-uuid&quot;</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&quot;contextId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ctx-uuid&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-01T00:00:00Z&quot;</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">&quot;artifacts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">]</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
+<p><strong>What it shows:</strong> two independent SSE subscribers watching the same running task — one started with <code>tasks/sendSubscribe</code>, the other attached mid-stream with <code>tasks/resubscribe</code>.</p>
+<hr />
+<h2 id="the-scenario">The scenario<a class="headerlink" href="#the-scenario" title="Permanent link">&para;</a></h2>
+<p>A five-step analysis pipeline runs for ~6 seconds. Subscriber 1 starts the task and begins receiving events immediately. As soon as it has the task ID, Subscriber 2 calls <code>tasks/resubscribe</code>. Subscriber 2's <strong>first event is the current Task snapshot</strong> — the live state of the task at the moment it joined — and it then receives all remaining events just like Subscriber 1.</p>
+<p>This demonstrates three protocol guarantees from the A2A specification:</p>
+<ol>
+<li><strong>Snapshot on join</strong> — <code>tasks/resubscribe</code> always delivers the current Task object as its first SSE event, so late-joining clients never miss the task's current state.</li>
+<li><strong>Independent fan-out</strong> — each subscriber has its own event queue; one slow or disconnecting subscriber does not affect the other.</li>
+<li><strong>Single completion</strong> — the task completes once; both streams close cleanly when the executor emits its final status event.</li>
+</ol>
+<hr />
+<h2 id="expected-output">Expected output<a class="headerlink" href="#expected-output" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>=== Agent Card ===
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Name:        AnalysisAgent
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Description: Multi-step analysis pipeline — demonstrates tasks/resubscribe
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Streaming:   true
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>[subscriber-1] tasks/sendSubscribe (new task)       [subscriber-2] tasks/resubscribe (join mid-stream)
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>────────────────────────────────────────────────────────────────────────────────────
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>[subscriber-1] status: working
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>[subscriber-2] (resubscribing to task c29189f8…)
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>[subscriber-2] (snapshot) state=working, steps so far: 0
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>[subscriber-1] Step 1/5: Collecting data from sources
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>[subscriber-2] Step 1/5: Collecting data from sources
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>[subscriber-1] Step 2/5: Filtering and normalising records
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>[subscriber-2] Step 2/5: Filtering and normalising records
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>...
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>[subscriber-1] status (final): completed
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>[subscriber-2] status (final): completed
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>=== Summary ===
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  Subscriber 1 — events received : 7
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  Subscriber 1 — artifact steps  : 5
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  Subscriber 2 — events received : 7
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  Subscriber 2 — task snapshot   : yes
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  Subscriber 2 — artifact steps  : 5
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  Subscriber 2 — joined at step  : 1 of 5
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  Both streams terminated cleanly: true
 </span></code></pre></div>
-<h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>tasks/send</code></td>
-<td>Send a message, execute synchronously, return completed task</td>
-</tr>
-<tr>
-<td><code>tasks/sendSubscribe</code></td>
-<td>Send a message, stream events via SSE</td>
-</tr>
-<tr>
-<td><code>tasks/resubscribe</code></td>
-<td>Attach an SSE stream to an existing running task</td>
-</tr>
-<tr>
-<td><code>tasks/get</code></td>
-<td>Retrieve a task by ID</td>
-</tr>
-<tr>
-<td><code>tasks/list</code></td>
-<td>List all tasks</td>
-</tr>
-<tr>
-<td><code>tasks/cancel</code></td>
-<td>Cancel a non-terminal task</td>
-</tr>
-<tr>
-<td><code>tasks/pushNotification/set</code></td>
-<td>Register a push notification endpoint</td>
-</tr>
-<tr>
-<td><code>tasks/pushNotification/get</code></td>
-<td>Retrieve push notification config</td>
-</tr>
-<tr>
-<td><code>tasks/pushNotification/delete</code></td>
-<td>Remove push notification config</td>
-</tr>
-<tr>
-<td><code>tasks/pushNotification/list</code></td>
-<td>List push notification configs</td>
-</tr>
-</tbody>
-</table>
-<h2 id="error-codes">Error codes<a class="headerlink" href="#error-codes" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Code</th>
-<th>Constant</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>-32700</td>
-<td><code>PARSE_ERROR</code></td>
-<td>Invalid JSON</td>
-</tr>
-<tr>
-<td>-32600</td>
-<td><code>INVALID_REQUEST</code></td>
-<td>Not a valid JSON-RPC 2.0 object</td>
-</tr>
-<tr>
-<td>-32601</td>
-<td><code>METHOD_NOT_FOUND</code></td>
-<td>Unknown method</td>
-</tr>
-<tr>
-<td>-32602</td>
-<td><code>INVALID_PARAMS</code></td>
-<td>Missing or invalid parameters</td>
-</tr>
-<tr>
-<td>-32603</td>
-<td><code>INTERNAL_ERROR</code></td>
-<td>Unhandled server error</td>
-</tr>
-<tr>
-<td>-32001</td>
-<td><code>TASK_NOT_FOUND</code></td>
-<td>No task with the given ID</td>
-</tr>
-<tr>
-<td>-32002</td>
-<td><code>TASK_NOT_CANCELABLE</code></td>
-<td>Task is already in a terminal state</td>
-</tr>
-<tr>
-<td>-32003</td>
-<td><code>PUSH_NOT_SUPPORTED</code></td>
-<td>Agent doesn't support push notifications</td>
-</tr>
-<tr>
-<td>-32004</td>
-<td><code>UNSUPPORTED_OPERATION</code></td>
-<td>Operation not supported (e.g. SSE on non-streaming agent)</td>
-</tr>
-<tr>
-<td>-32005</td>
-<td><code>CONTENT_TYPE_NOT_SUPPORTED</code></td>
-<td></td>
-</tr>
-<tr>
-<td>-32006</td>
-<td><code>INVALID_AGENT_RESPONSE</code></td>
-<td></td>
-</tr>
-<tr>
-<td>-32007</td>
-<td><code>EXTENSION_REQUIRED</code></td>
-<td></td>
-</tr>
-<tr>
-<td>-32008</td>
-<td><code>VERSION_NOT_SUPPORTED</code></td>
-<td>Unsupported A2A-Version header value</td>
-</tr>
-</tbody>
-</table>
-<h2 id="version-negotiation">Version negotiation<a class="headerlink" href="#version-negotiation" title="Permanent link">&para;</a></h2>
-<p>Clients may include an <code>A2A-Version</code> header. The server accepts <code>1.0</code> and <code>0.3</code>. Any other value returns a <code>VERSION_NOT_SUPPORTED</code> error.</p>
-<div class="language-http highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nf">POST</span> <span class="nn">/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">A2A-Version</span><span class="o">:</span> <span class="l">1.0</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<hr />
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<h3 id="server-analysisexecutor">Server — <code>AnalysisExecutor</code><a class="headerlink" href="#server-analysisexecutor" title="Permanent link">&para;</a></h3>
+<p>A straightforward streaming executor. Emits one <code>TaskArtifactUpdateEvent</code> per step with a 1.2-second pause between steps, giving the client time to resubscribe mid-stream.</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">AnalysisExecutor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Server</span><span class="o">::</span><span class="no">AgentExecutor</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="no">STEPS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="s2">&quot;Collecting data from sources&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="s2">&quot;Filtering and normalising records&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="s2">&quot;Running statistical analysis&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="s2">&quot;Detecting anomalies&quot;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="s2">&quot;Generating final report&quot;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="o">].</span><span class="n">freeze</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="n">ctx</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">start!</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="n">ctx</span><span class="o">.</span><span class="n">emit_status</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="no">STEPS</span><span class="o">.</span><span class="n">each_with_index</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">description</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="o">|</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nb">sleep</span><span class="w"> </span><span class="mi">1</span><span class="o">.</span><span class="mi">2</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="n">ctx</span><span class="o">.</span><span class="n">emit_artifact</span><span class="p">(</span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">Artifact</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="ss">index</span><span class="p">:</span><span class="w">      </span><span class="n">i</span><span class="p">,</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">        </span><span class="ss">parts</span><span class="p">:</span><span class="w">      </span><span class="o">[</span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">Part</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Step </span><span class="si">#{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="no">STEPS</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">description</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">]</span><span class="p">,</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">        </span><span class="ss">last_chunk</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="p">),</span><span class="w"> </span><span class="ss">last_chunk</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="k">end</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="n">ctx</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">complete!</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="n">ctx</span><span class="o">.</span><span class="n">emit_status</span><span class="p">(</span><span class="ss">final</span><span class="p">:</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="k">end</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="k">end</span>
 </span></code></pre></div>
-<h2 id="task-lifecycle">Task lifecycle<a class="headerlink" href="#task-lifecycle" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>submitted
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    │
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    ▼
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>working
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    │
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    ├──→ completed   (terminal)
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    ├──→ failed      (terminal)
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    ├──→ canceled    (terminal)
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    ├──→ rejected    (terminal)
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    ├──→ input_required  (interrupted — waiting for user)
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    └──→ auth_required   (interrupted — waiting for credentials)
+<h3 id="client-concurrent-subscribers-via-async">Client — concurrent subscribers via <code>Async</code><a class="headerlink" href="#client-concurrent-subscribers-via-async" title="Permanent link">&para;</a></h3>
+<p>Both subscribers run inside a single <code>Async</code> reactor. Subscriber 1 runs in a background async task so it doesn't block; once it captures the task ID from the first status event, the main fiber calls <code>resubscribe</code> synchronously.</p>
+<div class="language-ruby highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="no">Async</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">reactor</span><span class="o">|</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="n">captured_task_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="c1"># Subscriber 1 — starts the task</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="n">sub1_task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reactor</span><span class="o">.</span><span class="n">async</span><span class="w"> </span><span class="k">do</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="no">A2A</span><span class="o">.</span><span class="n">sse_client</span><span class="p">(</span><span class="ss">url</span><span class="p">:</span><span class="w"> </span><span class="no">URL</span><span class="p">)</span><span class="o">.</span><span class="n">send_subscribe</span><span class="p">(</span><span class="ss">message</span><span class="p">:</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">event</span><span class="o">|</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="n">captured_task_id</span><span class="w"> </span><span class="o">||=</span><span class="w"> </span><span class="n">event</span><span class="o">.</span><span class="n">task_id</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">event</span><span class="o">.</span><span class="n">respond_to?</span><span class="p">(</span><span class="ss">:task_id</span><span class="p">)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="c1"># … print event …</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="k">end</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="k">end</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="c1"># Wait for the task ID, then attach Subscriber 2</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="kp">loop</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">break</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">captured_task_id</span><span class="p">;</span><span class="w"> </span><span class="n">reactor</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mo">05</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="no">A2A</span><span class="o">.</span><span class="n">sse_client</span><span class="p">(</span><span class="ss">url</span><span class="p">:</span><span class="w"> </span><span class="no">URL</span><span class="p">)</span><span class="o">.</span><span class="n">resubscribe</span><span class="p">(</span><span class="ss">task_id</span><span class="p">:</span><span class="w"> </span><span class="n">captured_task_id</span><span class="p">)</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="o">|</span><span class="n">event</span><span class="o">|</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">event</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="no">Hash</span><span class="w">                                    </span><span class="c1"># Task snapshot — first event only</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">      </span><span class="nb">puts</span><span class="w"> </span><span class="s2">&quot;(snapshot) state=</span><span class="si">#{</span><span class="n">event</span><span class="o">.</span><span class="n">dig</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;state&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">TaskStatusUpdateEvent</span><span class="p">,</span><span class="w"> </span><span class="no">A2A</span><span class="o">::</span><span class="no">Models</span><span class="o">::</span><span class="no">TaskArtifactUpdateEvent</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">      </span><span class="c1"># … print event …</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="k">end</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="k">end</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">  </span><span class="n">sub1_task</span><span class="o">.</span><span class="n">wait</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="k">end</span>
 </span></code></pre></div>
-<p>Terminal tasks cannot be canceled (<code>TASK_NOT_CANCELABLE</code>).<br />
-Interrupted tasks can be resumed by sending a new message.</p>
-<h2 id="streaming-sse">Streaming (SSE)<a class="headerlink" href="#streaming-sse" title="Permanent link">&para;</a></h2>
-<p>Both <code>tasks/sendSubscribe</code> and <code>tasks/resubscribe</code> keep the HTTP connection open and stream <code>text/event-stream</code> events.</p>
-<p><strong><code>tasks/sendSubscribe</code></strong> — creates a new task and immediately begins streaming:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>data: {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:{&quot;type&quot;:&quot;TaskStatusUpdateEvent&quot;,&quot;taskId&quot;:&quot;…&quot;,&quot;status&quot;:{&quot;state&quot;:&quot;working&quot;},&quot;final&quot;:false}}
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>data: {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:{&quot;type&quot;:&quot;TaskArtifactUpdateEvent&quot;,&quot;taskId&quot;:&quot;…&quot;,&quot;artifact&quot;:{…},&quot;final&quot;:false}}
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>data: {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:{&quot;type&quot;:&quot;TaskStatusUpdateEvent&quot;,&quot;taskId&quot;:&quot;…&quot;,&quot;status&quot;:{&quot;state&quot;:&quot;completed&quot;},&quot;final&quot;:true}}
-</span></code></pre></div>
-<p><strong><code>tasks/resubscribe</code></strong> — attaches to an existing running task. The first event is always the current Task snapshot (no <code>type</code> field); subsequent events are the live stream:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>data: {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:{&quot;id&quot;:&quot;…&quot;,&quot;contextId&quot;:&quot;…&quot;,&quot;status&quot;:{&quot;state&quot;:&quot;working&quot;,…},&quot;artifacts&quot;:[]}}
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>data: {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:{&quot;type&quot;:&quot;TaskArtifactUpdateEvent&quot;,&quot;taskId&quot;:&quot;…&quot;,&quot;artifact&quot;:{…},&quot;final&quot;:false}}
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>data: {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:{&quot;type&quot;:&quot;TaskStatusUpdateEvent&quot;,&quot;taskId&quot;:&quot;…&quot;,&quot;status&quot;:{&quot;state&quot;:&quot;completed&quot;},&quot;final&quot;:true}}
-</span></code></pre></div>
-<p><code>tasks/resubscribe</code> returns <code>UnsupportedOperationError</code> if the task is already in a terminal state or is not currently streaming. Multiple clients may subscribe to the same task concurrently.</p>
-<p>Events with <code>"final": true</code> signal that the stream is complete.</p>
+<h3 id="under-the-hood-taskbroadcast">Under the hood — <code>TaskBroadcast</code><a class="headerlink" href="#under-the-hood-taskbroadcast" title="Permanent link">&para;</a></h3>
+<p>When <code>handle_send_subscribe</code> creates the task, it also creates a <code>TaskBroadcast</code> and registers it in the <code>BroadcastRegistry</code> under the task ID. Each SSE subscriber — whether the original or a resubscriber — gets its own <code>RactorQueue</code> from <code>broadcast.subscribe</code>. The executor calls <code>ctx.emit_status</code> and <code>ctx.emit_artifact</code>, which call <code>broadcast.publish</code>, which calls <code>async_push</code> on every subscriber queue. A pump loop in each SSE handler calls <code>async_pop</code> and writes SSE frames to the HTTP body. When the executor finishes, <code>broadcast.close</code> pushes the <code>DONE</code> sentinel to all queues and the pump loops exit cleanly.</p>
 
 
 
@@ -1736,44 +1430,6 @@ Interrupted tasks can be resumed by sending a new message.</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Overview
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../../api/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Overview
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
