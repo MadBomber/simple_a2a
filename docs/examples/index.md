@@ -2,51 +2,48 @@
 
 The `examples/` directory contains runnable demo applications that exercise the gem from a client and server process. Each demo uses `examples/common_config.rb`, which adds the repository `lib/` directory to `$LOAD_PATH` before requiring `simple_a2a`, so the examples run against the local checkout.
 
-<svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="examples-title examples-desc">
+<svg viewBox="0 0 640 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="examples-title examples-desc">
   <title id="examples-title">simple_a2a example applications</title>
-  <desc id="examples-desc">Dark themed transparent-background diagram showing the three example applications and the A2A capabilities they demonstrate.</desc>
+  <desc id="examples-desc">Dark themed transparent-background diagram showing the four example applications in a 2x2 grid and the A2A capabilities each demonstrates.</desc>
   <defs>
-    <linearGradient id="blue" x1="0" x2="1">
-      <stop offset="0" stop-color="#38bdf8"/>
-      <stop offset="1" stop-color="#2563eb"/>
-    </linearGradient>
-    <linearGradient id="green" x1="0" x2="1">
-      <stop offset="0" stop-color="#34d399"/>
-      <stop offset="1" stop-color="#16a34a"/>
-    </linearGradient>
-    <linearGradient id="amber" x1="0" x2="1">
-      <stop offset="0" stop-color="#fbbf24"/>
-      <stop offset="1" stop-color="#f97316"/>
-    </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.35"/>
+    <linearGradient id="eg-blue" x1="0" x2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
+    <linearGradient id="eg-green" x1="0" x2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#16a34a"/></linearGradient>
+    <linearGradient id="eg-amber" x1="0" x2="1"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f97316"/></linearGradient>
+    <linearGradient id="eg-violet" x1="0" x2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+    <filter id="eg-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
     </filter>
   </defs>
-  <g fill="none" stroke="#334155" stroke-width="2">
-    <path d="M295 165H365"/>
-    <path d="M535 165H605"/>
+  <g filter="url(#eg-glow)">
+    <rect x="20"  y="20"  width="280" height="190" rx="14" fill="#0f172a" stroke="url(#eg-blue)"   stroke-width="2"/>
+    <rect x="340" y="20"  width="280" height="190" rx="14" fill="#0f172a" stroke="url(#eg-green)"  stroke-width="2"/>
+    <rect x="20"  y="240" width="280" height="190" rx="14" fill="#0f172a" stroke="url(#eg-amber)"  stroke-width="2"/>
+    <rect x="340" y="240" width="280" height="190" rx="14" fill="#0f172a" stroke="url(#eg-violet)" stroke-width="2"/>
   </g>
-  <g filter="url(#glow)">
-    <rect x="45" y="65" width="250" height="200" rx="14" fill="#0f172a" stroke="url(#blue)" stroke-width="2"/>
-    <rect x="325" y="65" width="250" height="200" rx="14" fill="#0f172a" stroke="url(#green)" stroke-width="2"/>
-    <rect x="605" y="65" width="250" height="200" rx="14" fill="#0f172a" stroke="url(#amber)" stroke-width="2"/>
-  </g>
-  <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
-    <text x="70" y="108" fill="#e2e8f0" font-size="24" font-weight="700">01 Basic Usage</text>
-    <text x="70" y="145" fill="#93c5fd" font-size="16">JSON-RPC request/response</text>
-    <text x="70" y="180" fill="#cbd5e1" font-size="15">agent card discovery</text>
-    <text x="70" y="205" fill="#cbd5e1" font-size="15">send, list, and get tasks</text>
-    <text x="70" y="230" fill="#cbd5e1" font-size="15">client error handling</text>
-    <text x="350" y="108" fill="#e2e8f0" font-size="24" font-weight="700">02 Streaming</text>
-    <text x="350" y="145" fill="#86efac" font-size="16">SSE task subscription</text>
-    <text x="350" y="180" fill="#cbd5e1" font-size="15">working/final statuses</text>
-    <text x="350" y="205" fill="#cbd5e1" font-size="15">append artifact chunks</text>
-    <text x="350" y="230" fill="#cbd5e1" font-size="15">incremental client output</text>
-    <text x="630" y="108" fill="#e2e8f0" font-size="24" font-weight="700">03 LLM Research</text>
-    <text x="630" y="145" fill="#fcd34d" font-size="16">multi-agent orchestration</text>
-    <text x="630" y="180" fill="#cbd5e1" font-size="15">Anthropic + OpenAI agents</text>
-    <text x="630" y="205" fill="#cbd5e1" font-size="15">evaluator agent</text>
-    <text x="630" y="230" fill="#cbd5e1" font-size="15">CLI and web clients</text>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="44"  y="62"  fill="#e2e8f0" font-size="20" font-weight="700">01 Basic Usage</text>
+    <text x="44"  y="92"  fill="#93c5fd" font-size="14">JSON-RPC request/response</text>
+    <text x="44"  y="120" fill="#cbd5e1" font-size="13">agent card discovery</text>
+    <text x="44"  y="143" fill="#cbd5e1" font-size="13">send, list, and get tasks</text>
+    <text x="44"  y="166" fill="#cbd5e1" font-size="13">client error handling</text>
+
+    <text x="364" y="62"  fill="#e2e8f0" font-size="20" font-weight="700">02 Streaming</text>
+    <text x="364" y="92"  fill="#86efac" font-size="14">SSE task subscription</text>
+    <text x="364" y="120" fill="#cbd5e1" font-size="13">working / final statuses</text>
+    <text x="364" y="143" fill="#cbd5e1" font-size="13">append artifact chunks</text>
+    <text x="364" y="166" fill="#cbd5e1" font-size="13">incremental client output</text>
+
+    <text x="44"  y="282" fill="#e2e8f0" font-size="20" font-weight="700">03 LLM Research</text>
+    <text x="44"  y="312" fill="#fcd34d" font-size="14">multi-agent orchestration</text>
+    <text x="44"  y="340" fill="#cbd5e1" font-size="13">Anthropic + OpenAI agents</text>
+    <text x="44"  y="363" fill="#cbd5e1" font-size="13">evaluator agent</text>
+    <text x="44"  y="386" fill="#cbd5e1" font-size="13">CLI and web clients</text>
+
+    <text x="364" y="282" fill="#e2e8f0" font-size="20" font-weight="700">04 Resubscribe</text>
+    <text x="364" y="312" fill="#c4b5fd" font-size="14">tasks/resubscribe</text>
+    <text x="364" y="340" fill="#cbd5e1" font-size="13">concurrent SSE subscribers</text>
+    <text x="364" y="363" fill="#cbd5e1" font-size="13">live task snapshot on join</text>
+    <text x="364" y="386" fill="#cbd5e1" font-size="13">RactorQueue fan-out</text>
   </g>
 </svg>
 
@@ -57,6 +54,7 @@ From the repository root:
 ```bash
 bundle exec ruby examples/run 01_basic_usage
 bundle exec ruby examples/run 02_streaming
+bundle exec ruby examples/run 04_resubscribe
 ```
 
 The launcher starts the demo server on `http://localhost:9292`, waits for it to accept connections, runs the demo client, and then shuts the server down.
@@ -90,3 +88,4 @@ export OPENAI_API_KEY=your_key_here
 | Basic Usage | `bundle exec ruby examples/run 01_basic_usage` | [Basic Usage](basic-usage.md) |
 | Streaming | `bundle exec ruby examples/run 02_streaming` | [Streaming](streaming.md) |
 | Multi-Agent LLM Research | `bundle exec ruby examples/run 03_llm_research` | [Multi-Agent LLM Research](llm-research.md) |
+| Resubscribe | `bundle exec ruby examples/run 04_resubscribe` | [Resubscribe](resubscribe.md) |

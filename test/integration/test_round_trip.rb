@@ -23,7 +23,6 @@ class TestIntegration < Minitest::Test
   def app
     storage  = A2A::Storage::Memory.new
     executor = EchoProcessExecutor.new
-    router   = A2A::Server::EventRouter.new
     card     = M::AgentCard.new(
       name:         "integration-agent",
       version:      "1.0",
@@ -34,10 +33,10 @@ class TestIntegration < Minitest::Test
 
     app_class = Class.new(A2A::Server::App)
     app_class.configure(
-      agent_card:   card,
-      storage:      storage,
-      executor:     executor,
-      event_router: router
+      agent_card:         card,
+      storage:            storage,
+      executor:           executor,
+      broadcast_registry: A2A::Server::BroadcastRegistry.new
     )
     app_class.freeze.app
   end

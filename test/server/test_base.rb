@@ -65,7 +65,6 @@ class TestServerBase < Minitest::Test
     assert_equal minimal_card, server.agent_card
     assert_equal executor, server.executor
     assert_equal storage, server.storage
-    assert_kind_of A2A::Server::EventRouter, server.event_router
     assert_nil server.push_sender
   end
 end

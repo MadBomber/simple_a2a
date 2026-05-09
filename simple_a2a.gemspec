@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["dvanhoozer@gmail.com"]
 
   spec.summary = "A Ruby implementation of the Agent2Agent (A2A) protocol"
-  spec.description = "Client and server for the A2A protocol — async-first, Rack-compatible, built on Falcon and TypedBus."
+  spec.description = "Client and server for the A2A protocol — async-first, Rack-compatible, built on Falcon."
   spec.homepage = "https://github.com/MadBomber/simple_a2a"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rack",        "~> 3.0"
   spec.add_dependency "jwt",         "~> 2.0"
   spec.add_dependency "simple_flow", "~> 0.4"
-  spec.add_dependency "typed_bus",   "~> 0.0"
+  spec.add_dependency "ractor_queue", "~> 0.2"
 
   spec.add_development_dependency "rake",               "~> 13.0"
   spec.add_development_dependency "minitest",           "~> 5.0"
