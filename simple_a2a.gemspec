@@ -36,7 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "roda",        "~> 3.0"
   spec.add_dependency "rack",        "~> 3.0"
   spec.add_dependency "jwt",         "~> 2.0"
-  spec.add_dependency "simple_flow", "~> 0.4"
   spec.add_dependency "ractor_queue", "~> 0.2"
 
   spec.add_development_dependency "rake",               "~> 13.0"
