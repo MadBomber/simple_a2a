@@ -42,6 +42,7 @@ All A2A communication uses **JSON-RPC 2.0 over HTTP POST** to a single endpoint 
 |---|---|
 | `tasks/send` | Send a message, execute synchronously, return completed task |
 | `tasks/sendSubscribe` | Send a message, stream events via SSE |
+| `tasks/resubscribe` | Attach an SSE stream to an existing running task |
 | `tasks/get` | Retrieve a task by ID |
 | `tasks/list` | List all tasks |
 | `tasks/cancel` | Cancel a non-terminal task |
@@ -99,7 +100,9 @@ Interrupted tasks can be resumed by sending a new message.
 
 ## Streaming (SSE)
 
-`tasks/sendSubscribe` keeps the HTTP connection open and streams `text/event-stream` events:
+Both `tasks/sendSubscribe` and `tasks/resubscribe` keep the HTTP connection open and stream `text/event-stream` events.
+
+**`tasks/sendSubscribe`** — creates a new task and immediately begins streaming:
 
 ```
 data: {"jsonrpc":"2.0","result":{"type":"TaskStatusUpdateEvent","taskId":"…","status":{"state":"working"},"final":false}}
@@ -108,5 +111,17 @@ data: {"jsonrpc":"2.0","result":{"type":"TaskArtifactUpdateEvent","taskId":"…"
 
 data: {"jsonrpc":"2.0","result":{"type":"TaskStatusUpdateEvent","taskId":"…","status":{"state":"completed"},"final":true}}
 ```
+
+**`tasks/resubscribe`** — attaches to an existing running task. The first event is always the current Task snapshot (no `type` field); subsequent events are the live stream:
+
+```
+data: {"jsonrpc":"2.0","result":{"id":"…","contextId":"…","status":{"state":"working",…},"artifacts":[]}}
+
+data: {"jsonrpc":"2.0","result":{"type":"TaskArtifactUpdateEvent","taskId":"…","artifact":{…},"final":false}}
+
+data: {"jsonrpc":"2.0","result":{"type":"TaskStatusUpdateEvent","taskId":"…","status":{"state":"completed"},"final":true}}
+```
+
+`tasks/resubscribe` returns `UnsupportedOperationError` if the task is already in a terminal state or is not currently streaming. Multiple clients may subscribe to the same task concurrently.
 
 Events with `"final": true` signal that the stream is complete.

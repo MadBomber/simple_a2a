@@ -42,9 +42,9 @@ class TestServerAppSSE < Minitest::Test
   end
 
   def build_app(executor)
-    storage = A2A::Storage::Memory.new
-    router  = A2A::Server::EventRouter.new
-    card    = A2A::Models::AgentCard.new(
+    storage  = A2A::Storage::Memory.new
+    registry = A2A::Server::BroadcastRegistry.new
+    card     = A2A::Models::AgentCard.new(
       name:         "SSETestAgent",
       version:      "1.0",
       capabilities: A2A::Models::AgentCapabilities.new(streaming: true),
@@ -52,7 +52,7 @@ class TestServerAppSSE < Minitest::Test
       interfaces:   [A2A::Models::AgentInterface.new(type: "json-rpc", url: "http://localhost", version: "1.0")]
     )
     klass = Class.new(A2A::Server::App)
-    klass.configure(agent_card: card, storage: storage, executor: executor, event_router: router)
+    klass.configure(agent_card: card, storage: storage, executor: executor, broadcast_registry: registry)
     klass.freeze.app
   end
 

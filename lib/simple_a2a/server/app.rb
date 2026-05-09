@@ -7,26 +7,27 @@ module A2A
   module Server
     class App < Roda
       SUPPORTED_VERSIONS = %w[1.0 0.3].freeze
+      SSE_METHODS        = %w[tasks/sendSubscribe tasks/resubscribe].freeze
 
       plugin :json
       plugin :json_parser
       plugin :halt
       plugin :all_verbs
 
-      def self.configure(agent_card:, storage:, executor:, event_router:, push_sender: nil)
-        @agent_card   = agent_card
-        @storage      = storage
-        @executor     = executor
-        @event_router = event_router
-        @push_sender  = push_sender
+      def self.configure(agent_card:, storage:, executor:, broadcast_registry:, push_sender: nil, push_config_store: nil)
+        @agent_card         = agent_card
+        @storage            = storage
+        @executor           = executor
+        @broadcast_registry = broadcast_registry
+        @push_sender        = push_sender
+        @push_config_store  = push_config_store || PushConfigStore.new
       end
 
       class << self
-        attr_reader :agent_card, :storage, :executor, :event_router, :push_sender
+        attr_reader :agent_card, :storage, :executor, :broadcast_registry, :push_sender, :push_config_store
       end
 
       route do |r|
-        # A2A version negotiation
         a2a_version = request.env["HTTP_A2A_VERSION"]
         if a2a_version && !SUPPORTED_VERSIONS.include?(a2a_version)
           err = JsonRpc::Response.error(
@@ -53,15 +54,20 @@ module A2A
             r.halt([200, { "Content-Type" => "application/json" }, [err]])
           end
 
-          # SSE has different headers and body — intercept before normal dispatch.
-          # The body is an Enumerator so Falcon streams each event to the client
-          # as the executor yields it, rather than buffering the whole response.
-          if rpc_req.method == "tasks/sendSubscribe"
-            r.halt([200, {
-              "Content-Type"      => "text/event-stream",
-              "Cache-Control"     => "no-cache",
-              "X-Accel-Buffering" => "no"
-            }, handle_send_subscribe(rpc_req)])
+          if SSE_METHODS.include?(rpc_req.method)
+            begin
+              sse_body = rpc_req.method == "tasks/sendSubscribe" ?
+                         handle_send_subscribe(rpc_req) :
+                         handle_resubscribe(rpc_req)
+              r.halt([200, {
+                "Content-Type"      => "text/event-stream",
+                "Cache-Control"     => "no-cache",
+                "X-Accel-Buffering" => "no"
+              }, sse_body])
+            rescue A2A::Error, JsonRpc::InvalidParamsError => e
+              err = JsonRpc::Response.from_error(id: rpc_req.id, error: e)
+              r.halt([200, { "Content-Type" => "application/json" }, [err]])
+            end
           end
 
           result = dispatch(rpc_req)
@@ -110,7 +116,7 @@ module A2A
           task:         task,
           message:      message,
           storage:      self.class.storage,
-          event_router: self.class.event_router
+          event_router: TaskBroadcast.new
         )
         self.class.executor.call(ctx)
         self.class.storage.save(task)
@@ -140,11 +146,14 @@ module A2A
         task = self.class.storage.find!(task_id)
         raise TaskNotCancelableError, "Task #{task_id} is already terminal" if task.terminal?
 
+        # Use the live broadcast if streaming; otherwise events are discarded (no subscribers).
+        broadcast = self.class.broadcast_registry.find(task_id) || TaskBroadcast.new
+
         ctx = Server::Context.new(
           task:         task,
           message:      nil,
           storage:      self.class.storage,
-          event_router: self.class.event_router
+          event_router: broadcast
         )
         self.class.executor.cancel(ctx)
         self.class.storage.save(task)
@@ -156,47 +165,89 @@ module A2A
         params   = rpc_req.params || {}
         msg_hash = params["message"]
         raise JsonRpc::InvalidParamsError, "message is required" unless msg_hash.is_a?(Hash)
-        message  = Models::Message.from_hash(msg_hash)
+        message = Models::Message.from_hash(msg_hash)
 
         task = Models::Task.new(
           status: Models::TaskStatus.new(state: Models::Types::TaskState::SUBMITTED)
         )
         self.class.storage.save(task)
 
+        broadcast = TaskBroadcast.new
+        queue     = broadcast.subscribe
+        self.class.broadcast_registry.register(task.id, broadcast)
+
         storage  = self.class.storage
         executor = self.class.executor
-
-        # Protocol::HTTP::Body::Writable is a Readable subclass.
-        # Protocol::Rack detects this and does NOT wrap it in an Enumerable
-        # fiber — Falcon reads it directly via queue.dequeue in its async task.
-        # The executor runs in a sibling async task and pushes events via
-        # output.write (queue.enqueue), which is fully async-safe.
-        # This avoids the FiberError that Enumerator::Yielder#<< raises when
-        # called from inside an LLM streaming callback (an async task context
-        # where the Enumerator consumer fiber is not currently waiting).
-        output = Protocol::HTTP::Body::Writable.new
+        registry = self.class.broadcast_registry
+        output   = Protocol::HTTP::Body::Writable.new
 
         Async::Task.current.async do
-          streaming_router = Object.new.tap do |ro|
-            ro.define_singleton_method(:publish)   { |_, ev| output.write("data: #{JSON.generate({ 'jsonrpc' => '2.0', 'result' => ev.to_h })}\n\n") }
-            ro.define_singleton_method(:open)      { |*| }
-            ro.define_singleton_method(:close)     { |*| }
-            ro.define_singleton_method(:channel?)  { |*| false }
-            ro.define_singleton_method(:subscribe) { |*| }
-          end
-
           ctx = Server::Context.new(
             task:         task,
             message:      message,
             storage:      storage,
-            event_router: streaming_router
+            event_router: broadcast
           )
-
           executor.call(ctx)
           storage.save(task)
         rescue => e
-          output.write("data: #{JSON.generate({ 'jsonrpc' => '2.0', 'error' => { 'code' => -32000, 'message' => e.message } })}\n\n") rescue nil
+          broadcast.error(e.message)
         ensure
+          broadcast.close
+          registry.unregister(task.id)
+        end
+
+        Async::Task.current.async do
+          loop do
+            event = queue.async_pop
+            break if event.equal?(TaskBroadcast::DONE)
+            if event.is_a?(TaskBroadcast::BroadcastError)
+              output.write(sse_error_frame(event.message)) rescue nil
+              break
+            end
+            output.write(sse_frame(event))
+          end
+        rescue => e
+          output.write(sse_error_frame(e.message)) rescue nil
+        ensure
+          broadcast.unsubscribe(queue)
+          output.close_write rescue nil
+        end
+
+        output
+      end
+
+      def handle_resubscribe(rpc_req)
+        params  = rpc_req.params || {}
+        task_id = params["id"] || params["taskId"]
+        raise JsonRpc::InvalidParamsError, "id is required" unless task_id
+
+        task = self.class.storage.find!(task_id)
+        raise UnsupportedOperationError, "Task #{task_id} is in a terminal state" if task.terminal?
+
+        broadcast = self.class.broadcast_registry.find(task_id)
+        raise UnsupportedOperationError, "Task #{task_id} is no longer streaming" unless broadcast
+
+        queue  = broadcast.subscribe
+        output = Protocol::HTTP::Body::Writable.new
+
+        # Spec requires the current Task snapshot as the first SSE event.
+        output.write(sse_frame(task))
+
+        Async::Task.current.async do
+          loop do
+            event = queue.async_pop
+            break if event.equal?(TaskBroadcast::DONE)
+            if event.is_a?(TaskBroadcast::BroadcastError)
+              output.write(sse_error_frame(event.message)) rescue nil
+              break
+            end
+            output.write(sse_frame(event))
+          end
+        rescue => e
+          output.write(sse_error_frame(e.message)) rescue nil
+        ensure
+          broadcast.unsubscribe(queue)
           output.close_write rescue nil
         end
 
@@ -205,22 +256,57 @@ module A2A
 
       def handle_push_set(rpc_req)
         raise PushNotificationNotSupportedError unless self.class.agent_card&.capabilities&.push_notifications
-        JsonRpc::Response.success(id: rpc_req.id, result: true)
+
+        params  = rpc_req.params || {}
+        task_id = params["id"] or raise JsonRpc::InvalidParamsError, "id is required"
+        cfg_h   = params["pushNotificationConfig"]
+        raise JsonRpc::InvalidParamsError, "pushNotificationConfig is required" unless cfg_h.is_a?(Hash)
+
+        self.class.storage.find!(task_id)
+
+        config = Models::PushNotificationConfig.from_hash(cfg_h.merge("taskId" => task_id))
+        raise JsonRpc::InvalidParamsError, "pushNotificationConfig.webhookUrl is required" unless config.valid?
+
+        self.class.push_config_store.set(task_id, config)
+        result = { "id" => task_id, "pushNotificationConfig" => config.to_h }
+        JsonRpc::Response.success(id: rpc_req.id, result: result)
       end
 
       def handle_push_get(rpc_req)
         raise PushNotificationNotSupportedError unless self.class.agent_card&.capabilities&.push_notifications
-        JsonRpc::Response.success(id: rpc_req.id, result: nil)
+
+        params  = rpc_req.params || {}
+        task_id = params["id"] or raise JsonRpc::InvalidParamsError, "id is required"
+
+        config = self.class.push_config_store.get(task_id)
+        result = config ? { "id" => task_id, "pushNotificationConfig" => config.to_h } : nil
+        JsonRpc::Response.success(id: rpc_req.id, result: result)
       end
 
       def handle_push_delete(rpc_req)
         raise PushNotificationNotSupportedError unless self.class.agent_card&.capabilities&.push_notifications
-        JsonRpc::Response.success(id: rpc_req.id, result: true)
+
+        params  = rpc_req.params || {}
+        task_id = params["id"] or raise JsonRpc::InvalidParamsError, "id is required"
+
+        self.class.push_config_store.delete(task_id)
+        JsonRpc::Response.success(id: rpc_req.id, result: nil)
       end
 
       def handle_push_list(rpc_req)
         raise PushNotificationNotSupportedError unless self.class.agent_card&.capabilities&.push_notifications
-        JsonRpc::Response.success(id: rpc_req.id, result: [])
+
+        configs = self.class.push_config_store.list
+        result  = configs.map { |tid, cfg| { "id" => tid, "pushNotificationConfig" => cfg.to_h } }
+        JsonRpc::Response.success(id: rpc_req.id, result: result)
+      end
+
+      def sse_frame(result)
+        "data: #{JSON.generate({ 'jsonrpc' => '2.0', 'result' => result.to_h })}\n\n"
+      end
+
+      def sse_error_frame(message)
+        "data: #{JSON.generate({ 'jsonrpc' => '2.0', 'error' => { 'code' => -32_000, 'message' => message } })}\n\n"
       end
     end
   end

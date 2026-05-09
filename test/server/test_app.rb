@@ -29,7 +29,6 @@ class TestServerApp < Minitest::Test
   def app
     storage  = A2A::Storage::Memory.new
     executor = EchoExecutor.new
-    router   = A2A::Server::EventRouter.new
     card     = A2A::Models::AgentCard.new(
       name:         "TestAgent",
       version:      "1.0",
@@ -43,17 +42,16 @@ class TestServerApp < Minitest::Test
     # Use a fresh App subclass per test to avoid configure state leakage
     app_class = Class.new(A2A::Server::App)
     app_class.configure(
-      agent_card:   card,
-      storage:      storage,
-      executor:     executor,
-      event_router: router
+      agent_card:         card,
+      storage:            storage,
+      executor:           executor,
+      broadcast_registry: A2A::Server::BroadcastRegistry.new
     )
     app_class.freeze.app
   end
 
   def build_alt_app(executor)
     storage = A2A::Storage::Memory.new
-    router  = A2A::Server::EventRouter.new
     card    = A2A::Models::AgentCard.new(
       name:         "AltAgent",
       version:      "1.0",
@@ -62,7 +60,7 @@ class TestServerApp < Minitest::Test
       interfaces:   [A2A::Models::AgentInterface.new(type: "json-rpc", url: "http://localhost/a2a", version: "1.0")]
     )
     klass = Class.new(A2A::Server::App)
-    klass.configure(agent_card: card, storage: storage, executor: executor, event_router: router)
+    klass.configure(agent_card: card, storage: storage, executor: executor, broadcast_registry: A2A::Server::BroadcastRegistry.new)
     klass.freeze.app
   end
 

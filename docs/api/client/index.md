@@ -111,6 +111,25 @@ Events are instances of:
 
 The stream ends when the server sends a `final: true` event. The block is not called for malformed or comment-only SSE frames.
 
+### `#resubscribe(task_id:, &block)`
+
+Attaches an SSE stream to an already-running task. The first event yielded to the block is the current Task snapshot (a plain `Hash` — no `type` field); subsequent events are the live stream.
+
+```ruby
+client.resubscribe(task_id: "existing-task-id") do |event|
+  case event
+  when Hash
+    puts "reconnected — state: #{event['status']['state']}"
+  when A2A::Models::TaskStatusUpdateEvent
+    puts "Status: #{event.status.state} (final=#{event.final})"
+  when A2A::Models::TaskArtifactUpdateEvent
+    puts "Artifact: #{event.artifact.parts.map(&:text).join}"
+  end
+end
+```
+
+Returns `UnsupportedOperationError` (via `A2A::Error`) if the task is terminal or not currently streaming.
+
 ### Using inside an Async reactor
 
 Both `Base` and `SSE` detect whether they're already inside an `Async` reactor via `Async::Task.current?`. Inside a reactor, they call the underlying `Async::HTTP::Internet` directly. Outside, they wrap the call in `Async { }.wait`.

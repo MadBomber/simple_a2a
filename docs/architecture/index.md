@@ -6,17 +6,18 @@
 A2A
 ├── Models      — data classes (Task, Message, Part, Artifact, AgentCard, …)
 ├── Server      — HTTP server, routing, executor base, event fan-out
-│   ├── App          (Roda JSON-RPC router)
-│   ├── Base         (server bootstrap + Falcon runner)
-│   ├── AgentExecutor (base class for your agent logic)
-│   ├── Context      (per-request helper passed to executor)
-│   ├── ResumeContext (Context + resume_message for interrupted tasks)
-│   ├── EventRouter  (TypedBus SSE fan-out)
-│   ├── PushSender   (webhook delivery with JWT signing)
-│   └── FalconRunner (Falcon adapter)
+│   ├── App               (Roda JSON-RPC router)
+│   ├── Base              (server bootstrap + Falcon runner)
+│   ├── AgentExecutor     (base class for your agent logic)
+│   ├── Context           (per-request helper passed to executor)
+│   ├── ResumeContext     (Context + resume_message for interrupted tasks)
+│   ├── TaskBroadcast     (RactorQueue-based SSE fan-out per running task)
+│   ├── BroadcastRegistry (task_id → TaskBroadcast map, shared across requests)
+│   ├── PushSender        (webhook delivery with JWT signing)
+│   └── FalconRunner      (Falcon adapter)
 ├── Client      — async HTTP client
 │   ├── Base    (JSON-RPC client over async/http)
-│   └── SSE     (streaming subscribe client)
+│   └── SSE     (streaming subscribe + resubscribe client)
 ├── Storage     — task persistence
 │   ├── Base    (abstract interface)
 │   └── Memory  (in-process, thread-safe)
@@ -33,21 +34,22 @@ App (Roda)
     │  JSON-RPC parse + dispatch
     │
     ▼
-handle_send
+handle_send / handle_send_subscribe
     │  creates Task (submitted)
-    │  builds Context
+    │  builds Context (with TaskBroadcast as event_router)
     │
     ▼
 Executor#call(ctx)          ← your code lives here
     │  ctx.task.start!
-    │  ctx.emit_artifact(…)  → EventRouter → SSE subscribers
+    │  ctx.emit_artifact(…)  → TaskBroadcast → RactorQueue(s) → SSE subscriber(s)
     │  ctx.task.complete!(…)
     │
     ▼
 Storage#save(task)
     │
     ▼
-JsonRpc::Response (task hash) → HTTP response
+JsonRpc::Response (task hash) → HTTP response   [tasks/send]
+SSE stream closes             → HTTP body ends  [tasks/sendSubscribe / tasks/resubscribe]
 ```
 
 ## Key design decisions
@@ -60,4 +62,4 @@ JsonRpc::Response (task hash) → HTTP response
 
 **Pluggable storage** — `Storage::Base` defines the interface (`save`, `find`, `list`, `delete`). `find!` (raises on missing) is a convenience method on `Storage::Memory` only — not part of the required interface. Swap in Redis or PostgreSQL by subclassing and passing your implementation to `Server::Base`.
 
-**EventRouter** — wraps `TypedBus::MessageBus` to provide per-task SSE channels. Channels are opened on first publish and closed when the SSE connection ends. `subscribe` transparently unwraps `TypedBus::Delivery` and calls `ack!`.
+**TaskBroadcast + BroadcastRegistry** — each streaming task gets one `TaskBroadcast`, which holds one `RactorQueue` per SSE subscriber. The broadcast is registered in `BroadcastRegistry` for the duration of the task so that `tasks/resubscribe` and `tasks/cancel` can locate it by task ID. `RactorQueue#async_push` / `#async_pop` cooperate with the Falcon fiber scheduler via `sleep(0)`, keeping the event loop non-blocking. Multiple concurrent subscribers (original `sendSubscribe` and any number of `resubscribe` clients) each receive every event independently.

@@ -52,7 +52,6 @@ Each entry in `agents` accepts the same core configuration used by `Server::Base
 | `:agent_card` | Yes | AgentCard returned by that path's `/agentCard` endpoint |
 | `:executor` | Yes | Executor that handles requests for that path |
 | `:storage` | No | Storage backend for that path; defaults to `A2A::Storage::Memory.new` |
-| `:event_router` | No | SSE event router for that path; defaults to a new router |
 | `:push_sender` | No | Push notification sender for that path |
 
 For a runnable example, see the [Multi-Agent LLM Research demo](../../examples/llm-research.md).
@@ -93,7 +92,7 @@ Passed to `AgentExecutor#call`. Provides access to the request and helper method
 ctx.task          # => A2A::Models::Task
 ctx.message       # => A2A::Models::Message (the incoming message)
 ctx.storage       # => A2A::Storage::Base
-ctx.event_router  # => A2A::Server::EventRouter
+ctx.event_router  # => A2A::Server::TaskBroadcast (duck-typed — responds to #publish)
 ctx.config        # => Hash (arbitrary per-request config, default {})
 
 ctx.save_task           # persists task to storage
@@ -114,17 +113,50 @@ ctx.resume_message   # => A2A::Models::Message (the new input from the user)
 
 ---
 
-## Server::EventRouter
+## Server::TaskBroadcast
 
-Manages per-task SSE channels using `TypedBus`. You rarely interact with this directly — use `ctx.emit_status` and `ctx.emit_artifact` instead.
+Per-task lock-free SSE fan-out. One `TaskBroadcast` is created per streaming task and held in the `BroadcastRegistry` for the duration of that task. You rarely interact with this directly — use `ctx.emit_status` and `ctx.emit_artifact` instead.
 
 ```ruby
-router = A2A::Server::EventRouter.new
-router.open(task_id)                     # creates a channel
-router.publish(task_id, event)           # sends an event to subscribers
-router.subscribe(task_id) { |event| … } # block receives raw event objects
-router.close(task_id)                    # removes the channel
-router.channel?(task_id)                 # => true/false
+broadcast = A2A::Server::TaskBroadcast.new
+
+queue = broadcast.subscribe           # returns a RactorQueue for this subscriber
+broadcast.publish(task_id, event)     # fans event out to all subscriber queues
+broadcast.error("something failed")  # fans a BroadcastError sentinel to all queues
+broadcast.close                       # fans the DONE sentinel — signals end of stream
+broadcast.unsubscribe(queue)          # removes one subscriber
+```
+
+Each subscriber gets its own `RactorQueue`. `async_push` / `async_pop` cooperate with the Falcon fiber scheduler via `sleep(0)`.
+
+---
+
+## Server::BroadcastRegistry
+
+Thread-safe `task_id → TaskBroadcast` map, held at the App class level and shared across all concurrent requests.
+
+```ruby
+registry = A2A::Server::BroadcastRegistry.new
+registry.register(task_id, broadcast)   # called when a streaming task starts
+registry.find(task_id)                  # => TaskBroadcast or nil
+registry.unregister(task_id)            # called when the executor finishes
+```
+
+`tasks/resubscribe` and `tasks/cancel` use `registry.find` to locate the live broadcast for a running task.
+
+---
+
+## Server::PushConfigStore
+
+In-memory store for push notification configurations, keyed by task ID. One instance is created per `Server::App` and exposed as `App.push_config_store`. You rarely interact with this directly — the four `tasks/pushNotification/*` handlers use it automatically.
+
+```ruby
+store = A2A::Server::PushConfigStore.new
+
+store.set(task_id, config)   # => config — stores or replaces the config for this task
+store.get(task_id)           # => PushNotificationConfig or nil
+store.delete(task_id)        # => the deleted config or nil
+store.list                   # => { task_id => config, … } snapshot
 ```
 
 ---

@@ -61,6 +61,38 @@ The block is called for each parsed SSE event. Unrecognized event types yield a 
 
 ---
 
+---
+
+## Resubscribing to an existing task
+
+`tasks/resubscribe` lets a client attach a new SSE stream to a task that is already running — useful when a connection drops and the client needs to reconnect without re-sending the original message.
+
+```ruby
+client = A2A.sse_client(url: "http://localhost:9292")
+
+# The first event yielded is the current Task snapshot (a Hash, no `type` field).
+# Subsequent events are the live stream from the executor.
+client.resubscribe(task_id: "existing-task-id") do |event|
+  case event
+  when Hash
+    puts "reconnected — current state: #{event['status']['state']}"
+  when A2A::Models::TaskStatusUpdateEvent
+    puts "[status] #{event.status.state}  final=#{event.final}"
+  when A2A::Models::TaskArtifactUpdateEvent
+    print event.artifact.parts.map(&:text).join
+  end
+end
+```
+
+`resubscribe` raises (server returns `UnsupportedOperationError`) if:
+- The task ID does not exist (`TaskNotFoundError`)
+- The task is already in a terminal state
+- The task was not started with `tasks/sendSubscribe` (not in the broadcast registry)
+
+Multiple clients may resubscribe to the same task concurrently — each gets an independent event queue backed by `RactorQueue`.
+
+---
+
 ## AgentCard declaration
 
 Advertise streaming support in your AgentCard:
@@ -69,4 +101,4 @@ Advertise streaming support in your AgentCard:
 capabilities = A2A::Models::AgentCapabilities.new(streaming: true)
 ```
 
-Clients can check `card.capabilities.streaming` before using `send_subscribe`.
+Clients can check `card.capabilities.streaming` before using `send_subscribe` or `resubscribe`.

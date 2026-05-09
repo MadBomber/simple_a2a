@@ -23,6 +23,21 @@ module A2A
         end
       end
 
+      def resubscribe(task_id:, &block)
+        body = JSON.generate({
+          "jsonrpc" => "2.0",
+          "id"      => SecureRandom.uuid,
+          "method"  => "tasks/resubscribe",
+          "params"  => { "id" => task_id }
+        })
+
+        run_async do |internet|
+          headers  = rpc_headers.merge("accept" => "text/event-stream")
+          response = internet.post(@url, headers: headers, body: body)
+          parse_sse_stream(response, &block)
+        end
+      end
+
       private
 
       def parse_sse_stream(response, &block)

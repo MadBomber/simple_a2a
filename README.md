@@ -12,12 +12,13 @@
       <ul>
         <li>Full A2A v1.0 protocol support (backward compatible with v0.3)</li>
         <li>JSON-RPC 2.0 over HTTP(S) — primary binding</li>
-        <li>Server-Sent Events (SSE) for streaming responses</li>
+        <li>Server-Sent Events (SSE) for streaming responses (<code>tasks/sendSubscribe</code> and <code>tasks/resubscribe</code>)</li>
         <li>Push notifications via webhooks (RS256 JWT)</li>
         <li>Task lifecycle management (<code>submitted → working → completed/failed/canceled</code>)</li>
         <li>AgentCard discovery endpoint at <code>GET /agentCard</code></li>
         <li>Multi-agent hosting with path-based routing via <code>A2A.multi_server</code></li>
         <li>Async-first via the <code>async</code> gem ecosystem (Falcon + async-http)</li>
+        <li>Lock-free SSE fan-out via <code>RactorQueue</code> — multiple concurrent subscribers per task</li>
         <li>Rack-compatible server with Roda routing</li>
         <li>Zeitwerk autoloading — top-level module is <code>A2A</code></li>
         <li><a href="https://madbomber.github.io/simple_a2a">Full documentation website</a></li>
@@ -145,7 +146,7 @@ end
 ```
 
 ```ruby
-# Client — consume SSE events
+# Client — start a streaming task
 client = A2A.sse_client(url: "http://localhost:9292")
 
 client.send_subscribe(message: A2A::Models::Message.user("go")) do |event|
@@ -154,6 +155,19 @@ client.send_subscribe(message: A2A::Models::Message.user("go")) do |event|
     puts "status: #{event.status.state}"
   when A2A::Models::TaskArtifactUpdateEvent
     print event.artifact.parts.map(&:text).join
+  end
+end
+```
+
+```ruby
+# Client — reattach to an already-running task
+# First event is the current Task snapshot; subsequent events are the live stream.
+client.resubscribe(task_id: "existing-task-id") do |event|
+  case event
+  when Hash
+    puts "task snapshot: #{event['status']['state']}"
+  when A2A::Models::TaskStatusUpdateEvent
+    puts "status: #{event.status.state} (final=#{event.final})"
   end
 end
 ```
@@ -172,7 +186,7 @@ A2A.multi_server(
 ).run
 ```
 
-Each mounted agent has its own AgentCard, executor, storage, and event router.
+Each mounted agent has its own AgentCard, executor, storage, and broadcast registry.
 
 ## Examples
 
@@ -183,12 +197,14 @@ The repository includes three runnable demo apps:
 | `01_basic_usage` | Agent discovery, `tasks/send`, task listing, task lookup, and error handling |
 | `02_streaming` | `tasks/sendSubscribe` with Server-Sent Events and incremental artifact chunks |
 | `03_llm_research` | Multi-agent routing, parallel streaming LLM calls, evaluator agent, and a Sinatra web client |
+| `04_resubscribe` | `tasks/resubscribe` — two concurrent SSE subscribers watching the same running task |
 
-Run the basic and streaming demos end-to-end:
+Run any demo end-to-end:
 
 ```bash
 bundle exec ruby examples/run 01_basic_usage
 bundle exec ruby examples/run 02_streaming
+bundle exec ruby examples/run 04_resubscribe
 ```
 
 The LLM research demo requires `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, and demo-specific gems. See the full documentation for setup details.

@@ -40,7 +40,7 @@ module A2A
           agent_card:   cfg[:agent_card],
           storage:      cfg[:storage]      || Storage::Memory.new,
           executor:     cfg[:executor],
-          event_router: cfg[:event_router] || EventRouter.new,
+          broadcast_registry: BroadcastRegistry.new,
           push_sender:  cfg[:push_sender]
         )
         klass.freeze.app
