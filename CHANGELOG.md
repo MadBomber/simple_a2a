@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-09
+
 ### Added
 
 - `tasks/resubscribe` — attach an SSE stream to an existing running task (A2A `SubscribeToTask`
