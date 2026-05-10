@@ -16,6 +16,29 @@
   the task exists and that `webhookUrl` is present before storing.
 - `Server::PushConfigStore` — thread-safe in-memory store for `PushNotificationConfig` objects,
   keyed by task ID. One instance is created per `Server::App` automatically.
+- `examples/04_resubscribe` — two concurrent SSE subscribers demonstrating snapshot-on-join,
+  independent fan-out, and single-completion guarantees.
+- `examples/05_cancellation` — three concurrent `tasks/sendSubscribe` streams; one task is
+  cancelled mid-flight while the others complete normally.
+- `examples/06_push_notifications` — full push notification lifecycle: submit task, register
+  webhook, receive out-of-band HTTP POSTs per step, then get/list/delete the config with no
+  open SSE connection required.
+- `examples/07_agent_chaining` — three agents (`ReverseAgent`, `ShoutAgent`, `PipelineAgent`)
+  on one port via `A2A.multi_server`; the pipeline executor chains to the other two agents over
+  the protocol, invisible to the client.
+- `examples/08_interrupted_states` — `input_required` and `auth_required` interrupted states
+  demonstrated with `OrderAgent` (pauses for user input) and `VaultAgent` (blocks on wrong
+  token); each follow-up turn is a separate `tasks/send` threaded by `message.context_id`.
+- `examples/09_multipart` — all four `Part` types in one artifact: text summary, JSON metadata,
+  base64-encoded binary CSV, and URL reference; client uses `text?/json?/raw?/url?` predicates.
+- `examples/10_auth_headers` — `headers:` option on `A2A.client` with a Bearer token middleware;
+  agent card discovery is public while RPC calls require `Authorization: Bearer <token>`.
+- `examples/11_sqlite_storage` — persistent task storage across server restarts via
+  `SqliteStorage < A2A::Storage::Base` (WAL mode, mutex, JSON blobs); Brewfile + Gemfile pattern
+  keeps SQLite dependency out of the main gem.
+- MkDocs documentation pages for examples 05–11 (`cancellation`, `push-notifications`,
+  `agent-chaining`, `interrupted-states`, `multipart`, `auth-headers`, `sqlite-storage`).
+- `compare_agent2agent.md` — side-by-side comparison of A2A protocol operations at the repo root.
 
 ### Changed
 
@@ -23,6 +46,15 @@
   observe the `canceled` state update in real time.
 - `Server::Base` and `Server::MultiAgent` no longer create an `EventRouter`; they inject a fresh
   `BroadcastRegistry` into each App subclass instead.
+- `Server::Base` now accepts a `push_config_store:` keyword so the executor and the App share
+  the same store instance (fixes injection gap).
+- README Examples section expanded to an 11-row table; `docs/examples/index.md` rebuilt with
+  a 3×4 SVG grid covering all demos.
+
+### Fixed
+
+- Removed phantom `simple_flow` runtime dependency from gemspec.
+- Added missing `digest` require (fixes JWT signing in push notification delivery).
 
 ### Removed
 
