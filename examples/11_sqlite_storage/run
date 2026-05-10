@@ -1,0 +1,154 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Custom run script for demo 11 — SQLite3 persistent storage.
+#
+# This demo proves *persistence across server restarts*, so it needs a
+# two-phase lifecycle:
+#
+#   Phase 1 — start server, populate tasks via client, stop server
+#   Phase 2 — restart server with the same DB file, verify tasks, stop server
+#
+# Dependencies are declared in the Gemfile and Brewfile alongside this script
+# rather than in-lined into the application code:
+#
+#   Brewfile — sqlite3 binary (macOS only; other platforms must provide it)
+#   Gemfile  — sqlite3 gem + simple_a2a gem (via gemspec path)
+#
+# The top-level `examples/run` launcher detects this file and delegates here.
+
+require "socket"
+
+DEMO_DIR        = File.expand_path(__dir__)
+RUBY            = RbConfig.ruby
+SERVER_PORT     = 9292
+STARTUP_TIMEOUT = 20
+DB_FILE         = "/tmp/a2a_sqlite_demo_tasks.db"
+IDS_FILE        = "/tmp/a2a_sqlite_demo_ids.json"
+
+BREWFILE  = File.join(DEMO_DIR, "Brewfile")
+GEMFILE   = File.join(DEMO_DIR, "Gemfile")
+SERVER_RB = File.join(DEMO_DIR, "server.rb")
+CLIENT_RB = File.join(DEMO_DIR, "client.rb")
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+def banner(text)
+  bar = "─" * (text.length + 4)
+  puts "┌#{bar}┐"
+  puts "│  #{text}  │"
+  puts "└#{bar}┘"
+end
+
+def server_ready?(port)
+  TCPSocket.new("localhost", port).close
+  true
+rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Errno::ETIMEDOUT
+  false
+end
+
+def wait_for_server(port, timeout)
+  deadline = Time.now + timeout
+  sleep 0.1 until server_ready?(port) || Time.now > deadline
+  server_ready?(port)
+end
+
+def bundle_env(gemfile)
+  { "BUNDLE_GEMFILE" => gemfile }
+end
+
+def start_server(gemfile, db_path)
+  pid = spawn(bundle_env(gemfile), RUBY, SERVER_RB, db_path, out: $stdout, err: $stderr)
+  unless wait_for_server(SERVER_PORT, STARTUP_TIMEOUT)
+    Process.kill("TERM", pid) rescue nil
+    abort "\nServer did not become ready within #{STARTUP_TIMEOUT}s — aborting."
+  end
+  puts "\n(server ready on port #{SERVER_PORT})\n\n"
+  pid
+end
+
+def stop_server(pid)
+  puts "\n(stopping server…)"
+  Process.kill("TERM", pid)
+  Process.wait(pid)
+rescue Errno::ESRCH, Errno::ECHILD
+  # already gone
+end
+
+# ---------------------------------------------------------------------------
+# Step 1 — ensure sqlite3 binary is available
+# ---------------------------------------------------------------------------
+banner "11_sqlite_storage — checking dependencies"
+
+unless system("which sqlite3 > /dev/null 2>&1")
+  if RUBY_PLATFORM =~ /darwin/
+    puts "sqlite3 binary not found — installing via Homebrew (Brewfile)..."
+    if system("brew bundle check --file=#{BREWFILE} > /dev/null 2>&1")
+      puts "(already satisfied)"
+    else
+      system("brew bundle install --file=#{BREWFILE}") or
+        abort "brew bundle install failed. Check #{BREWFILE} and try again."
+    end
+  else
+    abort <<~MSG
+
+      sqlite3 binary not found.
+      Install sqlite3 for your platform (e.g. apt install sqlite3) and retry.
+    MSG
+  end
+else
+  puts "(sqlite3 binary found)"
+end
+
+# ---------------------------------------------------------------------------
+# Step 2 — bundle install using the local Gemfile (adds sqlite3 to the bundle)
+# ---------------------------------------------------------------------------
+puts "(running bundle install for demo 11 Gemfile...)"
+system(bundle_env(GEMFILE), "bundle", "install", "--quiet") or
+  abort "bundle install failed. Check #{GEMFILE} and try again."
+puts "(bundle ready)"
+puts
+
+# ---------------------------------------------------------------------------
+# Clean up any leftover files from a previous run
+# ---------------------------------------------------------------------------
+File.delete(DB_FILE)  if File.exist?(DB_FILE)
+File.delete(IDS_FILE) if File.exist?(IDS_FILE)
+
+# ---------------------------------------------------------------------------
+# Phase 1 — populate
+# ---------------------------------------------------------------------------
+banner "11_sqlite_storage — Phase 1: populate"
+server_pid = start_server(GEMFILE, DB_FILE)
+
+banner "11_sqlite_storage — client (populate)"
+populate_ok = system(bundle_env(GEMFILE), RUBY, CLIENT_RB, "populate", IDS_FILE)
+
+stop_server(server_pid)
+
+abort "\nPopulate phase failed — aborting." unless populate_ok
+
+puts
+puts "(database preserved at #{DB_FILE})"
+puts "(sleeping 1s before restart...)"
+sleep 1
+
+# ---------------------------------------------------------------------------
+# Phase 2 — verify (same DB file, brand-new server process)
+# ---------------------------------------------------------------------------
+banner "11_sqlite_storage — Phase 2: verify (server restarted)"
+server_pid = start_server(GEMFILE, DB_FILE)
+
+banner "11_sqlite_storage — client (verify)"
+verify_ok = system(bundle_env(GEMFILE), RUBY, CLIENT_RB, "verify", IDS_FILE)
+
+stop_server(server_pid)
+
+# ---------------------------------------------------------------------------
+# Clean up temp files
+# ---------------------------------------------------------------------------
+File.delete(DB_FILE)  if File.exist?(DB_FILE)
+File.delete(IDS_FILE) if File.exist?(IDS_FILE)
+
+exit(verify_ok ? 0 : 1)

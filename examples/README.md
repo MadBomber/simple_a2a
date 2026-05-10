@@ -1,6 +1,6 @@
 # simple_a2a — Example Applications
 
-Ten runnable demo applications that exercise the gem end-to-end. Each demo
+Eleven runnable demo applications that exercise the gem end-to-end. Each demo
 pairs a `server.rb` and a `client.rb` so both sides of the A2A protocol are
 visible in one place.
 
@@ -88,6 +88,7 @@ No additional gems or environment variables are required.
 | 08 | Interrupted States | `input_required`, `auth_required`, multi-turn conversations |
 | 09 | Multipart | `Part.text`, `Part.json`, `Part.binary`, `Part.from_url` |
 | 10 | Auth Headers | `A2A.client(headers:)`, Bearer token middleware |
+| 11 | SQLite Storage | `Storage::Base` injection, SQLite3 WAL persistence, cross-restart task survival |
 
 ---
 
@@ -337,3 +338,47 @@ headers and one with — demonstrating that the `headers:` option on
 | Rack middleware composition | `BearerAuthMiddleware.new(rack_app, token:)` wraps the standard app without library changes |
 | JSON-RPC error on rejection | Middleware returns a well-formed JSON-RPC error body so the client can rescue `A2A::Error` |
 | Header flexibility | The same `headers:` option supports API keys, custom schemes, and any HTTP header |
+
+---
+
+### 11 — SQLite3 Persistent Storage
+
+```bash
+bundle exec ruby examples/run 11_sqlite_storage
+```
+
+The server injects a `SqliteStorage` instance — a custom `Storage::Base` subclass
+backed by SQLite3 — instead of the default in-memory store. The demo runs in two
+phases managed by a custom `run` script to prove that tasks survive a full server
+restart:
+
+1. **Populate** — server starts, three tasks are sent and stored in `tasks.db`, task
+   IDs are written to a temp JSON file, server stops.
+2. **Verify** — server restarts with the same `tasks.db`, client reads the saved IDs
+   and fetches each task from the freshly booted server, confirming all three tasks
+   are present with state `completed`.
+
+The `SqliteStorage` implementation uses WAL mode and a mutex for safe concurrent
+access. Dependencies are declared in conventional tool files kept alongside the
+demo rather than inlined into application code:
+
+- **`Brewfile`** — declares the `sqlite3` binary dependency; the `run` script
+  calls `brew bundle install` on macOS if the binary is not already present.
+  Other platforms must provide the binary themselves.
+- **`Gemfile`** — uses `gemspec path: "../../"` to pull in all of the project's
+  own dependencies, then adds `sqlite3`. The `run` script calls `bundle install`
+  with this Gemfile before spawning either server phase, so `server.rb` can
+  simply `require "sqlite3"` with no inline gem-install logic.
+
+**Protocol specification coverage:**
+
+| Spec section | What the demo shows |
+|---|---|
+| `Storage::Base` injection | `A2A.server(storage:)` accepts any `Storage::Base` subclass — no library changes needed |
+| `SqliteStorage#save` | Tasks serialized to JSON and upserted into SQLite via `ON CONFLICT DO UPDATE` |
+| `SqliteStorage#find!` | Task fetched by ID across process boundaries; raises `TaskNotFoundError` if missing |
+| `SqliteStorage#list` | All stored tasks returned in insertion order |
+| `SqliteStorage#size` | Task count reported at server startup to confirm DB contents |
+| Cross-restart persistence | Tasks created in server process 1 are visible to server process 2 via the shared DB file |
+| WAL mode concurrency | `PRAGMA journal_mode=WAL` allows concurrent readers during writes |
+| `Brewfile` / `Gemfile` pattern | Per-demo dependency files keep application code free of setup logic |

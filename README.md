@@ -190,24 +190,31 @@ Each mounted agent has its own AgentCard, executor, storage, and broadcast regis
 
 ## Examples
 
-The repository includes three runnable demo apps:
+The repository includes eleven runnable demo applications:
 
-| Demo | Shows |
-|---|---|
-| `01_basic_usage` | Agent discovery, `tasks/send`, task listing, task lookup, and error handling |
-| `02_streaming` | `tasks/sendSubscribe` with Server-Sent Events and incremental artifact chunks |
-| `03_llm_research` | Multi-agent routing, parallel streaming LLM calls, evaluator agent, and a Sinatra web client |
-| `04_resubscribe` | `tasks/resubscribe` — two concurrent SSE subscribers watching the same running task |
+| # | Demo | What it shows |
+|---|---|---|
+| 01 | Basic Usage | Agent discovery, `tasks/send`, task listing, task lookup, error handling |
+| 02 | Streaming | `tasks/sendSubscribe`, SSE, incremental artifact chunks |
+| 03 | LLM Research | `multi_server`, parallel SSE agents, evaluator pattern, web client |
+| 04 | Resubscribe | `tasks/resubscribe`, concurrent SSE subscribers, mid-stream join |
+| 05 | Cancellation | `tasks/cancel`, concurrent tasks, cooperative cancellation |
+| 06 | Push Notifications | `tasks/pushNotification` CRUD, webhook delivery, out-of-band events |
+| 07 | Agent Chaining | `A2A.client` inside an executor, agent-to-agent delegation |
+| 08 | Interrupted States | `input_required`, `auth_required`, multi-turn `context_id` threading |
+| 09 | Multipart Artifacts | `Part.text`, `Part.json`, `Part.binary`, `Part.from_url`, predicates |
+| 10 | Auth Headers | `A2A.client(headers:)`, Bearer token, Rack middleware composition |
+| 11 | SQLite Storage | `Storage::Base` injection, WAL persistence, cross-restart survival |
 
-Run any demo end-to-end:
+Run any demo end-to-end from the repository root:
 
 ```bash
 bundle exec ruby examples/run 01_basic_usage
-bundle exec ruby examples/run 02_streaming
-bundle exec ruby examples/run 04_resubscribe
+bundle exec ruby examples/run 05_cancellation
+bundle exec ruby examples/run 11_sqlite_storage
 ```
 
-The LLM research demo requires `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, and demo-specific gems. See the full documentation for setup details.
+Demo 03 requires `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, and additional gems (`ruby_llm`, `async-http-faraday`, `sinatra`). Demo 11 has its own `Gemfile` and `Brewfile`; its `run` script handles setup automatically. See [`examples/README.md`](examples/README.md) for full details on each demo.
 
 ## Development
 
