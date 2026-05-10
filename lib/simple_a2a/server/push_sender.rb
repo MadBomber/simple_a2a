@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "digest"
 require "jwt"
 require "net/http"
 require "uri"

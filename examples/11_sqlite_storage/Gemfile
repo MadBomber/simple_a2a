@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Pull in the gem's own runtime + development dependencies.
+gemspec path: "../../"
+
+gem "irb"
+gem "sqlite3"

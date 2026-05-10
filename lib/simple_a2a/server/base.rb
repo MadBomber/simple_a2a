@@ -8,17 +8,19 @@ module A2A
       def initialize(
         agent_card:,
         executor:,
-        storage:      Storage::Memory.new,
-        push_sender:  nil,
-        host:         "localhost",
-        port:         9292
+        storage:           Storage::Memory.new,
+        push_sender:       nil,
+        push_config_store: nil,
+        host:              "localhost",
+        port:              9292
       )
-        @agent_card  = agent_card
-        @executor    = executor
-        @storage     = storage
-        @push_sender = push_sender
-        @host        = host
-        @port        = port
+        @agent_card        = agent_card
+        @executor          = executor
+        @storage           = storage
+        @push_sender       = push_sender
+        @push_config_store = push_config_store
+        @host              = host
+        @port              = port
       end
 
       def rack_app
@@ -28,7 +30,8 @@ module A2A
           storage:            @storage,
           executor:           @executor,
           broadcast_registry: BroadcastRegistry.new,
-          push_sender:        @push_sender
+          push_sender:        @push_sender,
+          push_config_store:  @push_config_store
         )
         klass.freeze.app
       end
