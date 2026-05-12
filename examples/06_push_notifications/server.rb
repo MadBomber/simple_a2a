@@ -109,11 +109,13 @@ card = A2A::Models::AgentCard.new(
   ]
 )
 
-puts "Starting PushAgent on http://localhost:9292"
-puts "  push_notifications: true"
-puts "  #{PushExecutor::STEPS} steps × #{PushExecutor::STEP_SEC}s = ~#{(PushExecutor::STEPS * PushExecutor::STEP_SEC).to_i}s per task"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting PushAgent on http://localhost:9292
+    push_notifications: true
+    #{PushExecutor::STEPS} steps × #{PushExecutor::STEP_SEC}s = ~#{(PushExecutor::STEPS * PushExecutor::STEP_SEC).to_i}s per task
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.server(
   agent_card:        card,

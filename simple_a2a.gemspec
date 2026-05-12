@@ -45,4 +45,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "debug_me"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "simplecov-ai"
+  spec.add_development_dependency "rubocop"
+  spec.add_development_dependency "flog"
 end

@@ -15,13 +15,15 @@ client = A2A.client(url: URL)
 # ---------------------------------------------------------------------------
 # 1. Discover the agent
 # ---------------------------------------------------------------------------
-puts "=== Agent Card ==="
 card = client.agent_card
-puts "  Name:        #{card.name}"
-puts "  Version:     #{card.version}"
-puts "  Description: #{card.description}"
-puts "  Skills:      #{card.skills.map(&:name).join(', ')}"
-puts
+puts <<~HEREDOC
+  === Agent Card ===
+    Name:        #{card.name}
+    Version:     #{card.version}
+    Description: #{card.description}
+    Skills:      #{card.skills.map(&:name).join(', ')}
+
+HEREDOC
 
 # ---------------------------------------------------------------------------
 # 2. Send a few tasks
@@ -57,12 +59,14 @@ puts
 # ---------------------------------------------------------------------------
 # 4. Retrieve a single task by ID
 # ---------------------------------------------------------------------------
-puts "=== Retrieve Task ==="
 retrieved = client.get_task(task_ids.first)
-puts "  id:    #{retrieved.id}"
-puts "  state: #{retrieved.status.state}"
-puts "  reply: #{retrieved.artifacts.first&.parts&.first&.text.inspect}"
-puts
+puts <<~HEREDOC
+  === Retrieve Task ===
+    id:    #{retrieved.id}
+    state: #{retrieved.status.state}
+    reply: #{retrieved.artifacts.first&.parts&.first&.text.inspect}
+
+HEREDOC
 
 # ---------------------------------------------------------------------------
 # 5. Cancel a non-existent task (demonstrates error handling)

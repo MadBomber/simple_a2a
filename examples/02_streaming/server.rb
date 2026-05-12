@@ -169,9 +169,11 @@ card = A2A::Models::AgentCard.new(
   ]
 )
 
-puts "Starting StreamingAgent on http://localhost:9292"
-puts "Streaming #{StreamingExecutor::WORDS.length} words at 600 WPM (~#{(StreamingExecutor::WORDS.length / 600.0).ceil} min)"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting StreamingAgent on http://localhost:9292
+  Streaming #{StreamingExecutor::WORDS.length} words at 600 WPM (~#{(StreamingExecutor::WORDS.length / 600.0).ceil} min)
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.server(agent_card: card, executor: StreamingExecutor.new).run

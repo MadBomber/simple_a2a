@@ -127,11 +127,13 @@ vault_card = make_card(
   path:        "/vault"
 )
 
-puts "Starting interrupted-states server on #{BASE_URL}"
-puts "  /order  → OrderAgent  (demonstrates input_required)"
-puts "  /vault  → VaultAgent  (demonstrates auth_required)"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting interrupted-states server on #{BASE_URL}
+    /order  → OrderAgent  (demonstrates input_required)
+    /vault  → VaultAgent  (demonstrates auth_required)
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.multi_server(
   agents: {

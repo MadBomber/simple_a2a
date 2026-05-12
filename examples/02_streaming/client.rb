@@ -16,12 +16,14 @@ client = A2A.sse_client(url: URL)
 # 1. Confirm the agent advertises streaming support
 # ---------------------------------------------------------------------------
 card = client.agent_card
-puts "=== Agent Card ==="
-puts "  Name:        #{card.name}"
-puts "  Description: #{card.description}"
-puts "  Streaming:   #{card.capabilities&.streaming}"
-puts "  Source:      https://lamplight.guide/blog/the-god-particle/"
-puts
+puts <<~HEREDOC
+  === Agent Card ===
+    Name:        #{card.name}
+    Description: #{card.description}
+    Streaming:   #{card.capabilities&.streaming}
+    Source:      https://lamplight.guide/blog/the-god-particle/
+
+HEREDOC
 
 # ---------------------------------------------------------------------------
 # 2. Subscribe and print words as they stream in
@@ -62,9 +64,11 @@ end
 elapsed = start_time ? (Time.now - start_time) : 0
 wpm     = elapsed > 0 ? (word_count / (elapsed / 60.0)).round : 0
 
-puts
-puts "=== Summary ==="
-puts "  Words received  : #{word_count}"
-puts "  Events received : #{event_count}"
-puts "  Elapsed         : #{elapsed.round(1)}s — #{wpm} WPM effective"
-puts "  Status          : #{interrupted ? "interrupted" : "completed"}"
+puts <<~HEREDOC
+
+  === Summary ===
+    Words received  : #{word_count}
+    Events received : #{event_count}
+    Elapsed         : #{elapsed.round(1)}s — #{wpm} WPM effective
+    Status          : #{interrupted ? "interrupted" : "completed"}
+HEREDOC

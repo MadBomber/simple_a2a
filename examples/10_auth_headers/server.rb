@@ -89,10 +89,12 @@ card = A2A::Models::AgentCard.new(
 inner_app = A2A.server(agent_card: card, executor: SecureEchoExecutor.new).rack_app
 auth_app  = BearerAuthMiddleware.new(inner_app, token: VALID_TOKEN)
 
-puts "Starting SecureAgent on http://localhost:9292"
-puts "  GET  /agentCard  — public (no auth required)"
-puts "  POST /           — requires Authorization: Bearer #{VALID_TOKEN}"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting SecureAgent on http://localhost:9292
+    GET  /agentCard  — public (no auth required)
+    POST /           — requires Authorization: Bearer #{VALID_TOKEN}
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A::Server::FalconRunner.new(auth_app, port: 9292).run

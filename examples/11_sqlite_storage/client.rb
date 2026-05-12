@@ -32,14 +32,14 @@ client = A2A.client(url: URL)
 # Phase: populate
 # ---------------------------------------------------------------------------
 if PHASE == "populate"
-  puts
-  puts "=== Phase 1: Populate — sending tasks to SQLite-backed server ==="
-  puts
-
   card = client.agent_card
-  puts "  Agent : #{card.name}"
-  puts "  DB    : shown in server output"
-  puts
+  puts <<~HEREDOC
+
+    === Phase 1: Populate — sending tasks to SQLite-backed server ===
+      Agent : #{card.name}
+      DB    : shown in server output
+
+  HEREDOC
 
   messages = [
     "alpha — first message",
@@ -51,28 +51,34 @@ if PHASE == "populate"
   messages.each do |text|
     task = client.send_task(message: A2A::Models::Message.user(text))
     ids << task.id
-    puts "  sent  : #{text.strip}"
-    puts "  id    : #{task.id}"
-    puts "  state : #{task.status.state}"
-    puts "  reply : #{task.artifacts.first&.parts&.first&.text}"
-    puts
+    puts <<~HEREDOC
+      sent  : #{text.strip}
+      id    : #{task.id}
+      state : #{task.status.state}
+      reply : #{task.artifacts.first&.parts&.first&.text}
+
+    HEREDOC
   end
 
   File.write(IDS_FILE, JSON.generate(ids))
   puts "  IDs written to #{IDS_FILE}"
   divider
   puts
-  puts "Populate complete. The server will now be stopped and restarted."
-  puts "The same database file will be passed to the new server instance."
-  puts
+  puts <<~HEREDOC
+    Populate complete. The server will now be stopped and restarted.
+    The same database file will be passed to the new server instance.
+
+  HEREDOC
 
 # ---------------------------------------------------------------------------
 # Phase: verify
 # ---------------------------------------------------------------------------
 else
-  puts
-  puts "=== Phase 2: Verify — confirming persistence after server restart ==="
-  puts
+  puts <<~HEREDOC
+
+    === Phase 2: Verify — confirming persistence after server restart ===
+
+  HEREDOC
 
   unless File.exist?(IDS_FILE)
     abort "IDs file not found: #{IDS_FILE} — run the populate phase first."
@@ -84,10 +90,12 @@ else
 
   results = ids.map do |id|
     task = client.get_task(id)
-    puts "  id    : #{id}"
-    puts "  state : #{task.status.state}"
-    puts "  reply : #{task.artifacts.first&.parts&.first&.text}"
-    puts
+    puts <<~HEREDOC
+      id    : #{id}
+      state : #{task.status.state}
+      reply : #{task.artifacts.first&.parts&.first&.text}
+
+    HEREDOC
     task
   rescue A2A::Error => e
     puts "  id    : #{id}  MISSING — #{e.message}"
@@ -100,15 +108,16 @@ else
   all_present   = results.none?(&:nil?)
   all_completed = results.compact.all? { |t| t.status.state == "completed" }
   count_ok      = results.length == ids.length
+  all_ok        = all_present && all_completed && count_ok
 
-  puts
-  puts "=== Verification ==="
-  puts "  All tasks present after restart : #{all_present   ? 'PASS' : 'FAIL'}"
-  puts "  All tasks in completed state    : #{all_completed ? 'PASS' : 'FAIL'}"
-  puts "  Task count matches (#{ids.length})         : #{count_ok     ? 'PASS' : 'FAIL'}"
-  puts
+  puts <<~HEREDOC
 
-  all_ok = all_present && all_completed && count_ok
+    === Verification ===
+      All tasks present after restart : #{all_present   ? 'PASS' : 'FAIL'}
+      All tasks in completed state    : #{all_completed ? 'PASS' : 'FAIL'}
+      Task count matches (#{ids.length})         : #{count_ok     ? 'PASS' : 'FAIL'}
+
+  HEREDOC
   puts(all_ok ? "All assertions passed." : "One or more assertions failed.")
   exit(all_ok ? 0 : 1)
 end

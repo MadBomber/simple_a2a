@@ -89,9 +89,11 @@ card = A2A::Models::AgentCard.new(
   ]
 )
 
-puts "Starting ReportAgent on http://localhost:9292"
-puts "Returns a 4-part artifact (text + JSON + binary + URL) for any topic."
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting ReportAgent on http://localhost:9292
+  Returns a 4-part artifact (text + JSON + binary + URL) for any topic.
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.server(agent_card: card, executor: ReportExecutor.new).run

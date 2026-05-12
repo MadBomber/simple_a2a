@@ -31,19 +31,23 @@ auth_client   = A2A.client(url: URL, headers: { "Authorization" => "Bearer #{TOK
 # Agent card — public endpoint, both clients can discover it
 # ---------------------------------------------------------------------------
 puts
-puts "=== Agent Card (public — no auth required) ==="
 card = unauth_client.agent_card
-puts "  Name:        #{card.name}"
-puts "  Description: #{card.description}"
-puts
+puts <<~HEREDOC
+  === Agent Card (public — no auth required) ===
+    Name:        #{card.name}
+    Description: #{card.description}
+
+HEREDOC
 divider
 
 # ---------------------------------------------------------------------------
 # Unauthenticated client — rejected on RPC call
 # ---------------------------------------------------------------------------
-puts
-puts "=== Unauthenticated client — no Authorization header ==="
-puts
+puts <<~HEREDOC
+
+  === Unauthenticated client — no Authorization header ===
+
+HEREDOC
 
 unauth_error = nil
 begin
@@ -59,9 +63,11 @@ divider
 # ---------------------------------------------------------------------------
 # Authenticated client — accepted
 # ---------------------------------------------------------------------------
-puts
-puts "=== Authenticated client — Authorization: Bearer #{TOKEN} ==="
-puts
+puts <<~HEREDOC
+
+  === Authenticated client — Authorization: Bearer #{TOKEN} ===
+
+HEREDOC
 
 auth_task   = auth_client.send_task(message: A2A::Models::Message.user("hello from authorized client"))
 auth_result = auth_task.artifacts&.first&.parts&.first&.text
@@ -74,19 +80,19 @@ divider
 # ---------------------------------------------------------------------------
 # Verification
 # ---------------------------------------------------------------------------
-puts
-puts "=== Verification ==="
-
 card_ok      = card.name == "SecureAgent"
 rejected_ok  = unauth_error&.message&.include?("Unauthorized")
 accepted_ok  = auth_task.status.state == "completed"
 result_ok    = auth_result&.include?("[authorized]")
+all_ok       = card_ok && rejected_ok && accepted_ok && result_ok
 
-puts "  Agent card discoverable without auth : #{card_ok     ? 'PASS' : 'FAIL'}"
-puts "  Unauthenticated call rejected        : #{rejected_ok ? 'PASS' : 'FAIL'}"
-puts "  Authenticated call accepted          : #{accepted_ok ? 'PASS' : 'FAIL'}"
-puts "  Authenticated result is correct      : #{result_ok   ? 'PASS' : 'FAIL'}"
-puts
+puts <<~HEREDOC
 
-all_ok = card_ok && rejected_ok && accepted_ok && result_ok
+  === Verification ===
+    Agent card discoverable without auth : #{card_ok     ? 'PASS' : 'FAIL'}
+    Unauthenticated call rejected        : #{rejected_ok ? 'PASS' : 'FAIL'}
+    Authenticated call accepted          : #{accepted_ok ? 'PASS' : 'FAIL'}
+    Authenticated result is correct      : #{result_ok   ? 'PASS' : 'FAIL'}
+
+HEREDOC
 puts(all_ok ? "All assertions passed." : "One or more assertions failed.")

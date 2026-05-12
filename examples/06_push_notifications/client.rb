@@ -44,9 +44,11 @@ end
 webhook_thread = Thread.new { webhook_server.start }
 at_exit { webhook_server.shutdown }
 
-puts
-puts "=== Webhook receiver listening on #{WEBHOOK_URL} ==="
-puts
+puts <<~HEREDOC
+
+  === Webhook receiver listening on #{WEBHOOK_URL} ===
+
+HEREDOC
 
 # ---------------------------------------------------------------------------
 # Confirm the server is up and supports push notifications
@@ -54,12 +56,14 @@ puts
 base_client = A2A.client(url: A2A_URL)
 card        = base_client.agent_card
 
-puts "=== Agent Card ==="
-puts "  Name:               #{card.name}"
-puts "  Description:        #{card.description}"
-puts "  push_notifications: #{card.capabilities&.push_notifications}"
-puts "  streaming:          #{card.capabilities&.streaming}"
-puts
+puts <<~HEREDOC
+  === Agent Card ===
+    Name:               #{card.name}
+    Description:        #{card.description}
+    push_notifications: #{card.capabilities&.push_notifications}
+    streaming:          #{card.capabilities&.streaming}
+
+HEREDOC
 abort "Agent does not advertise push notification support." unless card.capabilities&.push_notifications
 divider
 
@@ -121,10 +125,12 @@ divider
 # The server posts after each step; we print each payload as it lands.
 # Stop when we see a final=true delivery.
 # ---------------------------------------------------------------------------
-puts
-puts "Watching webhook for incoming push notifications…"
-puts "(the client has NO open SSE connection — all updates arrive out-of-band)"
-puts
+puts <<~HEREDOC
+
+  Watching webhook for incoming push notifications…
+  (the client has NO open SSE connection — all updates arrive out-of-band)
+
+HEREDOC
 
 received = []
 loop do
@@ -164,29 +170,32 @@ sse_thread.join(5)
 # Summary
 # ---------------------------------------------------------------------------
 divider
-puts
-puts "=== Summary ==="
-puts "  Push notifications received : #{received.length}"
-puts "  States delivered            : #{received.map { |p| p.dig("status", "state") }.join(" → ")}"
-puts "  Final delivery seen         : #{received.any? { |p| p["final"] } ? 'yes' : 'no'}"
-puts "  Config cleaned up           : #{list_after.empty? ? 'yes' : 'no'}"
-puts
+puts <<~HEREDOC
+
+  === Summary ===
+    Push notifications received : #{received.length}
+    States delivered            : #{received.map { |p| p.dig("status", "state") }.join(" → ")}
+    Final delivery seen         : #{received.any? { |p| p["final"] } ? 'yes' : 'no'}
+    Config cleaned up           : #{list_after.empty? ? 'yes' : 'no'}
+
+HEREDOC
 
 # ---------------------------------------------------------------------------
 # Verification
 # ---------------------------------------------------------------------------
-puts "=== Verification ==="
 states     = received.map { |p| p.dig("status", "state") }
 last_state = states.last
-
 push_ok    = received.length >= 2
 final_ok   = received.last&.fetch("final", false)
 state_ok   = last_state == "completed"
 cleanup_ok = list_after.empty?
+all_ok     = push_ok && final_ok && state_ok && cleanup_ok
+puts <<~HEREDOC
+  === Verification ===
+    Push notifications received (≥2) : #{push_ok    ? 'PASS' : 'FAIL'}
+    Final push delivery seen         : #{final_ok   ? 'PASS' : 'FAIL'}
+    Final state is completed         : #{state_ok   ? 'PASS' : 'FAIL'}
+    Config deleted successfully      : #{cleanup_ok ? 'PASS' : 'FAIL'}
 
-puts "  Push notifications received (≥2) : #{push_ok    ? 'PASS' : 'FAIL'}"
-puts "  Final push delivery seen         : #{final_ok   ? 'PASS' : 'FAIL'}"
-puts "  Final state is completed         : #{state_ok   ? 'PASS' : 'FAIL'}"
-puts "  Config deleted successfully      : #{cleanup_ok ? 'PASS' : 'FAIL'}"
-puts
-puts(push_ok && final_ok && state_ok && cleanup_ok ? "All assertions passed." : "One or more assertions failed.")
+HEREDOC
+puts(all_ok ? "All assertions passed." : "One or more assertions failed.")

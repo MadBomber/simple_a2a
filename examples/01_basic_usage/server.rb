@@ -50,8 +50,10 @@ card = A2A::Models::AgentCard.new(
 # ---------------------------------------------------------------------------
 # Start the server (blocks; Ctrl-C to stop).
 # ---------------------------------------------------------------------------
-puts "Starting BasicAgent on http://localhost:9292"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting BasicAgent on http://localhost:9292
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.server(agent_card: card, executor: BasicExecutor.new).run

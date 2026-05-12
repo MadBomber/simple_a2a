@@ -43,11 +43,13 @@ end
 base = A2A.client(url: URL)
 card = base.agent_card
 
-puts "=== Agent Card ==="
-puts "  Name:        #{card.name}"
-puts "  Description: #{card.description}"
-puts "  Streaming:   #{card.capabilities&.streaming}"
-puts
+puts <<~HEREDOC
+  === Agent Card ===
+    Name:        #{card.name}
+    Description: #{card.description}
+    Streaming:   #{card.capabilities&.streaming}
+
+HEREDOC
 
 abort "Agent does not advertise streaming support." unless card.capabilities&.streaming
 
@@ -118,23 +120,23 @@ end
 # ---------------------------------------------------------------------------
 # Summary
 # ---------------------------------------------------------------------------
-divider
-puts
-puts "=== Summary ==="
-
-snapshot = sub2_events.find { |e| e.is_a?(Hash) && e.key?("status") }
+snapshot       = sub2_events.find { |e| e.is_a?(Hash) && e.key?("status") }
 sub2_artifacts = sub2_events.select { |e| e.is_a?(A2A::Models::TaskArtifactUpdateEvent) }
 sub1_artifacts = sub1_events.select { |e| e.is_a?(A2A::Models::TaskArtifactUpdateEvent) }
+divider
+puts <<~HEREDOC
 
-puts "  Subscriber 1 — events received : #{sub1_events.length}"
-puts "  Subscriber 1 — artifact steps  : #{sub1_artifacts.length}"
-puts
-puts "  Subscriber 2 — events received : #{sub2_events.length}"
-puts "  Subscriber 2 — task snapshot   : #{snapshot ? 'yes' : 'no (unexpected)'}"
-puts "  Subscriber 2 — artifact steps  : #{sub2_artifacts.length}"
-puts "  Subscriber 2 — joined at step  : #{sub1_artifacts.length - sub2_artifacts.length + 1} of 5"
-puts
-puts "  Both streams terminated cleanly: #{
-  sub1_events.any? { |e| e.is_a?(A2A::Models::TaskStatusUpdateEvent) && e.final? } &&
-  sub2_events.any? { |e| e.is_a?(A2A::Models::TaskStatusUpdateEvent) && e.final? }
-}"
+  === Summary ===
+    Subscriber 1 — events received : #{sub1_events.length}
+    Subscriber 1 — artifact steps  : #{sub1_artifacts.length}
+
+    Subscriber 2 — events received : #{sub2_events.length}
+    Subscriber 2 — task snapshot   : #{snapshot ? 'yes' : 'no (unexpected)'}
+    Subscriber 2 — artifact steps  : #{sub2_artifacts.length}
+    Subscriber 2 — joined at step  : #{sub1_artifacts.length - sub2_artifacts.length + 1} of 5
+
+    Both streams terminated cleanly: #{
+      sub1_events.any? { |e| e.is_a?(A2A::Models::TaskStatusUpdateEvent) && e.final? } &&
+      sub2_events.any? { |e| e.is_a?(A2A::Models::TaskStatusUpdateEvent) && e.final? }
+    }
+HEREDOC

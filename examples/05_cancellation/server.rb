@@ -69,9 +69,11 @@ card = A2A::Models::AgentCard.new(
   ]
 )
 
-puts "Starting SlowAgent on http://localhost:9292"
-puts "Each task takes #{SlowExecutor::STEPS * SlowExecutor::STEP_SEC}s to complete without cancellation."
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting SlowAgent on http://localhost:9292
+  Each task takes #{SlowExecutor::STEPS * SlowExecutor::STEP_SEC}s to complete without cancellation.
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.server(agent_card: card, executor: SlowExecutor.new).run

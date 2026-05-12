@@ -122,10 +122,12 @@ card = A2A::Models::AgentCard.new(
   ]
 )
 
-puts "Starting PersistentEchoAgent on http://localhost:9292"
-puts "  database: #{db_path}"
-puts "  existing tasks in DB: #{storage.size}"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting PersistentEchoAgent on http://localhost:9292
+    database: #{db_path}
+    existing tasks in DB: #{storage.size}
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.server(agent_card: card, executor: EchoExecutor.new, storage: storage).run

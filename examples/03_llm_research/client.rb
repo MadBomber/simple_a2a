@@ -17,9 +17,11 @@ topic = ARGV.first || "research all shortcomings and defects and criticisms of t
 
 def banner(text)
   bar = "─" * (text.length + 4)
-  puts "┌#{bar}┐"
-  puts "│  #{text}  │"
-  puts "└#{bar}┘"
+  puts <<~HEREDOC
+    ┌#{bar}┐
+    │  #{text}  │
+    └#{bar}┘
+  HEREDOC
 end
 
 def collect_streaming_response(url, topic)
@@ -40,10 +42,12 @@ end
 # 1. Research phase — query both agents in parallel
 # ---------------------------------------------------------------------------
 banner "Research Phase: \"#{topic}\""
-puts
-puts "Querying Anthropic (claude-sonnet-4-6) and OpenAI (gpt-5.4) in parallel…"
-puts "This may take several minutes for complex topics."
-puts
+puts <<~HEREDOC
+
+  Querying Anthropic (claude-sonnet-4-6) and OpenAI (gpt-5.4) in parallel…
+  This may take several minutes for complex topics.
+
+HEREDOC
 
 anthropic_text = nil
 openai_text    = nil

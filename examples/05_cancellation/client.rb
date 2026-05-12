@@ -31,12 +31,14 @@ end
 # ---------------------------------------------------------------------------
 card = A2A.client(url: URL).agent_card
 
-puts
-puts "=== Agent Card ==="
-puts "  Name:         #{card.name}"
-puts "  Description:  #{card.description}"
-puts "  Streaming:    #{card.capabilities&.streaming}"
-puts
+puts <<~HEREDOC
+
+  === Agent Card ===
+    Name:         #{card.name}
+    Description:  #{card.description}
+    Streaming:    #{card.capabilities&.streaming}
+
+HEREDOC
 abort "Agent does not advertise streaming support." unless card.capabilities&.streaming
 divider
 
@@ -46,10 +48,12 @@ divider
 # A shared, mutex-protected hash lets the main thread see task IDs as soon
 # as the first status event arrives from each task.
 # ---------------------------------------------------------------------------
-puts
-puts "Starting tasks A, B, and C via tasks/sendSubscribe…"
-puts "(each would take 10 s; task B will be cancelled after #{CANCEL_SEC}s)"
-puts
+puts <<~HEREDOC
+
+  Starting tasks A, B, and C via tasks/sendSubscribe…
+  (each would take 10 s; task B will be cancelled after #{CANCEL_SEC}s)
+
+HEREDOC
 
 task_ids  = {}
 id_mutex  = Mutex.new
@@ -132,8 +136,6 @@ puts
 # ---------------------------------------------------------------------------
 # Assertions
 # ---------------------------------------------------------------------------
-puts "=== Verification ==="
-
 def final_state(events)
   events.select { |e| e.is_a?(A2A::Models::TaskStatusUpdateEvent) }
         .last&.status&.state
@@ -143,8 +145,11 @@ a_ok = final_state(all_events["A"]) == "completed"
 b_ok = final_state(all_events["B"]) == "canceled"
 c_ok = final_state(all_events["C"]) == "completed"
 
-puts "  Task A completed normally : #{a_ok ? 'PASS' : 'FAIL'}"
-puts "  Task B was cancelled      : #{b_ok ? 'PASS' : 'FAIL'}"
-puts "  Task C completed normally : #{c_ok ? 'PASS' : 'FAIL'}"
-puts
+puts <<~HEREDOC
+  === Verification ===
+    Task A completed normally : #{a_ok ? 'PASS' : 'FAIL'}
+    Task B was cancelled      : #{b_ok ? 'PASS' : 'FAIL'}
+    Task C completed normally : #{c_ok ? 'PASS' : 'FAIL'}
+
+HEREDOC
 puts(a_ok && b_ok && c_ok ? "All assertions passed." : "One or more assertions failed.")

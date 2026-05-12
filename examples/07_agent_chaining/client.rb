@@ -54,16 +54,19 @@ inputs = [
   "simple is better than complex"
 ]
 
-puts
-puts "=== Pipeline calls (client speaks only to /pipeline) ==="
-puts
+puts <<~HEREDOC
+
+  === Pipeline calls (client speaks only to /pipeline) ===
+
+HEREDOC
 
 results = inputs.map do |text|
   task   = pipeline.send_task(message: A2A::Models::Message.user(text))
   output = artifact_text(task)
-  puts "Input:  #{text}"
-  puts output.lines.map { |l| "  #{l}" }.join
-  puts
+  puts <<~HEREDOC
+    Input:  #{text}
+    #{output.lines.map { |l| "  #{l}" }.join}
+  HEREDOC
   { input: text, output: output, state: task.status.state }
 end
 
@@ -72,10 +75,11 @@ divider
 # ---------------------------------------------------------------------------
 # Call sub-agents directly to show they work standalone
 # ---------------------------------------------------------------------------
-puts
-puts "=== Sub-agents called directly (verification) ==="
-puts
+puts <<~HEREDOC
 
+  === Sub-agents called directly (verification) ===
+
+HEREDOC
 sample = "hello world from A2A"
 
 reverse_task = A2A.client(url: REVERSE_URL).send_task(
@@ -85,19 +89,18 @@ shout_task = A2A.client(url: SHOUT_URL).send_task(
   message: A2A::Models::Message.user(sample)
 )
 
-puts "  Input:                  #{sample}"
-puts "  /reverse result:        #{artifact_text(reverse_task)}"
-puts "  /shout   result:        #{artifact_text(shout_task)}"
-puts
+puts <<~HEREDOC
+  Input:                  #{sample}
+  /reverse result:        #{artifact_text(reverse_task)}
+  /shout   result:        #{artifact_text(shout_task)}
+
+HEREDOC
 
 divider
 
 # ---------------------------------------------------------------------------
 # Verification
 # ---------------------------------------------------------------------------
-puts
-puts "=== Verification ==="
-
 all_completed = results.all? { |r| r[:state] == "completed" }
 
 pipeline_correct = results.all? do |r|
@@ -109,12 +112,15 @@ end
 
 standalone_reverse_ok = artifact_text(reverse_task) == sample.split.reverse.join(" ")
 standalone_shout_ok   = artifact_text(shout_task)   == sample.upcase
+all_ok                = all_completed && pipeline_correct && standalone_reverse_ok && standalone_shout_ok
 
-puts "  All pipeline tasks completed       : #{all_completed          ? 'PASS' : 'FAIL'}"
-puts "  Pipeline output matches chain      : #{pipeline_correct       ? 'PASS' : 'FAIL'}"
-puts "  ReverseAgent standalone correct    : #{standalone_reverse_ok  ? 'PASS' : 'FAIL'}"
-puts "  ShoutAgent standalone correct      : #{standalone_shout_ok    ? 'PASS' : 'FAIL'}"
-puts
+puts <<~HEREDOC
 
-all_ok = all_completed && pipeline_correct && standalone_reverse_ok && standalone_shout_ok
+  === Verification ===
+    All pipeline tasks completed       : #{all_completed          ? 'PASS' : 'FAIL'}
+    Pipeline output matches chain      : #{pipeline_correct       ? 'PASS' : 'FAIL'}
+    ReverseAgent standalone correct    : #{standalone_reverse_ok  ? 'PASS' : 'FAIL'}
+    ShoutAgent standalone correct      : #{standalone_shout_ok    ? 'PASS' : 'FAIL'}
+
+HEREDOC
 puts(all_ok ? "All assertions passed." : "One or more assertions failed.")

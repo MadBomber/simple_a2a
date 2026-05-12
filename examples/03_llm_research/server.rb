@@ -186,12 +186,14 @@ evaluator_card = A2A::Models::AgentCard.new(
 # ---------------------------------------------------------------------------
 # Start multi-agent server
 # ---------------------------------------------------------------------------
-puts "Starting multi-agent research server on http://localhost:9292"
-puts "  /anthropic  → #{AnthropicResearchExecutor::MODEL}"
-puts "  /openai     → #{OpenAIResearchExecutor::MODEL}"
-puts "  /evaluator  → #{EvaluatorExecutor::MODEL} (evaluator)"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting multi-agent research server on http://localhost:9292
+    /anthropic  → #{AnthropicResearchExecutor::MODEL}
+    /openai     → #{OpenAIResearchExecutor::MODEL}
+    /evaluator  → #{EvaluatorExecutor::MODEL} (evaluator)
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.multi_server(
   agents: {

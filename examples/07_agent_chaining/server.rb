@@ -133,12 +133,14 @@ pipeline_card = make_card(
 # ---------------------------------------------------------------------------
 # Start the multi-agent server
 # ---------------------------------------------------------------------------
-puts "Starting multi-agent server on #{BASE_URL}"
-puts "  /reverse   → ReverseAgent"
-puts "  /shout     → ShoutAgent"
-puts "  /pipeline  → PipelineAgent (chains the other two)"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting multi-agent server on #{BASE_URL}
+    /reverse   → ReverseAgent
+    /shout     → ShoutAgent
+    /pipeline  → PipelineAgent (chains the other two)
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.multi_server(
   agents: {

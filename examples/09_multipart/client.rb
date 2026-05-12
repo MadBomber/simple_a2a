@@ -31,11 +31,13 @@ def header(title) = puts("\n  ── #{title} ──\n")
 client = A2A.client(url: URL)
 card   = client.agent_card
 
-puts
-puts "=== Agent Card ==="
-puts "  Name:        #{card.name}"
-puts "  Description: #{card.description}"
-puts
+puts <<~HEREDOC
+
+  === Agent Card ===
+    Name:        #{card.name}
+    Description: #{card.description}
+
+HEREDOC
 
 # ---------------------------------------------------------------------------
 # Send the task
@@ -73,9 +75,11 @@ artifact.parts.each_with_index do |part, i|
   elsif part.raw?
     header "binary  (media_type: #{part.media_type}, filename: #{part.filename})"
     bytes = part.decoded_bytes
-    puts "    base64 length : #{part.raw.length} chars"
-    puts "    decoded bytes : #{bytes.bytesize}"
-    puts "    content:"
+    puts <<~HEREDOC
+      base64 length : #{part.raw.length} chars
+      decoded bytes : #{bytes.bytesize}
+      content:
+    HEREDOC
     bytes.force_encoding("UTF-8").each_line { |l| puts "      #{l}" }
 
   elsif part.url?
@@ -96,15 +100,17 @@ json_part   = parts.find(&:json?)
 binary_part = parts.find(&:raw?)
 url_part    = parts.find(&:url?)
 
-puts
-puts "=== Verification ==="
-puts "  text   part present and non-empty : #{(text_part   && !text_part.text.empty?)           ? 'PASS' : 'FAIL'}"
-puts "  json   part present with hash     : #{(json_part   && json_part.data.is_a?(Hash))        ? 'PASS' : 'FAIL'}"
-puts "  binary part decodes correctly     : #{(binary_part && binary_part.decoded_bytes.bytesize > 0) ? 'PASS' : 'FAIL'}"
-puts "  url    part is a valid URL        : #{(url_part    && url_part.url.start_with?("https://")) ? 'PASS' : 'FAIL'}"
-puts "  json   part topic matches input   : #{(json_part   && json_part.data["topic"] == topic)  ? 'PASS' : 'FAIL'}"
-puts "  binary part is valid CSV          : #{(binary_part && binary_part.decoded_bytes.include?("rank")) ? 'PASS' : 'FAIL'}"
-puts
+puts <<~HEREDOC
+
+  === Verification ===
+    text   part present and non-empty : #{(text_part   && !text_part.text.empty?)           ? 'PASS' : 'FAIL'}
+    json   part present with hash     : #{(json_part   && json_part.data.is_a?(Hash))        ? 'PASS' : 'FAIL'}
+    binary part decodes correctly     : #{(binary_part && binary_part.decoded_bytes.bytesize > 0) ? 'PASS' : 'FAIL'}
+    url    part is a valid URL        : #{(url_part    && url_part.url.start_with?("https://")) ? 'PASS' : 'FAIL'}
+    json   part topic matches input   : #{(json_part   && json_part.data["topic"] == topic)  ? 'PASS' : 'FAIL'}
+    binary part is valid CSV          : #{(binary_part && binary_part.decoded_bytes.include?("rank")) ? 'PASS' : 'FAIL'}
+
+HEREDOC
 
 all_ok = text_part && json_part && binary_part && url_part &&
          !text_part.text.empty? &&

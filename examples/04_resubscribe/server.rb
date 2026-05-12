@@ -67,9 +67,11 @@ card = A2A::Models::AgentCard.new(
 )
 
 total = AnalysisExecutor::STEPS.length * AnalysisExecutor::STEP_DELAY
-puts "Starting AnalysisAgent on http://localhost:9292"
-puts "Task runs #{AnalysisExecutor::STEPS.length} steps × #{AnalysisExecutor::STEP_DELAY}s = ~#{total.round(0).to_i}s per run"
-puts "Press Ctrl-C to stop."
-puts
+puts <<~HEREDOC
+  Starting AnalysisAgent on http://localhost:9292
+  Task runs #{AnalysisExecutor::STEPS.length} steps × #{AnalysisExecutor::STEP_DELAY}s = ~#{total.round(0).to_i}s per run
+  Press Ctrl-C to stop.
+
+HEREDOC
 
 A2A.server(agent_card: card, executor: AnalysisExecutor.new).run
