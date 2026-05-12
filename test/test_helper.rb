@@ -10,6 +10,7 @@ SimpleCov.start do
   ])
   # Only track files inside this project's lib/ — excludes all gem source files.
   add_filter { |src| src.filename !~ %r{/simple_a2a/lib/} }
+  minimum_coverage 95
 end
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)

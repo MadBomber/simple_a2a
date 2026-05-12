@@ -17,6 +17,19 @@ class WorkingExecutor < A2A::Server::AgentExecutor
   end
 end
 
+class SuspendThenResumeExecutor < A2A::Server::AgentExecutor
+  def call(ctx)
+    if ctx.is_a?(A2A::Server::ResumeContext)
+      answer = ctx.resume_message.parts.first.text
+      ctx.task.complete!(artifacts: [
+        A2A::Models::Artifact.new(parts: [A2A::Models::Part.text("You said: #{answer}")])
+      ])
+    else
+      ctx.task.require_input!(message: A2A::Models::Message.agent("What is your name?"))
+    end
+  end
+end
+
 class ErrorExecutor < A2A::Server::AgentExecutor
   def call(_ctx)
     raise RuntimeError, "something went wrong"
@@ -101,6 +114,50 @@ class TestServerApp < Minitest::Test
     resp = parsed_response
     refute_nil resp["error"]
     assert_equal A2A::JsonRpc::ErrorCode::INVALID_PARAMS, resp["error"]["code"]
+  end
+
+  def test_tasks_send_resumes_interrupted_task
+    session = Rack::Test::Session.new(Rack::MockSession.new(build_alt_app(SuspendThenResumeExecutor.new)))
+
+    # Turn 1: new task → input_required
+    msg1 = A2A::Models::Message.user("hello").to_h
+    body1 = JSON.generate({ "jsonrpc" => "2.0", "id" => 1, "method" => "tasks/send", "params" => { "message" => msg1 } })
+    resp1 = JSON.parse(session.post("/", body1, "CONTENT_TYPE" => "application/json").body)
+    assert_nil resp1["error"]
+    assert_equal "input_required", resp1.dig("result", "status", "state")
+    task_id = resp1.dig("result", "id")
+
+    # Turn 2: resume with task_id → completed
+    msg2 = A2A::Models::Message.user("Alice").to_h
+    body2 = JSON.generate({ "jsonrpc" => "2.0", "id" => 2, "method" => "tasks/send",
+                            "params" => { "id" => task_id, "message" => msg2 } })
+    resp2 = JSON.parse(session.post("/", body2, "CONTENT_TYPE" => "application/json").body)
+    assert_nil resp2["error"]
+    assert_equal task_id, resp2.dig("result", "id")
+    assert_equal "completed", resp2.dig("result", "status", "state")
+    assert_equal "You said: Alice", resp2.dig("result", "artifacts", 0, "parts", 0, "text")
+  end
+
+  def test_tasks_send_with_unknown_task_id_returns_not_found
+    msg = A2A::Models::Message.user("hello").to_h
+    json_post("tasks/send", { "id" => "no-such-task", "message" => msg })
+    resp = parsed_response
+    refute_nil resp["error"]
+    assert_equal A2A::JsonRpc::ErrorCode::TASK_NOT_FOUND, resp["error"]["code"]
+  end
+
+  def test_tasks_send_with_terminal_task_id_returns_error
+    # Create and complete a task first
+    msg = A2A::Models::Message.user("hello").to_h
+    json_post("tasks/send", { "message" => msg })
+    task_id = parsed_response.dig("result", "id")
+    assert_equal "completed", parsed_response.dig("result", "status", "state")
+
+    # Attempt to resume the completed task
+    json_post("tasks/send", { "id" => task_id, "message" => msg })
+    resp = parsed_response
+    refute_nil resp["error"]
+    assert_equal A2A::JsonRpc::ErrorCode::UNSUPPORTED_OPERATION, resp["error"]["code"]
   end
 
   # --- tasks/get ---

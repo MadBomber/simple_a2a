@@ -106,18 +106,36 @@ module A2A
         msg_hash = params["message"]
         raise JsonRpc::InvalidParamsError, "message is required" unless msg_hash.is_a?(Hash)
         message  = Models::Message.from_hash(msg_hash)
+        task_id  = params["id"]
 
-        task = Models::Task.new(
-          status: Models::TaskStatus.new(state: Models::Types::TaskState::SUBMITTED)
-        )
-        self.class.storage.save(task)
+        task, ctx = if task_id
+          existing = self.class.storage.find!(task_id)
+          unless existing.status.interrupted?
+            raise UnsupportedOperationError,
+                  "Task #{task_id} cannot be resumed: state is #{existing.status.state}"
+          end
+          resume_ctx = Server::ResumeContext.new(
+            task:           existing,
+            message:        message,
+            resume_message: message,
+            storage:        self.class.storage,
+            event_router:   TaskBroadcast.new
+          )
+          [existing, resume_ctx]
+        else
+          new_task = Models::Task.new(
+            status: Models::TaskStatus.new(state: Models::Types::TaskState::SUBMITTED)
+          )
+          self.class.storage.save(new_task)
+          new_ctx = Server::Context.new(
+            task:         new_task,
+            message:      message,
+            storage:      self.class.storage,
+            event_router: TaskBroadcast.new
+          )
+          [new_task, new_ctx]
+        end
 
-        ctx = Server::Context.new(
-          task:         task,
-          message:      message,
-          storage:      self.class.storage,
-          event_router: TaskBroadcast.new
-        )
         self.class.executor.call(ctx)
         self.class.storage.save(task)
 

@@ -4,4 +4,8 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "irb"
+group :development, :test do
+  gem 'aigcm'
+  gem 'debug_me'
+  gem "irb"
+end
