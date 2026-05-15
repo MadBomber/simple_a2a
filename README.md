@@ -1,5 +1,8 @@
 # simple_a2a
 
+> [!CAUTION]
+> This library is not fully compliant with the A2A or RFC 8615 specifications. It is under active development and should not be used in a production environment.
+
 <table>
   <tr>
     <td width="40%">
