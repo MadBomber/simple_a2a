@@ -4,17 +4,17 @@ module A2A
   module Client
     class SSE < Base
       EVENT_CLASSES = {
-        "TaskStatusUpdateEvent"   => Models::TaskStatusUpdateEvent,
+        "TaskStatusUpdateEvent" => Models::TaskStatusUpdateEvent,
         "TaskArtifactUpdateEvent" => Models::TaskArtifactUpdateEvent
       }.freeze
 
       def send_subscribe(message:, **opts, &block)
         body = JSON.generate({
-          "jsonrpc" => "2.0",
-          "id"      => SecureRandom.uuid,
-          "method"  => "tasks/sendSubscribe",
-          "params"  => build_send_params(message, opts)
-        })
+                               "jsonrpc" => "2.0",
+                               "id" => SecureRandom.uuid,
+                               "method" => "tasks/sendSubscribe",
+                               "params" => build_send_params(message, opts)
+                             })
 
         run_async do |internet|
           headers  = rpc_headers.merge("accept" => "text/event-stream")
@@ -23,13 +23,14 @@ module A2A
         end
       end
 
+
       def resubscribe(task_id:, &block)
         body = JSON.generate({
-          "jsonrpc" => "2.0",
-          "id"      => SecureRandom.uuid,
-          "method"  => "tasks/resubscribe",
-          "params"  => { "id" => task_id }
-        })
+                               "jsonrpc" => "2.0",
+                               "id" => SecureRandom.uuid,
+                               "method" => "tasks/resubscribe",
+                               "params" => { "id" => task_id }
+                             })
 
         run_async do |internet|
           headers  = rpc_headers.merge("accept" => "text/event-stream")
@@ -52,6 +53,7 @@ module A2A
           end
         end
       end
+
 
       def parse_sse_event(event_str)
         data = nil

@@ -9,6 +9,7 @@ class PushTestExecutor < A2A::Server::AgentExecutor
   end
 end
 
+
 class TestServerAppPush < Minitest::Test
   include Rack::Test::Methods
 
@@ -17,37 +18,42 @@ class TestServerAppPush < Minitest::Test
   def build_app(push_notifications:)
     @storage = A2A::Storage::Memory.new
     card     = M::AgentCard.new(
-      name:         "PushTestAgent",
-      version:      "1.0",
+      name: "PushTestAgent",
+      version: "1.0",
       capabilities: M::AgentCapabilities.new(push_notifications: push_notifications),
-      skills:       [M::AgentSkill.new(name: "test")],
-      interfaces:   [M::AgentInterface.new(type: "json-rpc", url: "http://localhost", version: "1.0")]
+      skills: [M::AgentSkill.new(name: "test")],
+      interfaces: [M::AgentInterface.new(type: "json-rpc", url: "http://localhost", version: "1.0")]
     )
     klass = Class.new(A2A::Server::App)
     klass.configure(
-      agent_card:         card,
-      storage:            @storage,
-      executor:           PushTestExecutor.new,
+      agent_card: card,
+      storage: @storage,
+      executor: PushTestExecutor.new,
       broadcast_registry: A2A::Server::BroadcastRegistry.new
     )
     klass.freeze.app
   end
 
-  def push_app = build_app(push_notifications: true)
-  def app      = build_app(push_notifications: false)
 
-  def json_post(method, params = {}, rack_app = app)
+  def push_app = build_app(push_notifications: true)
+
+
+  def app
+    @_rack_app || build_app(push_notifications: false)
+  end
+
+
+  def json_post(method, params = {}, rack_app = nil)
     @_rack_app = rack_app
     body = JSON.generate({ "jsonrpc" => "2.0", "id" => 1, "method" => method, "params" => params })
     post "/", body, "CONTENT_TYPE" => "application/json"
     JSON.parse(last_response.body)
   end
 
-  alias original_app app
-  def app = @_rack_app || original_app
 
   def make_task(app_to_use)
-    resp = json_post("tasks/send", { "message" => { "role" => "user", "parts" => [{ "kind" => "text", "text" => "hi" }] } }, app_to_use)
+    msg  = { "message" => { "role" => "user", "parts" => [{ "kind" => "text", "text" => "hi" }] } }
+    resp = json_post("tasks/send", msg, app_to_use)
     resp.dig("result", "id")
   end
 
@@ -58,15 +64,18 @@ class TestServerAppPush < Minitest::Test
     assert_equal A2A::JsonRpc::ErrorCode::PUSH_NOT_SUPPORTED, resp.dig("error", "code")
   end
 
+
   def test_push_get_returns_not_supported_when_capability_false
     resp = json_post("tasks/pushNotification/get", {})
     assert_equal A2A::JsonRpc::ErrorCode::PUSH_NOT_SUPPORTED, resp.dig("error", "code")
   end
 
+
   def test_push_delete_returns_not_supported_when_capability_false
     resp = json_post("tasks/pushNotification/delete", {})
     assert_equal A2A::JsonRpc::ErrorCode::PUSH_NOT_SUPPORTED, resp.dig("error", "code")
   end
+
 
   def test_push_list_returns_not_supported_when_capability_false
     resp = json_post("tasks/pushNotification/list", {})
@@ -81,12 +90,14 @@ class TestServerAppPush < Minitest::Test
     assert_equal A2A::JsonRpc::ErrorCode::INVALID_PARAMS, resp.dig("error", "code")
   end
 
+
   def test_push_set_missing_config_returns_invalid_params
     the_app = push_app
     task_id = make_task(the_app)
     resp = json_post("tasks/pushNotification/set", { "id" => task_id }, the_app)
     assert_equal A2A::JsonRpc::ErrorCode::INVALID_PARAMS, resp.dig("error", "code")
   end
+
 
   def test_push_set_missing_webhook_url_returns_invalid_params
     the_app = push_app
@@ -97,19 +108,23 @@ class TestServerAppPush < Minitest::Test
     assert_equal A2A::JsonRpc::ErrorCode::INVALID_PARAMS, resp.dig("error", "code")
   end
 
+
   def test_push_set_unknown_task_returns_not_found
     the_app = push_app
     resp = json_post("tasks/pushNotification/set",
-                     { "id" => "nonexistent", "pushNotificationConfig" => { "webhookUrl" => "http://h/cb" } },
+                     { "id" => "nonexistent",
+                       "pushNotificationConfig" => { "webhookUrl" => "http://h/cb" } },
                      the_app)
     assert_equal A2A::JsonRpc::ErrorCode::TASK_NOT_FOUND, resp.dig("error", "code")
   end
+
 
   def test_push_get_missing_id_returns_invalid_params
     the_app = push_app
     resp = json_post("tasks/pushNotification/get", {}, the_app)
     assert_equal A2A::JsonRpc::ErrorCode::INVALID_PARAMS, resp.dig("error", "code")
   end
+
 
   def test_push_delete_missing_id_returns_invalid_params
     the_app = push_app
@@ -124,7 +139,8 @@ class TestServerAppPush < Minitest::Test
     task_id = make_task(the_app)
 
     resp = json_post("tasks/pushNotification/set",
-                     { "id" => task_id, "pushNotificationConfig" => { "webhookUrl" => "https://example.com/cb" } },
+                     { "id" => task_id,
+                       "pushNotificationConfig" => { "webhookUrl" => "https://example.com/cb" } },
                      the_app)
 
     assert_nil resp["error"], resp["error"].inspect
@@ -132,6 +148,7 @@ class TestServerAppPush < Minitest::Test
     assert_equal task_id, result["id"]
     assert_equal "https://example.com/cb", result.dig("pushNotificationConfig", "webhookUrl")
   end
+
 
   def test_push_get_returns_nil_when_no_config_stored
     the_app = push_app
@@ -141,6 +158,7 @@ class TestServerAppPush < Minitest::Test
     assert_nil resp["error"]
     assert_nil resp["result"]
   end
+
 
   def test_push_get_returns_config_after_set
     the_app = push_app
@@ -156,21 +174,25 @@ class TestServerAppPush < Minitest::Test
     assert_equal "https://example.com/cb", resp.dig("result", "pushNotificationConfig", "webhookUrl")
   end
 
+
   def test_push_set_overwrites_existing_config
     the_app = push_app
     task_id = make_task(the_app)
 
     json_post("tasks/pushNotification/set",
-              { "id" => task_id, "pushNotificationConfig" => { "webhookUrl" => "https://old.example.com/cb" } },
+              { "id" => task_id,
+                "pushNotificationConfig" => { "webhookUrl" => "https://old.example.com/cb" } },
               the_app)
 
     json_post("tasks/pushNotification/set",
-              { "id" => task_id, "pushNotificationConfig" => { "webhookUrl" => "https://new.example.com/cb" } },
+              { "id" => task_id,
+                "pushNotificationConfig" => { "webhookUrl" => "https://new.example.com/cb" } },
               the_app)
 
     resp = json_post("tasks/pushNotification/get", { "id" => task_id }, the_app)
     assert_equal "https://new.example.com/cb", resp.dig("result", "pushNotificationConfig", "webhookUrl")
   end
+
 
   def test_push_delete_removes_config
     the_app = push_app
@@ -185,6 +207,7 @@ class TestServerAppPush < Minitest::Test
     assert_nil resp["result"]
   end
 
+
   def test_push_delete_returns_null_result
     the_app = push_app
     task_id = make_task(the_app)
@@ -194,6 +217,7 @@ class TestServerAppPush < Minitest::Test
     assert_nil resp["result"]
   end
 
+
   def test_push_list_returns_empty_when_no_configs
     the_app = push_app
     resp = json_post("tasks/pushNotification/list", {}, the_app)
@@ -201,16 +225,19 @@ class TestServerAppPush < Minitest::Test
     assert_equal [], resp["result"]
   end
 
+
   def test_push_list_returns_all_stored_configs
     the_app = push_app
     task_id1 = make_task(the_app)
     task_id2 = make_task(the_app)
 
     json_post("tasks/pushNotification/set",
-              { "id" => task_id1, "pushNotificationConfig" => { "webhookUrl" => "https://a.example.com/cb" } },
+              { "id" => task_id1,
+                "pushNotificationConfig" => { "webhookUrl" => "https://a.example.com/cb" } },
               the_app)
     json_post("tasks/pushNotification/set",
-              { "id" => task_id2, "pushNotificationConfig" => { "webhookUrl" => "https://b.example.com/cb" } },
+              { "id" => task_id2,
+                "pushNotificationConfig" => { "webhookUrl" => "https://b.example.com/cb" } },
               the_app)
 
     resp = json_post("tasks/pushNotification/list", {}, the_app)

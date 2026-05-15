@@ -16,9 +16,11 @@ module A2A
         new(message_id: SecureRandom.uuid, role: Types::Role::USER, parts: build_parts(content))
       end
 
+
       def self.agent(*content)
         new(message_id: SecureRandom.uuid, role: Types::Role::AGENT, parts: build_parts(content))
       end
+
 
       def self.build_parts(content)
         content.map { |c| c.is_a?(Part) ? c : Part.text(c.to_s) }
@@ -30,12 +32,15 @@ module A2A
         super
       end
 
+
       def user?  = role == Types::Role::USER
       def agent? = role == Types::Role::AGENT
+
 
       def text_content
         parts.select(&:text?).map(&:text).join("\n")
       end
+
 
       def valid?
         !role.nil? && !parts.nil? && !parts.empty?

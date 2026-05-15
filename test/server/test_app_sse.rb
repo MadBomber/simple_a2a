@@ -14,8 +14,8 @@ class SSEStreamingExecutor < A2A::Server::AgentExecutor
     ctx.emit_status
 
     artifact = A2A::Models::Artifact.new(
-      index:      0,
-      parts:      [A2A::Models::Part.text("hello world")],
+      index: 0,
+      parts: [A2A::Models::Part.text("hello world")],
       last_chunk: true
     )
     ctx.emit_artifact(artifact, last_chunk: true)
@@ -25,13 +25,15 @@ class SSEStreamingExecutor < A2A::Server::AgentExecutor
   end
 end
 
+
 class SSEErrorExecutor < A2A::Server::AgentExecutor
   def call(ctx)
     ctx.task.start!
     ctx.emit_status
-    raise RuntimeError, "executor blew up"
+    raise "executor blew up"
   end
 end
+
 
 class TestServerAppSSE < Minitest::Test
   def free_port
@@ -41,20 +43,23 @@ class TestServerAppSSE < Minitest::Test
     s.close
   end
 
+
   def build_app(executor)
     storage  = A2A::Storage::Memory.new
     registry = A2A::Server::BroadcastRegistry.new
     card     = A2A::Models::AgentCard.new(
-      name:         "SSETestAgent",
-      version:      "1.0",
+      name: "SSETestAgent",
+      version: "1.0",
       capabilities: A2A::Models::AgentCapabilities.new(streaming: true),
-      skills:       [A2A::Models::AgentSkill.new(name: "test")],
-      interfaces:   [A2A::Models::AgentInterface.new(type: "json-rpc", url: "http://localhost", version: "1.0")]
+      skills: [A2A::Models::AgentSkill.new(name: "test")],
+      interfaces: [A2A::Models::AgentInterface.new(type: "json-rpc", url: "http://localhost",
+                                                   version: "1.0")]
     )
     klass = Class.new(A2A::Server::App)
     klass.configure(agent_card: card, storage: storage, executor: executor, broadcast_registry: registry)
     klass.freeze.app
   end
+
 
   # Starts a real Falcon server on a free port, yields the base URL, then stops.
   # Must be called from within a test method (not inside Async) so that the
@@ -75,6 +80,7 @@ class TestServerAppSSE < Minitest::Test
         break
       rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Errno::ETIMEDOUT
         raise "SSE test server did not start within 5s" if Time.now > deadline
+
         task.sleep 0.05
       end
 
@@ -84,20 +90,22 @@ class TestServerAppSSE < Minitest::Test
     end
   end
 
+
   def test_subscribe_receives_status_and_artifact_events
     with_server(build_app(SSEStreamingExecutor.new)) do |url|
       events = []
       A2A.sse_client(url: url)
          .send_subscribe(message: A2A::Models::Message.user("go")) { |ev| events << ev }
 
-      status_events   = events.select { |e| e.is_a?(A2A::Models::TaskStatusUpdateEvent) }
-      artifact_events = events.select { |e| e.is_a?(A2A::Models::TaskArtifactUpdateEvent) }
+      status_events   = events.grep(A2A::Models::TaskStatusUpdateEvent)
+      artifact_events = events.grep(A2A::Models::TaskArtifactUpdateEvent)
 
       assert_operator status_events.length, :>=, 1
       assert_equal 1, artifact_events.length
       assert_equal "hello world", artifact_events.first.artifact.parts.first.text
     end
   end
+
 
   def test_subscribe_final_status_is_completed
     with_server(build_app(SSEStreamingExecutor.new)) do |url|
@@ -106,12 +114,13 @@ class TestServerAppSSE < Minitest::Test
          .send_subscribe(message: A2A::Models::Message.user("go")) { |ev| events << ev }
 
       final = events
-        .select { |e| e.is_a?(A2A::Models::TaskStatusUpdateEvent) && e.final }
-        .last
+              .select { |e| e.is_a?(A2A::Models::TaskStatusUpdateEvent) && e.final }
+              .last
       refute_nil final
       assert_equal "completed", final.status.state
     end
   end
+
 
   def test_subscribe_executor_error_emits_sse_error_event
     with_server(build_app(SSEErrorExecutor.new)) do |url|

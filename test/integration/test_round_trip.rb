@@ -7,13 +7,14 @@ class EchoProcessExecutor < A2A::Server::AgentExecutor
   def call(ctx)
     input = ctx.message.parts.map { |p| p.respond_to?(:text) ? p.text : "" }.join
     ctx.task.complete!(artifacts: [
-      A2A::Models::Artifact.new(
-        name:  "reply",
-        parts: [A2A::Models::Part.text("Processed: #{input}")]
-      )
-    ])
+                         A2A::Models::Artifact.new(
+                           name: "reply",
+                           parts: [A2A::Models::Part.text("Processed: #{input}")]
+                         )
+                       ])
   end
 end
+
 
 class TestIntegration < Minitest::Test
   include Rack::Test::Methods
@@ -24,28 +25,30 @@ class TestIntegration < Minitest::Test
     storage  = A2A::Storage::Memory.new
     executor = EchoProcessExecutor.new
     card     = M::AgentCard.new(
-      name:         "integration-agent",
-      version:      "1.0",
+      name: "integration-agent",
+      version: "1.0",
       capabilities: M::AgentCapabilities.new,
-      skills:       [M::AgentSkill.new(name: "echo")],
-      interfaces:   [M::AgentInterface.new(type: "json-rpc", url: "http://localhost", version: "1.0")]
+      skills: [M::AgentSkill.new(name: "echo")],
+      interfaces: [M::AgentInterface.new(type: "json-rpc", url: "http://localhost", version: "1.0")]
     )
 
     app_class = Class.new(A2A::Server::App)
     app_class.configure(
-      agent_card:         card,
-      storage:            storage,
-      executor:           executor,
+      agent_card: card,
+      storage: storage,
+      executor: executor,
       broadcast_registry: A2A::Server::BroadcastRegistry.new
     )
     app_class.freeze.app
   end
+
 
   def rpc(method, params = {})
     body = JSON.generate({ "jsonrpc" => "2.0", "id" => 1, "method" => method, "params" => params })
     post "/", body, "CONTENT_TYPE" => "application/json"
     JSON.parse(last_response.body)
   end
+
 
   def test_agent_card_discoverable
     get "/agentCard"
@@ -54,6 +57,7 @@ class TestIntegration < Minitest::Test
     assert_equal "integration-agent", card["name"]
     assert_equal "1.0",               card["version"]
   end
+
 
   def test_full_send_and_retrieve_round_trip
     message = M::Message.user("hello world")
@@ -66,6 +70,7 @@ class TestIntegration < Minitest::Test
     assert_includes task["artifacts"][0]["parts"][0]["text"], "hello world"
   end
 
+
   def test_task_persists_after_send
     message = M::Message.user("persist me")
     send_resp = rpc("tasks/send", { "message" => message.to_h })
@@ -77,6 +82,7 @@ class TestIntegration < Minitest::Test
     assert_equal task_id, get_resp["result"]["id"]
   end
 
+
   def test_task_appears_in_list
     message = M::Message.user("list me")
     rpc("tasks/send", { "message" => message.to_h })
@@ -87,6 +93,7 @@ class TestIntegration < Minitest::Test
     assert_operator list_resp["result"].length, :>=, 1
   end
 
+
   def test_cancel_completed_task_returns_not_cancelable
     message = M::Message.user("cancel me")
     send_resp = rpc("tasks/send", { "message" => message.to_h })
@@ -96,6 +103,7 @@ class TestIntegration < Minitest::Test
     refute_nil cancel_resp["error"]
     assert_equal A2A::JsonRpc::ErrorCode::TASK_NOT_CANCELABLE, cancel_resp["error"]["code"]
   end
+
 
   def test_version_header_negotiation
     body = JSON.generate({ "jsonrpc" => "2.0", "id" => 1, "method" => "tasks/list", "params" => {} })
@@ -108,10 +116,12 @@ class TestIntegration < Minitest::Test
     assert_equal A2A::JsonRpc::ErrorCode::VERSION_NOT_SUPPORTED, resp["error"]["code"]
   end
 
+
   def test_unknown_method_returns_method_not_found
     resp = rpc("tasks/doesNotExist", {})
     assert_equal A2A::JsonRpc::ErrorCode::METHOD_NOT_FOUND, resp["error"]["code"]
   end
+
 
   def test_invalid_json_returns_parse_error
     post "/", "{ this is not json }", "CONTENT_TYPE" => "application/json"
@@ -119,10 +129,12 @@ class TestIntegration < Minitest::Test
     assert_equal A2A::JsonRpc::ErrorCode::PARSE_ERROR, resp["error"]["code"]
   end
 
+
   def test_factory_method_creates_client
     client = A2A.client(url: "http://localhost:9292")
     assert_kind_of A2A::Client::Base, client
   end
+
 
   def test_factory_method_creates_sse_client
     client = A2A.sse_client(url: "http://localhost:9292")

@@ -21,6 +21,7 @@ module A2A
         @port   = port
       end
 
+
       def run
         FalconRunner.new(rack_app, host: @host, port: @port).run
       end
@@ -32,16 +33,17 @@ module A2A
         Rack::URLMap.new(url_map)
       end
 
+
       # Each agent needs its own App subclass so class-level configure state
       # doesn't bleed between agents.
       def build_app(cfg)
         klass = Class.new(App)
         klass.configure(
-          agent_card:   cfg[:agent_card],
-          storage:      cfg[:storage]      || Storage::Memory.new,
-          executor:     cfg[:executor],
+          agent_card: cfg[:agent_card],
+          storage: cfg[:storage] || Storage::Memory.new,
+          executor: cfg[:executor],
           broadcast_registry: BroadcastRegistry.new,
-          push_sender:  cfg[:push_sender]
+          push_sender: cfg[:push_sender]
         )
         klass.freeze.app
       end

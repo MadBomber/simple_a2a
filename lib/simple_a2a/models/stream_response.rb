@@ -13,8 +13,10 @@ module A2A
       def status_update?   = !status_update.nil?
       def artifact_update? = !artifact_update.nil?
 
+
       def self.from_hash(hash)
         return nil if hash.nil?
+
         if hash["task"]
           new(task: Task.from_hash(hash["task"]))
         elsif hash["message"]

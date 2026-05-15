@@ -11,20 +11,28 @@ module A2A
   class << self
     attr_accessor :logger
 
-    def server(**opts)
-      Server::Base.new(**opts)
+    def server(**)
+      Server::Base.new(**)
     end
 
-    def multi_server(**opts)
-      Server::MultiAgent.new(**opts)
+
+    def multi_server(**)
+      Server::MultiAgent.new(**)
     end
 
-    def client(**opts)
-      Client::Base.new(**opts)
+
+    def broker_server(**)
+      Server::BrokerServer.new(**)
     end
 
-    def sse_client(**opts)
-      Client::SSE.new(**opts)
+
+    def client(**)
+      Client::Base.new(**)
+    end
+
+
+    def sse_client(**)
+      Client::SSE.new(**)
     end
   end
 end
@@ -36,7 +44,7 @@ require_relative "simple_a2a/errors"
 loader = Zeitwerk::Loader.for_gem
 loader.inflector.inflect(
   "simple_a2a" => "A2A",
-  "sse"        => "SSE"
+  "sse" => "SSE"
 )
 loader.ignore(
   "#{__dir__}/simple_a2a/version.rb",

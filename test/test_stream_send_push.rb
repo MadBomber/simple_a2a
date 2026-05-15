@@ -17,6 +17,7 @@ class TestStreamResponse < Minitest::Test
     refute sr.artifact_update?
   end
 
+
   def test_from_hash_with_message
     msg = A2A::Models::Message.user("hi")
     h = { "message" => msg.to_h }
@@ -26,6 +27,7 @@ class TestStreamResponse < Minitest::Test
     refute sr.task?
   end
 
+
   def test_from_hash_with_status_update
     h = { "statusUpdate" => { "state" => "working" } }
     sr = A2A::Models::StreamResponse.from_hash(h)
@@ -33,15 +35,18 @@ class TestStreamResponse < Minitest::Test
     assert_equal({ "state" => "working" }, sr.status_update)
   end
 
+
   def test_from_hash_with_artifact_update
     h = { "artifactUpdate" => { "name" => "result" } }
     sr = A2A::Models::StreamResponse.from_hash(h)
     assert sr.artifact_update?
   end
 
+
   def test_from_hash_nil_returns_nil
     assert_nil A2A::Models::StreamResponse.from_hash(nil)
   end
+
 
   def test_from_hash_unknown_returns_empty
     sr = A2A::Models::StreamResponse.from_hash({})
@@ -49,6 +54,7 @@ class TestStreamResponse < Minitest::Test
     refute sr.message?
   end
 end
+
 
 class TestSendMessageConfiguration < Minitest::Test
   def test_defaults
@@ -58,6 +64,7 @@ class TestSendMessageConfiguration < Minitest::Test
     assert_nil cfg.history_length
     assert_nil cfg.task_push_notification_config
   end
+
 
   def test_custom_values
     cfg = A2A::Models::SendMessageConfiguration.new(
@@ -69,6 +76,7 @@ class TestSendMessageConfiguration < Minitest::Test
     assert_equal 10, cfg.history_length
     assert cfg.return_immediately
   end
+
 
   def test_to_h_snake_to_camel
     cfg = A2A::Models::SendMessageConfiguration.new(
@@ -82,6 +90,7 @@ class TestSendMessageConfiguration < Minitest::Test
   end
 end
 
+
 class TestPushNotification < Minitest::Test
   def test_authentication_info_valid
     auth = A2A::Models::AuthenticationInfo.new(scheme: "bearer", value: "token123")
@@ -90,25 +99,30 @@ class TestPushNotification < Minitest::Test
     assert_equal "token123", auth.value
   end
 
+
   def test_authentication_info_requires_scheme_and_value
     auth = A2A::Models::AuthenticationInfo.new(scheme: "bearer", value: nil)
     refute auth.valid?
   end
+
 
   def test_push_notification_config_valid
     cfg = A2A::Models::PushNotificationConfig.new(webhook_url: "https://example.com/hook")
     assert cfg.valid?
   end
 
+
   def test_push_notification_config_invalid_without_url
     cfg = A2A::Models::PushNotificationConfig.new(webhook_url: nil)
     refute cfg.valid?
   end
 
+
   def test_push_notification_config_invalid_with_empty_url
     cfg = A2A::Models::PushNotificationConfig.new(webhook_url: "")
     refute cfg.valid?
   end
+
 
   def test_push_notification_config_with_auth
     auth = A2A::Models::AuthenticationInfo.new(scheme: "bearer", value: "tok")
@@ -118,6 +132,7 @@ class TestPushNotification < Minitest::Test
     )
     assert_equal "bearer", cfg.authentication_info.scheme
   end
+
 
   def test_from_hash_coerces_authentication_info
     h = {

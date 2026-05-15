@@ -6,10 +6,11 @@ require "rack/test"
 class MultiAgentEchoExecutor < A2A::Server::AgentExecutor
   def call(ctx)
     ctx.task.complete!(artifacts: [
-      A2A::Models::Artifact.new(parts: [A2A::Models::Part.text("echo")])
-    ])
+                         A2A::Models::Artifact.new(parts: [A2A::Models::Part.text("echo")])
+                       ])
   end
 end
+
 
 class TestMultiAgent < Minitest::Test
   include Rack::Test::Methods
@@ -18,23 +19,25 @@ class TestMultiAgent < Minitest::Test
 
   def build_card(name)
     M::AgentCard.new(
-      name:         name,
-      version:      "1.0",
+      name: name,
+      version: "1.0",
       capabilities: M::AgentCapabilities.new,
-      skills:       [M::AgentSkill.new(name: "test")],
-      interfaces:   [M::AgentInterface.new(type: "json-rpc", url: "http://localhost", version: "1.0")]
+      skills: [M::AgentSkill.new(name: "test")],
+      interfaces: [M::AgentInterface.new(type: "json-rpc", url: "http://localhost", version: "1.0")]
     )
   end
+
 
   def app
     multi = A2A::Server::MultiAgent.new(
       agents: {
         "/alpha" => { agent_card: build_card("AlphaAgent"), executor: MultiAgentEchoExecutor.new },
-        "/beta"  => { agent_card: build_card("BetaAgent"),  executor: MultiAgentEchoExecutor.new }
+        "/beta" => { agent_card: build_card("BetaAgent"),  executor: MultiAgentEchoExecutor.new }
       }
     )
     multi.send(:rack_app)
   end
+
 
   def json_post(path, method, params = {})
     body = JSON.generate({ "jsonrpc" => "2.0", "id" => 1, "method" => method, "params" => params })
@@ -42,17 +45,20 @@ class TestMultiAgent < Minitest::Test
     JSON.parse(last_response.body)
   end
 
+
   def test_alpha_agent_card_returns_correct_name
     get "/alpha/agentCard"
     assert last_response.ok?
     assert_equal "AlphaAgent", JSON.parse(last_response.body)["name"]
   end
 
+
   def test_beta_agent_card_returns_correct_name
     get "/beta/agentCard"
     assert last_response.ok?
     assert_equal "BetaAgent", JSON.parse(last_response.body)["name"]
   end
+
 
   def test_tasks_are_isolated_between_agents
     msg  = M::Message.user("hello").to_h
@@ -70,10 +76,12 @@ class TestMultiAgent < Minitest::Test
     assert_equal A2A::JsonRpc::ErrorCode::TASK_NOT_FOUND, not_found["error"]["code"]
   end
 
-  def test_unknown_path_returns_404
+
+  def test_unknown_path_returns_not_found
     get "/unknown/agentCard"
     assert_equal 404, last_response.status
   end
+
 
   def test_both_agents_can_execute_tasks_independently
     msg = M::Message.user("hello").to_h

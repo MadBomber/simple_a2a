@@ -16,13 +16,14 @@ module A2A
         @issuer      = issuer
       end
 
+
       def deliver(config, event)
         return unless config.is_a?(Models::PushNotificationConfig)
         return unless config.valid?
 
         payload = build_payload(event)
         headers = build_headers(config, payload)
-        post(config.webhook_url, payload, headers)
+        http_post(config.webhook_url, payload, headers)
       rescue StandardError => e
         A2A.logger&.warn("PushSender: delivery failed to #{config&.webhook_url} — #{e.class}: #{e.message}")
         false
@@ -33,6 +34,7 @@ module A2A
       def build_payload(event)
         JSON.generate(event.to_h)
       end
+
 
       def build_headers(config, payload)
         headers = { "Content-Type" => "application/json" }
@@ -52,6 +54,7 @@ module A2A
         headers
       end
 
+
       def jwt_token(payload)
         return "no-key" unless @private_key
 
@@ -64,7 +67,8 @@ module A2A
         JWT.encode(claims, @private_key, "RS256", { kid: @key_id }.compact)
       end
 
-      def post(url, body, headers)
+
+      def http_post(url, body, headers) # rubocop:disable Naming/PredicateMethod
         uri = URI.parse(url)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = uri.scheme == "https"

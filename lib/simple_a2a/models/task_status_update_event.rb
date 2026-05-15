@@ -11,6 +11,7 @@ module A2A
 
       def final? = !!final
 
+
       def to_h
         super.merge("type" => "TaskStatusUpdateEvent")
       end

@@ -12,6 +12,7 @@ module A2A
         super
       end
 
+
       def terminal?    = Types::TaskState.terminal?(state)
       def interrupted? = Types::TaskState.interrupted?(state)
       def active?      = Types::TaskState.active?(state)

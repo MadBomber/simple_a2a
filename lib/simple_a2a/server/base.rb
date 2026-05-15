@@ -23,18 +23,20 @@ module A2A
         @port              = port
       end
 
+
       def rack_app
         klass = Class.new(App)
         klass.configure(
-          agent_card:         @agent_card,
-          storage:            @storage,
-          executor:           @executor,
+          agent_card: @agent_card,
+          storage: @storage,
+          executor: @executor,
           broadcast_registry: BroadcastRegistry.new,
-          push_sender:        @push_sender,
-          push_config_store:  @push_config_store
+          push_sender: @push_sender,
+          push_config_store: @push_config_store
         )
         klass.freeze.app
       end
+
 
       def run
         app = rack_app

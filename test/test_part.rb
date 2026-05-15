@@ -14,11 +14,13 @@ class TestPart < Minitest::Test
     refute part.raw?
   end
 
+
   def test_text_factory_custom_media_type
     part = A2A::Models::Part.text("data", media_type: "text/csv", filename: "data.csv")
     assert_equal "text/csv", part.media_type
     assert_equal "data.csv", part.filename
   end
+
 
   def test_json_factory
     hash = { key: "value" }
@@ -28,12 +30,14 @@ class TestPart < Minitest::Test
     assert_equal "application/json", part.media_type
   end
 
+
   def test_url_factory
     part = A2A::Models::Part.from_url("https://example.com/file.png", media_type: "image/png")
     assert part.url?
     assert_equal "https://example.com/file.png", part.url
     assert_equal "image/png", part.media_type
   end
+
 
   def test_binary_factory
     bytes = "binary data"
@@ -43,16 +47,19 @@ class TestPart < Minitest::Test
     assert_equal bytes, part.decoded_bytes
   end
 
+
   def test_valid_with_one_field
     assert A2A::Models::Part.text("hi").valid?
     assert A2A::Models::Part.json({}).valid?
     assert A2A::Models::Part.from_url("http://x.com", media_type: "image/png").valid?
   end
 
+
   def test_invalid_with_no_fields
     part = A2A::Models::Part.new
     refute part.valid?
   end
+
 
   def test_to_h_omits_nil_fields
     part = A2A::Models::Part.text("hi")
@@ -63,6 +70,7 @@ class TestPart < Minitest::Test
     refute h.key?("data")
   end
 
+
   def test_from_hash_roundtrip
     part = A2A::Models::Part.text("hello world")
     h = part.to_h
@@ -70,6 +78,7 @@ class TestPart < Minitest::Test
     assert_equal "hello world", part2.text
     assert_equal "text/plain", part2.media_type
   end
+
 
   def test_from_hash_camel_case_keys
     part = A2A::Models::Part.from_hash({ "text" => "hi", "mediaType" => "text/plain" })

@@ -9,21 +9,26 @@ module A2A
           attr_accessor name
         end
 
+
         def attributes
           @attributes ||= {}
         end
+
 
         def inherited(subclass)
           super
           subclass.instance_variable_set(:@attributes, attributes.dup)
         end
 
+
         def from_hash(hash)
           return nil if hash.nil?
+
           kwargs = {}
           attributes.each do |name, opts|
             val = find_value(hash, name)
             next if val.nil?
+
             kwargs[name] = coerce(val, opts[:type])
           end
           new(**kwargs)
@@ -36,23 +41,27 @@ module A2A
           hash[camel] || hash[camel.to_sym] || hash[name.to_s] || hash[name]
         end
 
+
         def camelize(snake)
           parts = snake.to_s.split("_")
           (parts[0..0] + parts[1..].map(&:capitalize)).join
         end
 
+
         def coerce(val, type)
           return val if type.nil?
-
-          if type.is_a?(Array)
-            item_type = type[0]
-            return val unless val.is_a?(Array)
-            return val.map { |v| coerce(v, item_type) }
-          end
-
+          return coerce_array(val, type[0]) if type.is_a?(Array)
           return val if val.is_a?(type)
           return type.from_hash(val) if val.is_a?(Hash) && type.respond_to?(:from_hash)
+
           val
+        end
+
+
+        def coerce_array(val, item_type)
+          return val unless val.is_a?(Array)
+
+          val.map { |v| coerce(v, item_type) }
         end
       end
 
@@ -63,17 +72,21 @@ module A2A
         end
       end
 
+
       def to_h
         self.class.attributes.each_with_object({}) do |(name, _), result|
           val = send(name)
           next if val.nil?
+
           result[camelize(name)] = serialize(val)
         end
       end
 
+
       def to_json(*)
         JSON.generate(to_h)
       end
+
 
       def valid?
         self.class.attributes.all? do |name, opts|
@@ -81,8 +94,10 @@ module A2A
         end
       end
 
+
       def ==(other)
         return false unless other.is_a?(self.class)
+
         self.class.attributes.keys.all? { |n| send(n) == other.send(n) }
       end
 
@@ -93,9 +108,11 @@ module A2A
         (parts[0..0] + parts[1..].map(&:capitalize)).join
       end
 
+
       def resolve_default(default)
         default.respond_to?(:call) ? default.call : default
       end
+
 
       def serialize(val)
         case val

@@ -8,13 +8,16 @@ module A2A
         @mutex      = Mutex.new
       end
 
+
       def register(task_id, broadcast)
         @mutex.synchronize { @broadcasts[task_id] = broadcast }
       end
 
+
       def unregister(task_id)
         @mutex.synchronize { @broadcasts.delete(task_id) }
       end
+
 
       def find(task_id)
         @mutex.synchronize { @broadcasts[task_id] }

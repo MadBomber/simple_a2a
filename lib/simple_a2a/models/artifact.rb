@@ -15,6 +15,7 @@ module A2A
         super
       end
 
+
       def valid?
         !parts.nil? && !parts.empty?
       end

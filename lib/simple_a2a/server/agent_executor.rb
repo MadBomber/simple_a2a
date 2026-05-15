@@ -7,6 +7,7 @@ module A2A
         raise NotImplementedError, "#{self.class}#call must be implemented"
       end
 
+
       def cancel(context)
         context.task.cancel!
         context.emit_status(final: true)

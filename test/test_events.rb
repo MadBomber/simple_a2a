@@ -7,6 +7,7 @@ class TestTaskStatusUpdateEvent < Minitest::Test
     A2A::Models::TaskStatus.new(state: state, timestamp: "2026-01-01T00:00:00Z")
   end
 
+
   def test_required_fields
     ev = A2A::Models::TaskStatusUpdateEvent.new(
       task_id: "t-1",
@@ -19,12 +20,14 @@ class TestTaskStatusUpdateEvent < Minitest::Test
     assert_equal "working", ev.status.state
   end
 
+
   def test_final_defaults_false
     ev = A2A::Models::TaskStatusUpdateEvent.new(
       task_id: "t-1", context_id: "c-1", status: make_status("working")
     )
     refute ev.final?
   end
+
 
   def test_final_true
     ev = A2A::Models::TaskStatusUpdateEvent.new(
@@ -34,12 +37,14 @@ class TestTaskStatusUpdateEvent < Minitest::Test
     assert ev.final?
   end
 
+
   def test_invalid_without_task_id
     ev = A2A::Models::TaskStatusUpdateEvent.new(
       task_id: nil, context_id: "c-1", status: make_status("working")
     )
     refute ev.valid?
   end
+
 
   def test_to_h_roundtrip
     ev = A2A::Models::TaskStatusUpdateEvent.new(
@@ -52,12 +57,13 @@ class TestTaskStatusUpdateEvent < Minitest::Test
     assert_equal "completed", h["status"]["state"]
   end
 
+
   def test_from_hash_coerces_status
     h = {
-      "taskId"    => "t-1",
+      "taskId" => "t-1",
       "contextId" => "c-1",
-      "status"    => { "state" => "failed", "timestamp" => "2026-01-01T00:00:00Z" },
-      "final"     => true
+      "status" => { "state" => "failed", "timestamp" => "2026-01-01T00:00:00Z" },
+      "final" => true
     }
     ev = A2A::Models::TaskStatusUpdateEvent.from_hash(h)
     assert_instance_of A2A::Models::TaskStatus, ev.status
@@ -65,6 +71,7 @@ class TestTaskStatusUpdateEvent < Minitest::Test
     assert ev.final?
   end
 end
+
 
 class TestTaskArtifactUpdateEvent < Minitest::Test
   def make_artifact
@@ -74,6 +81,7 @@ class TestTaskArtifactUpdateEvent < Minitest::Test
     )
   end
 
+
   def test_required_fields
     ev = A2A::Models::TaskArtifactUpdateEvent.new(
       task_id: "t-1", context_id: "c-1", artifact: make_artifact
@@ -82,6 +90,7 @@ class TestTaskArtifactUpdateEvent < Minitest::Test
     assert_equal "art-1", ev.artifact.artifact_id
   end
 
+
   def test_append_defaults_false
     ev = A2A::Models::TaskArtifactUpdateEvent.new(
       task_id: "t-1", context_id: "c-1", artifact: make_artifact
@@ -89,6 +98,7 @@ class TestTaskArtifactUpdateEvent < Minitest::Test
     refute ev.append?
     refute ev.last_chunk?
   end
+
 
   def test_append_and_last_chunk
     ev = A2A::Models::TaskArtifactUpdateEvent.new(
@@ -99,12 +109,14 @@ class TestTaskArtifactUpdateEvent < Minitest::Test
     assert ev.last_chunk?
   end
 
+
   def test_invalid_without_artifact
     ev = A2A::Models::TaskArtifactUpdateEvent.new(
       task_id: "t-1", context_id: "c-1", artifact: nil
     )
     refute ev.valid?
   end
+
 
   def test_to_h_roundtrip
     ev = A2A::Models::TaskArtifactUpdateEvent.new(
@@ -117,13 +129,14 @@ class TestTaskArtifactUpdateEvent < Minitest::Test
     assert_equal "art-1", h["artifact"]["artifactId"]
   end
 
+
   def test_from_hash_coerces_artifact
     h = {
-      "taskId"    => "t-1",
+      "taskId" => "t-1",
       "contextId" => "c-1",
-      "artifact"  => {
+      "artifact" => {
         "artifactId" => "art-2",
-        "parts"      => [{ "text" => "chunk", "mediaType" => "text/plain" }]
+        "parts" => [{ "text" => "chunk", "mediaType" => "text/plain" }]
       },
       "append" => true
     }

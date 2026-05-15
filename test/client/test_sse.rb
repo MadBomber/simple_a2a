@@ -7,25 +7,28 @@ class TestClientSSE < Minitest::Test
     @client = A2A::Client::SSE.new(url: "http://localhost:9292")
   end
 
+
   def status_update_event_hash(state: "working", final: false)
     {
-      "type"      => "TaskStatusUpdateEvent",
-      "taskId"    => "t-1",
+      "type" => "TaskStatusUpdateEvent",
+      "taskId" => "t-1",
       "contextId" => "c-1",
-      "status"    => { "state" => state, "timestamp" => "2026-01-01T00:00:00Z" },
-      "final"     => final
+      "status" => { "state" => state, "timestamp" => "2026-01-01T00:00:00Z" },
+      "final" => final
     }
   end
 
+
   def artifact_update_event_hash
     {
-      "type"      => "TaskArtifactUpdateEvent",
-      "taskId"    => "t-1",
+      "type" => "TaskArtifactUpdateEvent",
+      "taskId" => "t-1",
       "contextId" => "c-1",
-      "artifact"  => { "parts" => [{ "kind" => "text", "text" => "hello" }] },
-      "final"     => false
+      "artifact" => { "parts" => [{ "kind" => "text", "text" => "hello" }] },
+      "final" => false
     }
   end
+
 
   # Fake response body that yields chunks via #each (matches async/http body interface)
   def fake_response(sse_body, chunk_size: 16)
@@ -47,6 +50,7 @@ class TestClientSSE < Minitest::Test
     assert_equal "t-1", event.task_id
   end
 
+
   def test_parse_sse_event_artifact_update
     data      = JSON.generate({ "result" => artifact_update_event_hash })
     event_str = "data: #{data}"
@@ -55,6 +59,7 @@ class TestClientSSE < Minitest::Test
     assert_equal "t-1", event.task_id
   end
 
+
   def test_parse_sse_event_returns_hash_for_unknown_type
     data      = JSON.generate({ "result" => { "type" => "UnknownEvent", "foo" => "bar" } })
     event_str = "data: #{data}"
@@ -62,15 +67,18 @@ class TestClientSSE < Minitest::Test
     assert_kind_of Hash, event
   end
 
+
   def test_parse_sse_event_returns_nil_for_no_data
     event = @client.send(:parse_sse_event, "event: ping\n")
     assert_nil event
   end
 
+
   def test_parse_sse_event_returns_nil_for_invalid_json
     event = @client.send(:parse_sse_event, "data: not-json")
     assert_nil event
   end
+
 
   def test_parse_sse_event_ignores_comment_lines
     data      = JSON.generate({ "result" => status_update_event_hash })
@@ -96,6 +104,7 @@ class TestClientSSE < Minitest::Test
     assert_equal "completed", events[1].status.state
   end
 
+
   def test_parse_sse_stream_handles_chunked_delivery
     data     = JSON.generate({ "result" => status_update_event_hash })
     sse_body = "data: #{data}\n\n"
@@ -106,6 +115,7 @@ class TestClientSSE < Minitest::Test
     assert_equal 1, events.length
     assert_kind_of A2A::Models::TaskStatusUpdateEvent, events.first
   end
+
 
   def test_parse_sse_stream_skips_nil_events
     sse_body = ": keep-alive\n\ndata: bad-json\n\n"

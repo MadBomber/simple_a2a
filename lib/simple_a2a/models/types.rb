@@ -23,11 +23,13 @@ module A2A
         def self.active?(state)      = ACTIVE.include?(state)
       end
 
+
       module Role
         USER  = "user"
         AGENT = "agent"
         ALL   = [USER, AGENT].freeze
       end
+
 
       module BindingType
         JSON_RPC = "json-rpc"

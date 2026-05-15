@@ -9,10 +9,12 @@ class FakeEventRouter
     @published = []
   end
 
+
   def publish(task_id, event)
     @published << [task_id, event]
   end
 end
+
 
 class TestServerContext < Minitest::Test
   def setup
@@ -29,6 +31,7 @@ class TestServerContext < Minitest::Test
     )
   end
 
+
   def test_accessors
     assert_equal @task,    @ctx.task
     assert_equal @message, @ctx.message
@@ -37,10 +40,12 @@ class TestServerContext < Minitest::Test
     assert_equal({},       @ctx.config)
   end
 
+
   def test_save_task
     @ctx.save_task
     assert_equal @task, @storage.find("t-1")
   end
+
 
   def test_emit_status_publishes_event_and_saves
     @task.start!
@@ -54,12 +59,14 @@ class TestServerContext < Minitest::Test
     assert_equal @task, @storage.find("t-1")
   end
 
+
   def test_emit_status_final
     @task.complete!
     @ctx.emit_status(final: true)
     _, event = @router.published.first
     assert event.final?
   end
+
 
   def test_emit_artifact_publishes_event
     art = A2A::Models::Artifact.new(
@@ -75,6 +82,7 @@ class TestServerContext < Minitest::Test
     refute event.append?
   end
 
+
   def test_custom_config
     ctx = A2A::Server::Context.new(
       task: @task, message: @message,
@@ -84,6 +92,7 @@ class TestServerContext < Minitest::Test
     assert_equal({ timeout: 30 }, ctx.config)
   end
 end
+
 
 class TestResumeContext < Minitest::Test
   def setup
@@ -97,6 +106,7 @@ class TestResumeContext < Minitest::Test
     @resume_msg   = A2A::Models::Message.user("here is the input")
   end
 
+
   def test_resume_message_accessible
     ctx = A2A::Server::ResumeContext.new(
       task: @task, message: @message,
@@ -107,6 +117,7 @@ class TestResumeContext < Minitest::Test
     assert_equal @message,    ctx.message
   end
 end
+
 
 class TestAgentExecutor < Minitest::Test
   def setup
@@ -122,10 +133,12 @@ class TestAgentExecutor < Minitest::Test
     )
   end
 
+
   def test_call_raises_not_implemented
     executor = A2A::Server::AgentExecutor.new
     assert_raises(NotImplementedError) { executor.call(@ctx) }
   end
+
 
   def test_cancel_transitions_to_canceled
     executor = A2A::Server::AgentExecutor.new
@@ -136,6 +149,7 @@ class TestAgentExecutor < Minitest::Test
     assert event.final?
     assert_equal "canceled", event.status.state
   end
+
 
   def test_subclass_can_implement_call
     executor = Class.new(A2A::Server::AgentExecutor) do

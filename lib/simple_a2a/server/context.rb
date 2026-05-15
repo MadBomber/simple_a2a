@@ -13,32 +13,34 @@ module A2A
         @config       = config || {}
       end
 
+
       def save_task
         storage.save(task)
       end
 
+
       def emit_status(final: false)
         event = Models::TaskStatusUpdateEvent.new(
-          task_id:    task.id,
+          task_id: task.id,
           context_id: task.context_id,
-          status:     task.status,
-          final:      final
+          status: task.status,
+          final: final
         )
         storage.save(task)
         event_router.publish(task.id, event)
       end
 
+
       def emit_artifact(artifact, append: false, last_chunk: false)
         event = Models::TaskArtifactUpdateEvent.new(
-          task_id:    task.id,
+          task_id: task.id,
           context_id: task.context_id,
-          artifact:   artifact,
-          append:     append,
+          artifact: artifact,
+          append: append,
           last_chunk: last_chunk
         )
         event_router.publish(task.id, event)
       end
     end
-
   end
 end

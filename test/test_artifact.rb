@@ -9,20 +9,24 @@ class TestArtifact < Minitest::Test
     assert_match(/\A[0-9a-f-]{36}\z/, art.artifact_id)
   end
 
+
   def test_explicit_artifact_id_preserved
     art = A2A::Models::Artifact.new(artifact_id: "my-id", parts: [A2A::Models::Part.text("x")])
     assert_equal "my-id", art.artifact_id
   end
+
 
   def test_valid_with_parts
     art = A2A::Models::Artifact.new(parts: [A2A::Models::Part.text("result")])
     assert art.valid?
   end
 
+
   def test_invalid_with_empty_parts
     art = A2A::Models::Artifact.new(parts: [])
     refute art.valid?
   end
+
 
   def test_name_and_description
     art = A2A::Models::Artifact.new(
@@ -33,6 +37,7 @@ class TestArtifact < Minitest::Test
     assert_equal "output.txt", art.name
     assert_equal "The result", art.description
   end
+
 
   def test_to_h_roundtrip
     art = A2A::Models::Artifact.new(

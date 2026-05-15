@@ -7,37 +7,41 @@ class TestClientBase < Minitest::Test
     @client = A2A::Client::Base.new(url: "http://localhost:9292")
   end
 
-  def stub_http_post(result_or_error)
+
+  def stub_http_post(result_or_error, &)
     body = if result_or_error.key?(:error)
-      JSON.generate({ "jsonrpc" => "2.0", "id" => "1", "error" => result_or_error[:error] })
-    else
-      JSON.generate({ "jsonrpc" => "2.0", "id" => "1", "result" => result_or_error[:result] })
-    end
-    @client.stub(:http_post, body) { yield }
+             JSON.generate({ "jsonrpc" => "2.0", "id" => "1", "error" => result_or_error[:error] })
+           else
+             JSON.generate({ "jsonrpc" => "2.0", "id" => "1", "result" => result_or_error[:result] })
+           end
+    @client.stub(:http_post, body, &)
   end
 
-  def stub_http_get(body_hash)
-    @client.stub(:http_get, JSON.generate(body_hash)) { yield }
+
+  def stub_http_get(body_hash, &)
+    @client.stub(:http_get, JSON.generate(body_hash), &)
   end
+
 
   def task_hash(state: "completed")
     {
-      "id"         => "task-1",
-      "contextId"  => "ctx-1",
-      "status"     => { "state" => state, "timestamp" => "2026-01-01T00:00:00Z" },
-      "artifacts"  => [],
-      "metadata"   => {},
-      "kind"       => "task"
+      "id" => "task-1",
+      "contextId" => "ctx-1",
+      "status" => { "state" => state, "timestamp" => "2026-01-01T00:00:00Z" },
+      "artifacts" => [],
+      "metadata" => {},
+      "kind" => "task"
     }
   end
 
+
   def agent_card_hash
     {
-      "name"         => "TestAgent",
-      "version"      => "1.0",
+      "name" => "TestAgent",
+      "version" => "1.0",
       "capabilities" => {},
-      "skills"       => [],
-      "interfaces"   => []
+      "skills" => [],
+      "interfaces" => []
     }
   end
 
@@ -62,6 +66,7 @@ class TestClientBase < Minitest::Test
     end
   end
 
+
   def test_send_task_accepts_hash_message
     stub_http_post(result: task_hash) do
       msg_hash = A2A::Models::Message.user("hi").to_h
@@ -70,16 +75,21 @@ class TestClientBase < Minitest::Test
     end
   end
 
+
   def test_send_task_with_task_id_option
     captured_json = nil
-    @client.stub(:http_post, ->(body) { captured_json = JSON.parse(body); JSON.generate({ "jsonrpc" => "2.0", "id" => "x", "result" => task_hash }) }) do
+    @client.stub(:http_post, lambda { |body|
+      captured_json = JSON.parse(body)
+      JSON.generate({ "jsonrpc" => "2.0", "id" => "x", "result" => task_hash })
+    }) do
       @client.send_task(message: A2A::Models::Message.user("hi"), task_id: "my-id")
     end
     assert_equal "my-id", captured_json["params"]["id"]
   end
 
+
   def test_send_task_raises_on_error
-    err = { "code" => -32001, "message" => "not found" }
+    err = { "code" => -32_001, "message" => "not found" }
     stub_http_post(error: err) do
       assert_raises(A2A::Error) do
         @client.send_task(message: A2A::Models::Message.user("hi"))
@@ -97,8 +107,9 @@ class TestClientBase < Minitest::Test
     end
   end
 
+
   def test_get_task_raises_on_error
-    err = { "code" => -32001, "message" => "Task not found" }
+    err = { "code" => -32_001, "message" => "Task not found" }
     stub_http_post(error: err) do
       assert_raises(A2A::Error) { @client.get_task("no-such") }
     end
@@ -114,6 +125,7 @@ class TestClientBase < Minitest::Test
       assert_kind_of A2A::Models::Task, tasks.first
     end
   end
+
 
   def test_list_tasks_empty
     stub_http_post(result: []) do
@@ -133,7 +145,7 @@ class TestClientBase < Minitest::Test
   # --- rpc_call error handling ---
 
   def test_rpc_error_raises_a2a_error
-    err = { "code" => -32603, "message" => "Internal error" }
+    err = { "code" => -32_603, "message" => "Internal error" }
     stub_http_post(error: err) do
       assert_raises(A2A::Error) { @client.list_tasks }
     end

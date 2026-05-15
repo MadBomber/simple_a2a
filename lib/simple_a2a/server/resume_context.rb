@@ -5,8 +5,8 @@ module A2A
     class ResumeContext < Context
       attr_reader :resume_message
 
-      def initialize(resume_message:, **kwargs)
-        super(**kwargs)
+      def initialize(resume_message:, **)
+        super(**)
         @resume_message = resume_message
       end
     end

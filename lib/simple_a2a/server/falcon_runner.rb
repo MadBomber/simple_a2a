@@ -16,6 +16,7 @@ module A2A
         @port = port
       end
 
+
       def run
         endpoint = Async::HTTP::Endpoint.parse("http://#{@host}:#{@port}")
         server   = Falcon::Server.new(Falcon::Server.middleware(@app), endpoint)

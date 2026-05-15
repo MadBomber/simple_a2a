@@ -7,6 +7,7 @@ class TestErrors < Minitest::Test
     assert_operator A2A::Error, :<, StandardError
   end
 
+
   def test_all_errors_inherit_from_base
     [
       A2A::ConfigurationError,
