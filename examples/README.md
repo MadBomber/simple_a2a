@@ -89,6 +89,8 @@ No additional gems or environment variables are required.
 | 09 | Multipart | `Part.text`, `Part.json`, `Part.binary`, `Part.from_url` |
 | 10 | Auth Headers | `A2A.client(headers:)`, Bearer token middleware |
 | 11 | SQLite Storage | `Storage::Base` injection, SQLite3 WAL persistence, cross-restart task survival |
+| 12 | Broker Agent | `A2A.broker_server`, RFC 8615 discovery, keyword-ranked routing, end-to-end dispatch |
+| 13 | Custom Broker | `broker_executor:`, TF-IDF scoring, synonym expansion, confidence thresholding, fallback |
 
 ---
 
@@ -382,3 +384,93 @@ demo rather than inlined into application code:
 | Cross-restart persistence | Tasks created in server process 1 are visible to server process 2 via the shared DB file |
 | WAL mode concurrency | `PRAGMA journal_mode=WAL` allows concurrent readers during writes |
 | `Brewfile` / `Gemfile` pattern | Per-demo dependency files keep application code free of setup logic |
+
+---
+
+### 12 — Broker Agent
+
+```bash
+bundle exec ruby examples/run 12_broker_agent
+```
+
+A `BrokerServer` hosts a routing agent at the server root alongside four
+specialist sub-agents (WeatherAgent, TranslationAgent, CalculatorAgent,
+SchedulerAgent). Clients send natural-language queries to the broker and
+receive a keyword-ranked array of matching `AgentCard` objects. The client
+then calls the top-ranked agent directly for the actual answer.
+
+The demo runs four stages:
+
+1. **RFC 8615 discovery** — the broker card is fetched from
+   `/.well-known/agent-card.json` using a plain `Net::HTTP` GET, showing that
+   the broker is discoverable without a pre-configured `A2A.client`.
+2. **Broker routing** — four distinct queries (weather, translation,
+   calculation, scheduling) are sent to the broker at `/`. Each response
+   carries a ranked `AgentCard` array as a JSON artifact.
+3. **End-to-end dispatch** — for each query the client extracts the top
+   agent's URL from its `interfaces` declaration and calls that agent directly
+   to obtain a real answer.
+4. **Standalone verification** — each sub-agent is also called directly
+   (bypassing the broker) to confirm it operates independently.
+
+**Protocol specification coverage:**
+
+| Spec section | What the demo shows |
+|---|---|
+| `A2A.broker_server` | Single call hosts the broker at `/` and four sub-agents at path prefixes |
+| RFC 8615 discovery | `/.well-known/agent-card.json` serves the broker card; discoverable without a pre-wired client |
+| `BrokerExecutor` | Default keyword-scoring implementation; ranks agents by skill, name, and description matches |
+| Ranked `AgentCard` artifact | Broker returns `Part.json(cards)` — client reads `part.data` to get the ranked array |
+| `AgentCard.interfaces` | Each card declares its URL; client uses `interfaces[0]["url"]` to call the winner |
+| `tasks/send` | Both broker queries and sub-agent calls use the standard synchronous send |
+| Sub-agent isolation | Sub-agents answer queries directly, independent of the broker |
+| Composability | Any agent card with an `interfaces` URL is callable by any A2A client |
+
+---
+
+### 13 — Custom Broker Agent
+
+```bash
+bundle exec ruby examples/run 13_custom_broker
+```
+
+Replaces the default `BrokerExecutor` with a `SophisticatedBrokerExecutor` that
+uses a TF-IDF-inspired scoring pipeline instead of simple keyword frequency. The
+custom executor is injected via the `broker_executor:` option on `A2A.broker_server`.
+
+**What makes the routing more sophisticated:**
+
+1. **IDF-weighted scoring** — terms rare across the agent corpus score higher than
+   common terms. `"risotto"` appears only in RecipeAgent's skill description, so
+   any query mentioning it unambiguously routes there. `"current"` appears in
+   several agents, so it barely moves the needle — the broker spreads the score
+   and signals ambiguity via equal confidence values.
+2. **Synonym expansion** — domain synonyms are expanded before scoring, so words
+   absent from every agent card still route correctly: `"forex"` expands to
+   `currency exchange rate`; `"shares"` expands to `stock equity market`; `"baking"`
+   expands to `recipe cooking`. The default broker would return no match for these.
+3. **Confidence normalization** — raw IDF sums are rescaled to [0, 1] and embedded
+   in each returned `AgentCard` under a `brokerMeta` key alongside the matched terms,
+   giving clients a machine-readable confidence signal.
+4. **Threshold filtering** — agents below `MIN_CONFIDENCE` (0.20) are excluded. A
+   vague query that matches nothing falls back to the top 2 with `confidence: 0.0`,
+   explicitly signalling that routing is uncertain.
+5. **Short-token guard** — tokens shorter than `MIN_TOKEN_LENGTH` (4 chars) are
+   dropped to prevent false substring matches (e.g., `"me" ⊂ "time"` would
+   otherwise bleed into unrelated agents).
+
+The demo also pre-builds the agent registry before calling `A2A.broker_server` so
+the custom executor can pre-compute IDF weights at start-up rather than per request.
+
+**Protocol specification coverage:**
+
+| Spec section | What the demo shows |
+|---|---|
+| `broker_executor:` option | Pass a fully custom executor to `A2A.broker_server`; auto-generated card or supply `broker_card:` too |
+| `BrokerExecutor` replacement | Any `AgentExecutor` subclass can serve as the broker; the registry is pre-built externally |
+| `Part.json` artifact | Custom broker embeds `brokerMeta` (confidence, matchedTerms) inside each ranked card |
+| `brokerMeta` client usage | Client reads `part.data[n]["brokerMeta"]["confidence"]` to choose dispatch strategy |
+| Synonym expansion | Query terms absent from all cards still resolve correctly via the expansion table |
+| IDF weighting | Discriminating terms (unique to one agent) score higher than common terms shared across agents |
+| Threshold fallback | Vague queries return ≤ `FALLBACK_COUNT` agents with `confidence: 0.0` instead of an empty list |
+| `tasks/send` | Standard JSON-RPC send used for both broker and direct sub-agent calls |
