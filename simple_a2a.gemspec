@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
                      "async-first, Rack-compatible, built on Falcon."
   spec.homepage = "https://github.com/MadBomber/simple_a2a"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.2.0"
+  spec.required_ruby_version = ">= 4.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
